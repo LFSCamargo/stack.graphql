@@ -1,0 +1,8 @@
+query CardUser {
+  cardUser {
+    cardNumber
+    name
+    id
+    balance
+  }
+}

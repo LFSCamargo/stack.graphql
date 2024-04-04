@@ -1,0 +1,16 @@
+export { default as Header } from "./Header.component.vue";
+export { default as SectionTile } from "./SectionTile.component.vue";
+export { default as GradientText } from "./GradientText.component.vue";
+export { default as Button } from "./Button.component.vue";
+export { default as Heading } from "./Heading.component.vue";
+export { default as Hero } from "./Hero.component.vue";
+export { default as About } from "./About.component.vue";
+export { default as ForYou } from "./ForYou.component.vue";
+export { default as ForYourCompany } from "./ForYourCompany.component.vue";
+export { default as CTA } from "./CTA.component.vue";
+export { default as Contact } from "./Contact.component.vue";
+export { default as Footer } from "./Footer.component.vue";
+export { default as BackButton } from "./BackButton.component.vue";
+export { default as Avatar } from "./Avatar.component.vue";
+export { default as BalanceCard } from "./BalanceCard.component.vue";
+export { default as CreditCard } from "./CreditCard.component.vue";

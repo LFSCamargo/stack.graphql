@@ -1,0 +1,10 @@
+mutation CardUserSignIn($input: CardSignInInput!) {
+  signInCardUser(input: $input) {
+    token
+    cardUser {
+      cardNumber
+      id
+      name
+    }
+  }
+}

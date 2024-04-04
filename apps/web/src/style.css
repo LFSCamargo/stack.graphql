@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'DM Sans', sans-serif !important;
+  color-scheme: dark;
+  font-optical-sizing: auto;
+  font-style: normal;
+  background-color: #202020;
+  color: #fff;
+}
+
+* {
+  @apply tracking-tight
+}
+
+input {
+  @apply w-full border-gray-200 rounded-full p-4 pl-5 text-sm shadow-sm;
+}
