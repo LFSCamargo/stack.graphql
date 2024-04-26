@@ -5,7 +5,9 @@
   "main": "generated/index.ts",
   "type": "module",
   "scripts": {
-    "codegen": "node scripts/fetchSchema.js && graphql-codegen --config codegen.yml"
+    "fetch:schema": "node scripts/fetchSchema.js",
+    "run:codegen": "graphql-codegen --config codegen.yml",
+    "codegen": "pnpm fetch:schema && graphql-codegen --config codegen.yml"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +18,7 @@
     "@graphql-codegen/typescript": "^4.0.6",
     "@graphql-codegen/typescript-operations": "^4.2.0",
     "@graphql-codegen/typescript-vue-apollo": "^4.1.1",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.0",
     "@vue/apollo-composable": "^4.0.2",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",

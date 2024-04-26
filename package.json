@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start:dev": "pnpm web:dev & pnpm admin:dev & pnpm server:dev",
     "web:dev": "pnpm run --filter @ipe.stack/web dev",
+    "admin:dev": "pnpm run --filter @ipe.stack/admin dev",
     "server:dev": "pnpm run --filter @ipe.stack/server dev",
     "server:seeds": "pnpm run --filter @ipe.stack/server seeds",
     "apollo:codegen": "pnpm run --filter @ipe.stack/apollo codegen"

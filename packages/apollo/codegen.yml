@@ -24,3 +24,9 @@ generates:
       withCompositionFunctions: true
       vueApolloComposableImportFrom: "@vue/apollo-composable"
       vueCompositionApiImportFrom: "vue"
+
+  ./generated/react/index.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"

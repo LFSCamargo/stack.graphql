@@ -5,6 +5,10 @@ export function onlyLoggedCardUser(
   creditUser: GraphQLContext["creditUser"],
 ): asserts creditUser is NonNullable<GraphQLContext["creditUser"]> {
   if (!creditUser) {
-    throw new GraphQLError("You are not authorized to perform this action");
+    throw new GraphQLError("You are not authorized to perform this action", {
+      extensions: {
+        code: "BAD_REQUEST",
+      },
+    });
   }
 }

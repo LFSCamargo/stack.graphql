@@ -12,4 +12,11 @@ export const StorageUtility = {
   setToken(token: string) {
     localStorage.setItem("card-user:token", token);
   },
+
+  /**
+   * @description - Removes token from local storage
+   */
+  removeToken() {
+    localStorage.removeItem("card-user:token");
+  },
 };

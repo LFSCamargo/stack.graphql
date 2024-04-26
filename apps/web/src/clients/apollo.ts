@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client/core";
 import { createHttpLink } from "@apollo/client/link/http";
 import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
 import { StorageUtility } from "../utils";
 
 const link = createHttpLink({
@@ -17,7 +18,17 @@ const authLink = setContext(async (_, { headers }) => {
   };
 });
 
+const errorLink = onError(({ graphQLErrors }) => {
+  if (graphQLErrors) {
+    for (const error of graphQLErrors) {
+      if (error.message === "Invalid authorization token provided") {
+        StorageUtility.removeToken();
+      }
+    }
+  }
+});
+
 export const apolloClient = new ApolloClient({
-  link: authLink.concat(link),
+  link: errorLink.concat(authLink.concat(link)),
   cache: new InMemoryCache(),
 });
