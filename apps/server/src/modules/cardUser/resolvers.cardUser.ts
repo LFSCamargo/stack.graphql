@@ -1,22 +1,121 @@
 import { GraphQLError } from "graphql";
 import { CardUserModel } from "../../models";
-import { GraphQLInput, TResolvers } from "../../types";
-import { PasswordUtility, TokenUtility } from "../../utils";
-import { SignInInput, ChangeCardUserPassword } from "./types";
-import { onlyLoggedCardUser } from "../../guards";
+import { GraphQLInput, GraphQLPaginationInput, TResolvers } from "../../types";
+import {
+  PasswordUtility,
+  TokenUtility,
+  TransactionsUtility,
+} from "../../utils";
+import {
+  SignInInput,
+  ChangeCardUserPassword,
+  CreateCardUserInput,
+} from "./types";
+import { onlyAdmin, onlyLoggedCardUser } from "../../guards";
+import { PaginationUtility } from "../../utils";
 
 export const CardUserResolvers: TResolvers = {
   CardUser: {
-    balance: async () => {
-      return 0;
+    balance: async ({ _id }) => {
+      return await TransactionsUtility.getBalanceFromTransactions(_id);
     },
   },
   Query: {
     cardUser: async (_, __, { creditUser }) => {
       return creditUser;
     },
+    cardUsers: async (
+      _,
+      { input }: GraphQLInput<GraphQLPaginationInput>,
+      { user },
+    ) => {
+      onlyAdmin(user);
+
+      const params = {
+        active: true,
+      } as Record<string, unknown>;
+
+      if (input.search) {
+        params.name = { $regex: input.search, $options: "i" };
+      }
+
+      const { count, data, pageInfo } =
+        await PaginationUtility.paginateCollection(
+          CardUserModel,
+          params,
+          input.limit,
+          input.offset,
+        );
+
+      return {
+        count,
+        data,
+        pageInfo,
+      };
+    },
   },
   Mutation: {
+    deleteCardUser: async (
+      _,
+      { input }: GraphQLInput<{ id: string }>,
+      { user },
+    ) => {
+      onlyAdmin(user);
+
+      await CardUserModel.updateOne(
+        { _id: input.id },
+        {
+          active: false,
+        },
+      );
+
+      return true;
+    },
+    editCardUser: async (
+      _,
+      { input }: GraphQLInput<CreateCardUserInput>,
+      { user },
+    ) => {
+      onlyAdmin(user);
+
+      const { cardNumber, name, password } = input;
+
+      const payload: Partial<typeof input> = {
+        name,
+      };
+
+      if (password) {
+        payload.password = PasswordUtility.encryptPassword(password);
+      }
+
+      await CardUserModel.updateOne(
+        {
+          cardNumber,
+        },
+        payload,
+      );
+
+      return await CardUserModel.findOne({ cardNumber });
+    },
+    createCardUser: async (
+      _,
+      { input }: GraphQLInput<CreateCardUserInput>,
+      { user },
+    ) => {
+      onlyAdmin(user);
+
+      const { cardNumber, name, password } = input;
+
+      const cardUser = new CardUserModel({
+        cardNumber,
+        name,
+        password: PasswordUtility.encryptPassword(password),
+      });
+
+      await cardUser.save();
+
+      return cardUser;
+    },
     changeCardUserPassword: async (
       _,
       { input }: GraphQLInput<ChangeCardUserPassword>,

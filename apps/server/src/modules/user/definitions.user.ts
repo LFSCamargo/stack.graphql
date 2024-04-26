@@ -17,11 +17,17 @@ export const UserDefinitions = gql`
     password: String!
   }
 
+  input ChangePasswordInput {
+    oldPassword: String!
+    newPassword: String!
+  }
+
   type Query {
     me: User
   }
 
   type Mutation {
     signIn(input: SignInInput!): AuthPayload
+    changePassword(input: ChangePasswordInput!): Boolean
   }
 `;

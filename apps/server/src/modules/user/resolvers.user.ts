@@ -2,7 +2,7 @@ import { GraphQLError } from "graphql";
 import { UserModel } from "../../models";
 import { GraphQLInput, TResolvers } from "../../types";
 import { PasswordUtility, TokenUtility } from "../../utils";
-import { SignInInput } from "./types";
+import { ChangePasswordInput, SignInInput } from "./types";
 import { onlyAdmin } from "../../guards/onlyAdmin.guard";
 
 export const UserResolvers: TResolvers = {
@@ -13,6 +13,36 @@ export const UserResolvers: TResolvers = {
     },
   },
   Mutation: {
+    changePassword: async (
+      _,
+      { input }: GraphQLInput<ChangePasswordInput>,
+      { user },
+    ) => {
+      onlyAdmin(user);
+      const { password } = user;
+
+      const isValidOldPassword = PasswordUtility.authenticate(
+        input.oldPassword,
+        password,
+      );
+
+      if (!isValidOldPassword) {
+        throw new GraphQLError(
+          "Invalid old password. Please check your credentials and try again",
+        );
+      }
+
+      const newPassword = PasswordUtility.encryptPassword(input.newPassword);
+
+      await UserModel.updateOne(
+        {
+          _id: user._id,
+        },
+        { password: newPassword },
+      );
+
+      return true;
+    },
     signIn: async (_, { input }: GraphQLInput<SignInInput>) => {
       const { email, password } = input;
 

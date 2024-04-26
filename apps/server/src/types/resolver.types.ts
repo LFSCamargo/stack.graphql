@@ -11,6 +11,12 @@ type Resolver = (
 
 interface IResolver extends Record<string, Resolver> {}
 
+export type GraphQLPaginationInput = {
+  limit?: number;
+  offset?: number;
+  search?: string;
+};
+
 export type TResolvers = {
   Query?: IResolver;
   Mutation?: IResolver;

@@ -5,6 +5,8 @@ export interface ICardUserSchema extends Document {
   cardNumber: string;
   password: string;
   createdAt: Date;
+  active: boolean;
+  newAccount: boolean;
 }
 
 const cardUserSchema = new Schema(
@@ -21,6 +23,14 @@ const cardUserSchema = new Schema(
     password: {
       type: String,
       required: true,
+    },
+    newAccount: {
+      type: Boolean,
+      default: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
     },
     createdAt: {
       type: Date,

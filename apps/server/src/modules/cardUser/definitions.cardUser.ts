@@ -12,12 +12,24 @@ export const CardUserDefinitions = gql`
     newPassword: String!
   }
 
+  input CreateCardUserInput {
+    cardNumber: String!
+    name: String!
+    password: String!
+  }
+
+  input DeleteCardUserInput {
+    id: ID!
+  }
+
   # Output types
   type CardUser {
-    id: ID!
+    _id: ID!
     cardNumber: String!
     name: String!
     balance: String
+    newAccount: Boolean!
+    active: Boolean
   }
 
   type CardAuthPayload {
@@ -25,12 +37,28 @@ export const CardUserDefinitions = gql`
     cardUser: CardUser!
   }
 
+  type CardUsersOutput {
+    count: Int!
+    data: [CardUser!]!
+    pageInfo: PageInfo!
+  }
+
   # GraphQL Main Types
   type Query {
+    # Admin queries
+    cardUsers(input: PaginationInput!): CardUsersOutput
+
+    # Card user queries
     cardUser: CardUser
   }
 
   type Mutation {
+    # Admin mutations
+    deleteCardUser(input: DeleteCardUserInput!): Boolean
+    editCardUser(input: CreateCardUserInput!): CardUser
+    createCardUser(input: CreateCardUserInput!): CardUser
+
+    # Card user mutations
     signInCardUser(input: CardSignInInput!): CardAuthPayload
     changeCardUserPassword(input: ChangeCardUserPassword!): Boolean
   }

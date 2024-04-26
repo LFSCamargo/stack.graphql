@@ -1,4 +1,5 @@
 import { ApolloServer } from "@apollo/server";
+import GlobalTypes from "./graphql/definitions.graphql";
 import { HealthModule, UserModule, CardUserModule } from "./modules";
 
 const apolloServer = new ApolloServer({
@@ -12,6 +13,7 @@ const apolloServer = new ApolloServer({
     HealthModule.typeDefs,
     UserModule.typeDefs,
     CardUserModule.typeDefs,
+    GlobalTypes,
   ],
 });
 
