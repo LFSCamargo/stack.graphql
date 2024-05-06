@@ -1,0 +1,10 @@
+query CardUserById($cardUserByIdId: ID!) {
+  cardUserById(id: $cardUserByIdId) {
+    newAccount
+    name
+    cardNumber
+    _id
+    active
+    balance
+  }
+}

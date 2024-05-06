@@ -21,6 +21,11 @@ export const CardUserResolvers: TResolvers = {
     },
   },
   Query: {
+    cardUserById: async (_, { id }: { id: string }, { user }) => {
+      onlyAdmin(user);
+
+      return await CardUserModel.findOne({ _id: id });
+    },
     cardUser: async (_, __, { creditUser }) => {
       return creditUser;
     },

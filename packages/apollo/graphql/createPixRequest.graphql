@@ -1,0 +1,11 @@
+mutation CreateTedRequest($input: CreatePixRequestInput!) {
+  createPixRequest(input: $input) {
+    reason
+    payload
+    createdAt
+    active
+    cardUserId
+    type
+    status
+  }
+}

@@ -1,15 +1,30 @@
 import { Document, Schema, model } from "mongoose";
 
 interface IRequest extends Document {
-  type: "card-password-change" | "withdrawal";
+  type: "CARD_PASSWORD_CHANGE" | "WITHDRAWAL";
   cardUserId: Schema.Types.ObjectId;
-  status: "pending" | "approved" | "rejected";
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELED";
   reason?: string;
   active: boolean;
   createdAt: Date;
   payload:
     | {
-        amount: number;
+        type: "PIX" | "TED";
+        payload:
+          | {
+              cpf: string;
+              name: string;
+              pixKey: string;
+              ammount: number;
+            }
+          | {
+              cpf: string;
+              name: string;
+              bankCode: string;
+              agency: string;
+              accountDigit: string;
+              ammount: number;
+            };
       }
     | {
         oldCardPassword: string;

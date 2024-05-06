@@ -1,0 +1,10 @@
+mutation EditCardUser($input: CreateCardUserInput!) {
+  editCardUser(input: $input) {
+    newAccount
+    name
+    cardNumber
+    balance
+    active
+    _id
+  }
+}

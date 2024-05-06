@@ -1,6 +1,8 @@
+import { GraphQLError } from "graphql";
 import { onlyAdmin, onlyLoggedCardUser } from "../../guards";
-import { CardUserTransactionsModel } from "../../models";
-import { TResolvers } from "../../types";
+import { CardUserModel, CardUserTransactionsModel } from "../../models";
+import { GraphQLInput, GraphQLPaginationInput, TResolvers } from "../../types";
+import { PaginationUtility } from "../../utils";
 
 type Inputs = {
   injestTransactions: {
@@ -21,11 +23,78 @@ type Inputs = {
 
 export const TransactionsResolvers: TResolvers = {
   Query: {
-    cardUserTransactions: async (_, __, { creditUser }) => {
+    cardUserTransactions: async (
+      _,
+      { input }: GraphQLInput<GraphQLPaginationInput>,
+      { creditUser },
+    ) => {
       onlyLoggedCardUser(creditUser);
-      return await CardUserTransactionsModel.find({
-        cardUserId: creditUser?._id,
-      });
+
+      const { count, data, pageInfo } =
+        await PaginationUtility.paginateCollection(
+          CardUserTransactionsModel,
+          { cardUserId: creditUser?._id },
+          input.limit,
+          input.offset,
+        );
+
+      return {
+        count,
+        data,
+        pageInfo,
+      };
+    },
+    transactionsByCardNumber: async (
+      _,
+      {
+        input,
+        cardNumber,
+      }: GraphQLInput<GraphQLPaginationInput> & { cardNumber: string },
+      { user },
+    ) => {
+      onlyAdmin(user);
+
+      const cardUser = await CardUserModel.findOne({ cardNumber });
+
+      if (!cardUser) {
+        throw new GraphQLError("Card user not found");
+      }
+
+      const { count, data, pageInfo } =
+        await PaginationUtility.paginateCollection(
+          CardUserTransactionsModel,
+          { cardUserId: cardUser?._id },
+          input.limit,
+          input.offset,
+        );
+
+      return {
+        count,
+        data,
+        pageInfo,
+      };
+    },
+
+    allTransactions: async (
+      _,
+      { input }: GraphQLInput<GraphQLPaginationInput>,
+      { user },
+    ) => {
+      onlyAdmin(user);
+
+      const { count, data, pageInfo } =
+        await PaginationUtility.paginateCollection(
+          CardUserTransactionsModel,
+          {},
+          input.limit,
+          input.offset,
+        );
+
+      return {
+        count,
+        data,
+        pageInfo,
+      };
     },
   },
   Mutation: {

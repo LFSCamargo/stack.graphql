@@ -47,6 +47,7 @@ export const CardUserDefinitions = gql`
   type Query {
     # Admin queries
     cardUsers(input: PaginationInput!): CardUsersOutput
+    cardUserById(id: ID!): CardUser
 
     # Card user queries
     cardUser: CardUser

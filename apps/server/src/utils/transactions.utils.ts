@@ -8,7 +8,9 @@ export const TransactionsUtility = {
    * @returns The balance of the card user ex: 1000
    */
   async getBalanceFromTransactions(cardUserId: string) {
-    return await CardUserTransactionsModel.aggregate([
+    const transactions = await CardUserTransactionsModel.aggregate<{
+      total: number;
+    }>([
       {
         $match: {
           cardUserId,
@@ -23,5 +25,7 @@ export const TransactionsUtility = {
         },
       },
     ]);
+
+    return transactions[0]?.total || 0;
   },
 };

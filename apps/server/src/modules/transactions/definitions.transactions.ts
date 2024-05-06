@@ -20,11 +20,20 @@ export const TransactionsDefinitions = gql`
     transactions: [TransactionInput!]!
   }
 
-  type Query {
-    cardUserTransactions: [Transaction!]!
+  type TransactionsOutput {
+    count: Int!
+    data: [Transaction!]!
+    pageInfo: PageInfo!
+  }
 
-    transactionsByCardUserId(cardUserId: ID!): [Transaction!]!
-    allTransactions: [Transaction!]!
+  type Query {
+    cardUserTransactions(input: PaginationInput!): TransactionsOutput!
+
+    transactionsByCardNumber(
+      cardNumber: String!
+      input: PaginationInput!
+    ): TransactionsOutput!
+    allTransactions(input: PaginationInput!): TransactionsOutput!
   }
 
   type Mutation {

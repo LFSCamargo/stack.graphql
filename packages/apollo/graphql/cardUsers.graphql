@@ -1,0 +1,10 @@
+query CardUsers($input: PaginationInput!) {
+  cardUsers(input: $input) {
+    newAccount
+    name
+    balance
+    cardNumber
+    active
+    _id
+  }
+}

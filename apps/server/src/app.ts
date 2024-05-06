@@ -1,6 +1,12 @@
 import { ApolloServer } from "@apollo/server";
 import GlobalTypes from "./graphql/definitions.graphql";
-import { HealthModule, UserModule, CardUserModule } from "./modules";
+import {
+  HealthModule,
+  UserModule,
+  CardUserModule,
+  TransactionsModule,
+  RequestsModule,
+} from "./modules";
 
 const apolloServer = new ApolloServer({
   introspection: true,
@@ -8,11 +14,15 @@ const apolloServer = new ApolloServer({
     HealthModule.resolvers,
     UserModule.resolvers,
     CardUserModule.resolvers,
+    TransactionsModule.resolvers,
+    RequestsModule.resolvers,
   ],
   typeDefs: [
     HealthModule.typeDefs,
     UserModule.typeDefs,
     CardUserModule.typeDefs,
+    TransactionsModule.typeDefs,
+    RequestsModule.typeDefs,
     GlobalTypes,
   ],
 });
