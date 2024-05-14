@@ -1,0 +1,15 @@
+query TransactionsByCardUserId($cardUserId: ID!, $input: PaginationInput!) {
+  transactionsByCardUserId(cardUserId: $cardUserId, input: $input) {
+    count
+    pageInfo {
+      hasNextPage
+    }
+    data {
+      _id
+      amount
+      createdAt
+      description
+      date
+    }
+  }
+}

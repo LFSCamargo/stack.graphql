@@ -28,6 +28,12 @@ const DashboardManageUsersIndexLazyImport = createFileRoute(
 const DashboardManageClientsIndexLazyImport = createFileRoute(
   '/dashboard/manage-clients/',
 )()
+const DashboardManageClientsAddIndexLazyImport = createFileRoute(
+  '/dashboard/manage-clients/add/',
+)()
+const DashboardManageClientsDetailsCardUserIdLazyImport = createFileRoute(
+  '/dashboard/manage-clients/details/$cardUserId',
+)()
 
 // Create/Update Routes
 
@@ -75,6 +81,26 @@ const DashboardManageClientsIndexLazyRoute =
     import('./routes/dashboard/manage-clients/index.lazy').then((d) => d.Route),
   )
 
+const DashboardManageClientsAddIndexLazyRoute =
+  DashboardManageClientsAddIndexLazyImport.update({
+    path: '/dashboard/manage-clients/add/',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/manage-clients/add/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const DashboardManageClientsDetailsCardUserIdLazyRoute =
+  DashboardManageClientsDetailsCardUserIdLazyImport.update({
+    path: '/dashboard/manage-clients/details/$cardUserId',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/manage-clients/details/$cardUserId.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -103,6 +129,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRequestsIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/dashboard/manage-clients/details/$cardUserId': {
+      preLoaderRoute: typeof DashboardManageClientsDetailsCardUserIdLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/manage-clients/add/': {
+      preLoaderRoute: typeof DashboardManageClientsAddIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -115,6 +149,8 @@ export const routeTree = rootRoute.addChildren([
   DashboardManageClientsIndexLazyRoute,
   DashboardManageUsersIndexLazyRoute,
   DashboardRequestsIndexLazyRoute,
+  DashboardManageClientsDetailsCardUserIdLazyRoute,
+  DashboardManageClientsAddIndexLazyRoute,
 ])
 
 /* prettier-ignore-end */

@@ -91,7 +91,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           </div>
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
-              Password
+              Senha
             </Label>
             <FormField
               id="password"

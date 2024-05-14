@@ -8,6 +8,7 @@ type Inputs = {
   injestTransactions: {
     transactions: {
       amount: number;
+      balanceUpdated: number;
       description: string;
       date: string;
     }[];
@@ -36,6 +37,42 @@ export const TransactionsResolvers: TResolvers = {
           { cardUserId: creditUser?._id },
           input.limit,
           input.offset,
+          {
+            date: -1,
+          },
+        );
+
+      return {
+        count,
+        data,
+        pageInfo,
+      };
+    },
+    transactionsByCardUserId: async (
+      _,
+      {
+        cardUserId,
+        input,
+      }: { cardUserId: string; input: GraphQLPaginationInput },
+      { user },
+    ) => {
+      onlyAdmin(user);
+
+      const cardUser = await CardUserModel.findById(cardUserId);
+
+      if (!cardUser) {
+        throw new GraphQLError("Card user not found");
+      }
+
+      const { count, data, pageInfo } =
+        await PaginationUtility.paginateCollection(
+          CardUserTransactionsModel,
+          { cardUserId: cardUser?._id },
+          input.limit,
+          input.offset,
+          {
+            date: -1,
+          },
         );
 
       return {
@@ -66,6 +103,9 @@ export const TransactionsResolvers: TResolvers = {
           { cardUserId: cardUser?._id },
           input.limit,
           input.offset,
+          {
+            date: -1,
+          },
         );
 
       return {
@@ -100,21 +140,25 @@ export const TransactionsResolvers: TResolvers = {
   Mutation: {
     injestTransactions: async (
       _,
-      { transactions, cardUserId }: Inputs["injestTransactions"],
+      { input }: GraphQLInput<Inputs["injestTransactions"]>,
       { user },
     ) => {
       onlyAdmin(user);
 
       await CardUserTransactionsModel.insertMany([
-        ...transactions.map((transaction) => ({
+        ...input.transactions.map((transaction) => ({
           ...transaction,
           date: new Date(transaction.date).toISOString(),
           createdAt: new Date().toISOString(),
-          cardUserId,
+          cardUserId: input.cardUserId,
+          balanceUpdated: transaction.balanceUpdated,
+          amount: transaction.amount,
         })),
       ]);
 
-      return await CardUserTransactionsModel.find({ cardUserId });
+      return await CardUserTransactionsModel.find({
+        cardUserId: input.cardUserId,
+      });
     },
     clearTransactions: async (
       _,

@@ -6,7 +6,7 @@ module.exports = {
   client: {
     service: {
       name: "web",
-      url: "http://localhost:4000/graphql",
+      url: "http://localhost:4000/",
       skipSSLValidation: true,
     },
   },

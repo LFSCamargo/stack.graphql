@@ -17,3 +17,4 @@ export * from "./tabs";
 export * from "./overview";
 export * from "./sonner";
 export * from "./separator";
+export * from "./table";

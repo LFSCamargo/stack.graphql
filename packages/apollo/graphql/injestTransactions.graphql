@@ -1,0 +1,9 @@
+mutation InjestTransactions($input: InjestTransactionsInput) {
+  injestTransactions(input: $input) {
+    description
+    date
+    createdAt
+    amount
+    _id
+  }
+}

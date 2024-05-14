@@ -11,6 +11,7 @@ export const TransactionsDefinitions = gql`
 
   input TransactionInput {
     amount: Float!
+    balanceUpdated: Float!
     description: String!
     date: String!
   }
@@ -28,7 +29,10 @@ export const TransactionsDefinitions = gql`
 
   type Query {
     cardUserTransactions(input: PaginationInput!): TransactionsOutput!
-
+    transactionsByCardUserId(
+      cardUserId: ID!
+      input: PaginationInput!
+    ): TransactionsOutput!
     transactionsByCardNumber(
       cardNumber: String!
       input: PaginationInput!

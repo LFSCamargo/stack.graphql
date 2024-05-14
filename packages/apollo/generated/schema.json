@@ -94,6 +94,70 @@
           },
           {
             "__typename": "__Field",
+            "name": "cardUsers",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "PaginationInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "CardUsersOutput",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "cardUserById",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "id",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "CardUser",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
             "name": "cardUser",
             "description": null,
             "args": [],
@@ -105,10 +169,296 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "cardUserTransactions",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "PaginationInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "TransactionsOutput",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "transactionsByCardUserId",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "cardUserId",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "PaginationInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "TransactionsOutput",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "transactionsByCardNumber",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "cardNumber",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "PaginationInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "TransactionsOutput",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "allTransactions",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "PaginationInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "TransactionsOutput",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "request",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "id",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "IRequest",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "requests",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "PaginationInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "__typename": "__InputValue",
+                "name": "status",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "ENUM",
+                  "name": "RequestStatus",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "__typename": "__InputValue",
+                "name": "type",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "ENUM",
+                  "name": "RequestType",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "RequestsOutput",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "SCALAR",
+        "name": "ID",
+        "description": "The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `\"4\"`) or integer (such as `4`) input value will be accepted as an ID.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -178,17 +528,6 @@
         ],
         "inputFields": null,
         "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "__typename": "__Type",
-        "kind": "SCALAR",
-        "name": "ID",
-        "description": "The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `\"4\"`) or integer (such as `4`) input value will be accepted as an ID.",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -290,6 +629,52 @@
       },
       {
         "__typename": "__Type",
+        "kind": "INPUT_OBJECT",
+        "name": "ChangePasswordInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "__typename": "__InputValue",
+            "name": "oldPassword",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "newPassword",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
         "kind": "OBJECT",
         "name": "Mutation",
         "description": null,
@@ -321,6 +706,134 @@
               "__typename": "__Type",
               "kind": "OBJECT",
               "name": "AuthPayload",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "changePassword",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "ChangePasswordInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "deleteCardUser",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "DeleteCardUserInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "editCardUser",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "CreateCardUserInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "CardUser",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "createCardUser",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "CreateCardUserInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "CardUser",
               "ofType": null
             },
             "isDeprecated": false,
@@ -386,6 +899,289 @@
               "kind": "SCALAR",
               "name": "Boolean",
               "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "injestTransactions",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "INPUT_OBJECT",
+                  "name": "InjestTransactionsInput",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "__typename": "__Type",
+                  "kind": "OBJECT",
+                  "name": "Transaction",
+                  "ofType": null
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "clearTransactions",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "__typename": "__Type",
+                  "kind": "OBJECT",
+                  "name": "Transaction",
+                  "ofType": null
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "createPixRequest",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "CreatePixRequestInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "IRequest",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "createTedRequest",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "CreateTedRequestInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "IRequest",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "createCardPasswordChangeRequest",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "CreateCardPasswordChangeRequestInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "IRequest",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "cancelRequest",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "id",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "IRequest",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "approveRequest",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "id",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "IRequest",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "rejectRequest",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "id",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "IRequest",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -501,13 +1297,105 @@
       },
       {
         "__typename": "__Type",
+        "kind": "INPUT_OBJECT",
+        "name": "CreateCardUserInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "__typename": "__InputValue",
+            "name": "cardNumber",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "name",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "password",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "INPUT_OBJECT",
+        "name": "DeleteCardUserInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "__typename": "__InputValue",
+            "name": "id",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
         "kind": "OBJECT",
         "name": "CardUser",
         "description": null,
         "fields": [
           {
             "__typename": "__Field",
-            "name": "id",
+            "name": "_id",
             "description": null,
             "args": [],
             "type": {
@@ -575,6 +1463,53 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "balanceChange",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "newAccount",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "active",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -629,6 +1564,1110 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "OBJECT",
+        "name": "CardUsersOutput",
+        "description": null,
+        "fields": [
+          {
+            "__typename": "__Field",
+            "name": "count",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "data",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "OBJECT",
+                    "name": "CardUser",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "pageInfo",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "SCALAR",
+        "name": "Int",
+        "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "OBJECT",
+        "name": "Transaction",
+        "description": null,
+        "fields": [
+          {
+            "__typename": "__Field",
+            "name": "_id",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "amount",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "description",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "date",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "createdAt",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "SCALAR",
+        "name": "Float",
+        "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "INPUT_OBJECT",
+        "name": "TransactionInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "__typename": "__InputValue",
+            "name": "amount",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "balanceUpdated",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "description",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "date",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "INPUT_OBJECT",
+        "name": "InjestTransactionsInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "__typename": "__InputValue",
+            "name": "cardUserId",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "transactions",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "TransactionInput",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "OBJECT",
+        "name": "TransactionsOutput",
+        "description": null,
+        "fields": [
+          {
+            "__typename": "__Field",
+            "name": "count",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "data",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "OBJECT",
+                    "name": "Transaction",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "pageInfo",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "ENUM",
+        "name": "RequestType",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "__typename": "__EnumValue",
+            "name": "CARD_PASSWORD_CHANGE",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__EnumValue",
+            "name": "WITHDRAWAL",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "ENUM",
+        "name": "RequestStatus",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "__typename": "__EnumValue",
+            "name": "PENDING",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__EnumValue",
+            "name": "APPROVED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__EnumValue",
+            "name": "REJECTED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__EnumValue",
+            "name": "CANCELED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "OBJECT",
+        "name": "IRequest",
+        "description": null,
+        "fields": [
+          {
+            "__typename": "__Field",
+            "name": "_id",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "type",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "ENUM",
+                "name": "RequestType",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "cardUserId",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "status",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "ENUM",
+                "name": "RequestStatus",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "reason",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "active",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "createdAt",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "payload",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "JSON",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "OBJECT",
+        "name": "RequestsOutput",
+        "description": null,
+        "fields": [
+          {
+            "__typename": "__Field",
+            "name": "count",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "data",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "OBJECT",
+                    "name": "IRequest",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "pageInfo",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "INPUT_OBJECT",
+        "name": "CreatePixRequestInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "__typename": "__InputValue",
+            "name": "cpf",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "name",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "pixKey",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "ammount",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "INPUT_OBJECT",
+        "name": "CreateTedRequestInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "__typename": "__InputValue",
+            "name": "cpf",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "name",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "bankCode",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "agency",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "accountDigit",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "ammount",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "INPUT_OBJECT",
+        "name": "CreateCardPasswordChangeRequestInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "__typename": "__InputValue",
+            "name": "oldCardPassword",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "newCardPassword",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "SCALAR",
+        "name": "JSON",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "OBJECT",
+        "name": "PageInfo",
+        "description": null,
+        "fields": [
+          {
+            "__typename": "__Field",
+            "name": "hasNextPage",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "hasPreviousPage",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "startCursor",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "endCursor",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "INPUT_OBJECT",
+        "name": "PaginationInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "__typename": "__InputValue",
+            "name": "offset",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "limit",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "search",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },

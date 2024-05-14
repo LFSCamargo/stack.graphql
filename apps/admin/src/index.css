@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+  border-radius: 100%;
+  cursor: pointer;
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  @apply bg-neutral-500 bg-opacity-80;
+}
+::-webkit-scrollbar-track {
+  @apply bg-gray-300 bg-opacity-10;
+  border-radius: 10px;
+}
+
+body {
+  @apply overflow-hidden lg:overflow-auto;
+}
+
 @layer base {
   :root {
     --background: 0 0% 3.9%;

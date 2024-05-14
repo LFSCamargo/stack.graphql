@@ -19,6 +19,9 @@ export const CardUserResolvers: TResolvers = {
     balance: async ({ _id }) => {
       return await TransactionsUtility.getBalanceFromTransactions(_id);
     },
+    balanceChange: async ({ _id }) => {
+      return await TransactionsUtility.getChangeFromTransactions(_id);
+    },
   },
   Query: {
     cardUserById: async (_, { id }: { id: string }, { user }) => {
