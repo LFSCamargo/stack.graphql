@@ -1,14 +1,6 @@
 import { Separator } from "@/components/ui";
 import { UserSwitcher } from "../ui";
-import {
-  Home,
-  Package,
-  Shield,
-  Users,
-  Lock,
-  ChevronRight,
-  LogOut,
-} from "lucide-react";
+import { Home, Package, Users, Lock, ChevronRight, LogOut } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { StorageUtility } from "@/utils";
@@ -17,15 +9,17 @@ type Props = {
   to?: string;
   children?: React.ReactNode;
   onClick?: () => void;
+  className?: string;
 };
 
-export function SidebarLink({ to, children, onClick }: Props) {
+export function SidebarLink({ to, children, onClick, className }: Props) {
   if (!to && onClick) {
     return (
       <button
         onClick={onClick}
         className={cn(
           "flex w-full items-center justify-between rounded-lg px-3 py-2 pr-4 text-sm text-muted-foreground transition-all hover:bg-white/5 hover:text-primary  hover:ring hover:ring-white/10",
+          className,
         )}
       >
         <div className="flex flex-row items-center gap-3">{children}</div>
@@ -41,6 +35,7 @@ export function SidebarLink({ to, children, onClick }: Props) {
         "flex items-center justify-between rounded-lg px-3 py-2 pr-4 text-sm text-muted-foreground transition-all hover:bg-white/5 hover:text-primary  hover:ring hover:ring-white/10",
         window.location.pathname === to &&
           "bg-white/10 !text-white hover:bg-white/10",
+        className,
       )}
     >
       <div className="flex flex-row items-center gap-3">{children}</div>
@@ -78,10 +73,6 @@ export function SideMenu() {
           <SidebarLink to="/dashboard/manage-clients">
             <Users className="h-4 w-4" />
             Gerenciar Clientes
-          </SidebarLink>
-          <SidebarLink to="/dashboard/manage-users">
-            <Shield className="h-4 w-4" />
-            Gerenciar Administradores
           </SidebarLink>
         </nav>
       </div>

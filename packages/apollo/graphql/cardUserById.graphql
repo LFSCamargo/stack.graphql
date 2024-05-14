@@ -6,5 +6,6 @@ query CardUserById($cardUserByIdId: ID!) {
     _id
     active
     balance
+    balanceChange
   }
 }

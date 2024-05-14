@@ -2,7 +2,8 @@ query CardUser {
   cardUser {
     cardNumber
     name
-    id
+    _id
     balance
+    balanceChange
   }
 }

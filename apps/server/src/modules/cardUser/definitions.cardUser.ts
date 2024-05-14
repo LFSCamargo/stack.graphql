@@ -28,6 +28,7 @@ export const CardUserDefinitions = gql`
     cardNumber: String!
     name: String!
     balance: String
+    balanceChange: String
     newAccount: Boolean!
     active: Boolean
   }

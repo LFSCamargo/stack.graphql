@@ -3,6 +3,7 @@ import { Schema, model, Document } from "mongoose";
 export interface ICardUserTransactionsSchema extends Document {
   amount: number;
   description: string;
+  balanceUpdated: number;
   date: Date;
   cardUserId: string;
   createdAt: Date;
@@ -16,6 +17,10 @@ const cardUserTransactionsSchema = new Schema(
     },
     description: {
       type: String,
+      required: true,
+    },
+    balanceUpdated: {
+      type: Number,
       required: true,
     },
     date: {

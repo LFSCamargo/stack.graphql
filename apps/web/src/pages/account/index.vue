@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { Button, BalanceCard, CreditCard } from "../../components";
-import { useCardUserQuery, CardUserDocument } from "@ipe.stack/apollo";
+import {
+  useCardUserQuery,
+  CardUserDocument,
+  CardUser,
+} from "@ipe.stack/apollo";
 import { FormatUtility } from "../../utils";
 import { useRouter } from "vue-router";
 import { useRequireAuth } from "../../guards";
@@ -65,9 +69,12 @@ const transactionHistory = {
           <span class="text-4xl md:text-2xl"> Minha Conta </span>
         </div>
         <!-- User Balance and Credit Card Information -->
-        <div class="flex animate-fade-right flex-col md:flex-row gap-4">
-          <BalanceCard :card-user="result?.cardUser" />
-          <CreditCard :card-user="result?.cardUser" />
+        <div
+          v-if="!!result?.cardUser"
+          class="flex animate-fade-right flex-col md:flex-row gap-4"
+        >
+          <BalanceCard :card-user="result?.cardUser as CardUser" />
+          <CreditCard :card-user="result?.cardUser as CardUser" />
         </div>
         <!-- Actions -->
         <div class="flex flex-col animate-fade-up pb-4 mt-6">

@@ -15,10 +15,23 @@ export const PaginationUtility = {
   async paginateCollection<
     TParams extends Record<string, unknown>,
     TModel extends Model<any>,
-  >(model: TModel, params: TParams, limit: number = 10, offset: number = 0) {
+    TOrdering extends Record<string, any>,
+  >(
+    model: TModel,
+    params: TParams,
+    limit: number = 10,
+    offset: number = 0,
+    ordering: TOrdering = {} as TOrdering,
+  ) {
     const totalCount = await model.countDocuments(params);
 
-    const data = await model.find(params).limit(limit).skip(offset);
+    const data = await model
+      .find(params)
+      .limit(limit)
+      .sort({
+        ...ordering,
+      })
+      .skip(offset);
 
     const hasNextPage = offset + limit < totalCount;
 
