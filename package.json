@@ -6,6 +6,8 @@
   "scripts": {
     "start:dev": "pnpm web:dev & pnpm admin:dev & pnpm server:dev",
     "web:dev": "pnpm run --filter @ipe.stack/web dev",
+    "mail:dev": "pnpm run --filter @ipe.stack/mail dev",
+    "mail:export": "pnpm run --filter @ipe.stack/mail export",
     "admin:dev": "pnpm run --filter @ipe.stack/admin dev",
     "server:dev": "pnpm run --filter @ipe.stack/server dev",
     "server:seeds": "pnpm run --filter @ipe.stack/server seeds",

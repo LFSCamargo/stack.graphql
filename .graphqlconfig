@@ -1,4 +1,4 @@
-schema: "http://localhost:4000/"
+schema: "./packages/apollo/generated/schema.json"
 extensions:
   languageService:
     cacheSchemaFileForLookup: true

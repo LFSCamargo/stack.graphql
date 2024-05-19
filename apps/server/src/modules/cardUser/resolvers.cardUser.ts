@@ -1,5 +1,5 @@
 import { GraphQLError } from "graphql";
-import { CardUserModel } from "../../models";
+import { CardUserModel, RecoveryCodeModel } from "../../models";
 import { GraphQLInput, GraphQLPaginationInput, TResolvers } from "../../types";
 import {
   PasswordUtility,
@@ -13,6 +13,7 @@ import {
 } from "./types";
 import { onlyAdmin, onlyLoggedCardUser } from "../../guards";
 import { PaginationUtility } from "../../utils";
+import { MailingHandler } from "../../mailing/handlers.mailing";
 
 export const CardUserResolvers: TResolvers = {
   CardUser: {
@@ -63,6 +64,84 @@ export const CardUserResolvers: TResolvers = {
     },
   },
   Mutation: {
+    resetPasswordWithCode: async (
+      _,
+      { input }: GraphQLInput<{ code: string; newPassword: string }>,
+    ) => {
+      const { code, newPassword } = input;
+      const recoveryCode = await RecoveryCodeModel.findOne({
+        recoveryCode: code,
+        expiresAt: { $gt: new Date() },
+      });
+
+      if (!recoveryCode) {
+        throw new GraphQLError("Invalid recovery code.");
+      }
+
+      const cardUser = await CardUserModel.findOne({
+        _id: recoveryCode.cardUserId,
+      });
+
+      if (!cardUser) {
+        throw new GraphQLError("Invalid recovery code.");
+      }
+
+      const password = PasswordUtility.encryptPassword(newPassword);
+
+      cardUser.password = password;
+
+      await recoveryCode.deleteOne({ _id: recoveryCode._id });
+
+      await cardUser.save();
+
+      return {
+        message: "Password updated successfully.",
+      };
+    },
+    recoverPassword: async (
+      _,
+      { input }: GraphQLInput<{ cardNumber: string }>,
+    ) => {
+      const { cardNumber } = input;
+
+      const cardUser = await CardUserModel.findOne({
+        cardNumber,
+      });
+
+      if (!cardUser) {
+        throw new GraphQLError("Invalid card number.");
+      }
+
+      const recoveryCode = await RecoveryCodeModel.findOne({
+        cardUserId: cardUser._id,
+      });
+
+      if (recoveryCode) {
+        await recoveryCode.deleteOne({ cardUserId: cardUser._id });
+      }
+
+      const generatedCode = PasswordUtility.generateTemporaryCode();
+
+      const recovery = new RecoveryCodeModel({
+        recoveryCode: generatedCode,
+        cardUserId: cardUser._id,
+      });
+
+      await recovery.save();
+
+      await MailingHandler.recoverPasswordEmail(
+        {
+          changePasswordCode: recovery.recoveryCode,
+          name: cardUser.name,
+        },
+        cardUser.email,
+      );
+
+      return {
+        message: "A recovery code has been sent to your email.",
+      };
+    },
+
     deleteCardUser: async (
       _,
       { input }: GraphQLInput<{ id: string }>,
@@ -118,7 +197,17 @@ export const CardUserResolvers: TResolvers = {
         cardNumber,
         name,
         password: PasswordUtility.encryptPassword(password),
+        email: input.email,
       });
+
+      await MailingHandler.createUserEmail(
+        {
+          newUserCardNumber: cardNumber,
+          newUserPassword: password,
+          newUserName: input.email,
+        },
+        input.email,
+      );
 
       await cardUser.save();
 

@@ -16,10 +16,20 @@ export const CardUserDefinitions = gql`
     cardNumber: String!
     name: String!
     password: String!
+    email: String!
   }
 
   input DeleteCardUserInput {
     id: ID!
+  }
+
+  input ResetPasswordWithCodeInput {
+    code: String!
+    newPassword: String!
+  }
+
+  input RecoverPassword {
+    cardNumber: String!
   }
 
   # Output types
@@ -27,6 +37,7 @@ export const CardUserDefinitions = gql`
     _id: ID!
     cardNumber: String!
     name: String!
+    email: String!
     balance: String
     balanceChange: String
     newAccount: Boolean!
@@ -36,6 +47,10 @@ export const CardUserDefinitions = gql`
   type CardAuthPayload {
     token: String!
     cardUser: CardUser!
+  }
+
+  type MessageOutput {
+    message: String!
   }
 
   type CardUsersOutput {
@@ -63,5 +78,8 @@ export const CardUserDefinitions = gql`
     # Card user mutations
     signInCardUser(input: CardSignInInput!): CardAuthPayload
     changeCardUserPassword(input: ChangeCardUserPassword!): Boolean
+
+    recoverPassword(input: RecoverPassword!): MessageOutput
+    resetPasswordWithCode(input: ResetPasswordWithCodeInput!): MessageOutput
   }
 `;

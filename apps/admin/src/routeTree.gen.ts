@@ -28,6 +28,9 @@ const DashboardManageUsersIndexLazyImport = createFileRoute(
 const DashboardManageClientsIndexLazyImport = createFileRoute(
   '/dashboard/manage-clients/',
 )()
+const DashboardRequestsRequestIdLazyImport = createFileRoute(
+  '/dashboard/requests/$requestId',
+)()
 const DashboardManageClientsAddIndexLazyImport = createFileRoute(
   '/dashboard/manage-clients/add/',
 )()
@@ -81,6 +84,14 @@ const DashboardManageClientsIndexLazyRoute =
     import('./routes/dashboard/manage-clients/index.lazy').then((d) => d.Route),
   )
 
+const DashboardRequestsRequestIdLazyRoute =
+  DashboardRequestsRequestIdLazyImport.update({
+    path: '/dashboard/requests/$requestId',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/requests/$requestId.lazy').then((d) => d.Route),
+  )
+
 const DashboardManageClientsAddIndexLazyRoute =
   DashboardManageClientsAddIndexLazyImport.update({
     path: '/dashboard/manage-clients/add/',
@@ -117,6 +128,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/dashboard/requests/$requestId': {
+      preLoaderRoute: typeof DashboardRequestsRequestIdLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/dashboard/manage-clients/': {
       preLoaderRoute: typeof DashboardManageClientsIndexLazyImport
       parentRoute: typeof rootRoute
@@ -146,6 +161,7 @@ export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   UserChangePasswordLazyRoute,
   DashboardIndexLazyRoute,
+  DashboardRequestsRequestIdLazyRoute,
   DashboardManageClientsIndexLazyRoute,
   DashboardManageUsersIndexLazyRoute,
   DashboardRequestsIndexLazyRoute,

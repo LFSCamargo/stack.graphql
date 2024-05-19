@@ -3,6 +3,7 @@ import { Schema, model, Document } from "mongoose";
 export interface ICardUserSchema extends Document {
   name: string;
   cardNumber: string;
+  email: string;
   password: string;
   createdAt: Date;
   active: boolean;
@@ -12,6 +13,10 @@ export interface ICardUserSchema extends Document {
 const cardUserSchema = new Schema(
   {
     name: {
+      type: String,
+      required: true,
+    },
+    email: {
       type: String,
       required: true,
     },

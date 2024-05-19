@@ -1,6 +1,10 @@
+import crypto from "crypto";
 import * as bcrypt from "bcrypt";
 
 export const PasswordUtility = {
+  generateTemporaryCode: (): string => {
+    return crypto.randomBytes(3).toString("hex");
+  },
   /**
    * @description - This function is used to authenticate the user stored password with the plain password
    * @param plainPassword - Plain password from request

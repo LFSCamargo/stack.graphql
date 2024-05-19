@@ -19,6 +19,7 @@ async function seed() {
     cardNumber: "6362970000457013",
     password: PasswordUtility.encryptPassword(password),
     name: "Luiz Fernando",
+    email: "luizepauloxd@gmail.com",
   };
 
   const exists = await CardUserModel.findOne({
