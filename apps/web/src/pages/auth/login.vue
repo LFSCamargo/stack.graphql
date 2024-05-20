@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import * as zod from "zod";
+import { toast } from "vue-sonner";
 import { useForm, useField } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { Button } from "../../components";
@@ -26,6 +27,7 @@ const { value: cardNumber } = useField("cardNumber", validationSchema);
 const { value: password } = useField("password", validationSchema);
 
 const onSubmit = handleSubmit(async (values) => {
+  const t = toast.loading("Fazendo Login...");
   try {
     const result = await mutate({
       input: {
@@ -40,11 +42,16 @@ const onSubmit = handleSubmit(async (values) => {
 
     if (result?.data?.signInCardUser?.token) {
       StorageUtility.setToken(result.data.signInCardUser.token);
+      toast.success("Login Realizado com Sucesso", {
+        id: t,
+      });
       return router.push("/account");
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.warn("Error During Form Submission:", error.message);
+      toast.error(error.message, {
+        id: t,
+      });
     }
   } finally {
     console.log("finally");

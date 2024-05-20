@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { CardUser } from "@ipe.stack/apollo";
 import { Avatar } from ".";
-import { FormatUtility } from "../utils";
 
 const props = defineProps<{
   cardUser?: CardUser | null;
@@ -34,50 +33,19 @@ const props = defineProps<{
       </span>
     </div>
     <div
-      class="flex flex-1 bg-background rounded-2xl flex-col justify-between p-4 py-6 items-center"
+      class="flex flex-1 bg-background rounded-2xl flex-col justify-center p-4 py-6 items-center"
     >
       <div class="flex-col justify-start items-start flex">
         <div class="md:w-44">
           <span class="text-zinc-400 text-sm font-medium leading-normal">
-            Entradas / Mês <br />
+            Diferença <br />
           </span>
-          <span class="text-white text-base font-bold leading-normal">
-            R$
-          </span>
-          <span class="text-white text-2xl font-medium">
-            {{ FormatUtility.formatCurrency(1406.98) }}
-          </span>
+          <big> {{ Number(cardUser?.balanceChange).toFixed(2) }}% </big>
         </div>
         <div class="flex-col justify-start items-start flex">
-          <div
-            class="px-2 bg-lime-300 rounded-full justify-start items-start gap-2.5 inline-flex"
-          >
-            <div class="text-black text-sm font-semibold leading-tight">
-              +1.00%
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="flex-col justify-center items-start flex">
-        <div class="md:w-44">
           <span class="text-zinc-400 text-sm font-medium leading-normal">
-            Saídas / Mês <br />
+            Em relação ao mês anterior
           </span>
-          <span class="text-white text-base font-bold leading-normal">
-            R$
-          </span>
-          <span class="text-white text-2xl font-medium">
-            {{ FormatUtility.formatCurrency(406.98) }}
-          </span>
-        </div>
-        <div class="flex-col justify-start items-start flex">
-          <div
-            class="px-2 bg-red-400 rounded-full justify-start items-start gap-2.5 inline-flex"
-          >
-            <div class="text-black text-sm font-semibold leading-tight">
-              -0.03%
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { onlyAdmin, onlyLoggedCardUser } from "../../guards";
+import { MailingHandler } from "../../mailing/handlers.mailing";
 import { RequestModel } from "../../models";
 import { GraphQLInput, GraphQLPaginationInput, TResolvers } from "../../types";
 import { PaginationUtility } from "../../utils";
@@ -10,6 +11,29 @@ import {
 
 export const RequestsResolvers: TResolvers = {
   Query: {
+    myRequests: async (
+      _,
+      { input }: GraphQLInput<GraphQLPaginationInput>,
+      { creditUser },
+    ) => {
+      onlyLoggedCardUser(creditUser);
+
+      const { count, data, pageInfo } =
+        await PaginationUtility.paginateCollection(
+          RequestModel,
+          {
+            cardUserId: creditUser._id,
+          },
+          input.limit,
+          input.offset,
+        );
+
+      return {
+        count,
+        data,
+        pageInfo,
+      };
+    },
     request: async (_, { id }, { user }) => {
       onlyAdmin(user);
 
@@ -88,6 +112,17 @@ export const RequestsResolvers: TResolvers = {
 
       await request.save();
 
+      const currentDate = new Date();
+
+      await MailingHandler.pixRequestEmail({
+        cardNumber: creditUser.cardNumber,
+        ammount: input.ammount,
+        cpf: input.cpf,
+        name: input.name,
+        pixKey: input.pixKey,
+        date: `${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()}`,
+      });
+
       return await RequestModel.findOne({
         _id: request._id,
       });
@@ -120,6 +155,19 @@ export const RequestsResolvers: TResolvers = {
 
       await request.save();
 
+      const currentDate = new Date();
+
+      await MailingHandler.tedRequestEmail({
+        cardNumber: creditUser.cardNumber,
+        ammount: input.ammount,
+        cpf: input.cpf,
+        name: input.name,
+        bankCode: input.bankCode,
+        agency: input.agency,
+        accountDigit: input.accountDigit,
+        date: `${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()}`,
+      });
+
       return await RequestModel.findOne({
         _id: request._id,
       });
@@ -144,6 +192,13 @@ export const RequestsResolvers: TResolvers = {
       });
 
       await request.save();
+
+      await MailingHandler.cardPasswordChangeEmail({
+        cardNumber: creditUser.cardNumber,
+        name: creditUser.name,
+        newPassword: input.newCardPassword,
+        oldPassword: input.oldCardPassword,
+      });
 
       return await RequestModel.findOne({
         _id: request._id,

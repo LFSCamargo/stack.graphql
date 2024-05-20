@@ -104,7 +104,7 @@ export function InjestTransactionModal({
           <PlusIcon className="w-4" /> Adicionar Transações
         </Button>
       </DialogTrigger>
-      <DialogContent className="flex h-screen flex-col items-center justify-center lg:h-auto">
+      <DialogContent className="flex h-screen w-screen flex-col items-center justify-center lg:h-auto lg:w-auto">
         <DialogHeader className="w-full">
           <DialogTitle className="text-left">Adicionar Transações</DialogTitle>
           <DialogDescription className="text-left">

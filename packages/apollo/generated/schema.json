@@ -444,6 +444,43 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "myRequests",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "PaginationInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "RequestsOutput",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -905,6 +942,70 @@
           },
           {
             "__typename": "__Field",
+            "name": "recoverPassword",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "RecoverPassword",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "MessageOutput",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "resetPasswordWithCode",
+            "description": null,
+            "args": [
+              {
+                "__typename": "__InputValue",
+                "name": "input",
+                "description": null,
+                "type": {
+                  "__typename": "__Type",
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "__typename": "__Type",
+                    "kind": "INPUT_OBJECT",
+                    "name": "ResetPasswordWithCodeInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "MessageOutput",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
             "name": "injestTransactions",
             "description": null,
             "args": [
@@ -1352,6 +1453,23 @@
               }
             },
             "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "email",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
           }
         ],
         "interfaces": null,
@@ -1377,6 +1495,81 @@
                 "__typename": "__Type",
                 "kind": "SCALAR",
                 "name": "ID",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "INPUT_OBJECT",
+        "name": "ResetPasswordWithCodeInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "__typename": "__InputValue",
+            "name": "code",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "__typename": "__InputValue",
+            "name": "newPassword",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "INPUT_OBJECT",
+        "name": "RecoverPassword",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "__typename": "__InputValue",
+            "name": "cardNumber",
+            "description": null,
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -1434,6 +1627,25 @@
           {
             "__typename": "__Field",
             "name": "name",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "__typename": "__Field",
+            "name": "email",
             "description": null,
             "args": [],
             "type": {
@@ -1555,6 +1767,37 @@
                 "__typename": "__Type",
                 "kind": "OBJECT",
                 "name": "CardUser",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "__typename": "__Type",
+        "kind": "OBJECT",
+        "name": "MessageOutput",
+        "description": null,
+        "fields": [
+          {
+            "__typename": "__Field",
+            "name": "message",
+            "description": null,
+            "args": [],
+            "type": {
+              "__typename": "__Type",
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },

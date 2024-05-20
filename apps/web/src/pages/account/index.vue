@@ -81,19 +81,28 @@ const transactionHistory = {
           <span class="text-xs"> Ações </span>
           <div class="flex flex-row flex-wrap mt-4 gap-2">
             <Button
-              @click="router.push('/account/request-withdrawal')"
+              @click="router.push('/account/withdrawal-request')"
               variant="primary"
             >
               Solicitar Transfência
             </Button>
-            <Button @click="router.push('/account/extract')" variant="primary">
-              Extrato
+            <Button
+              @click="router.push('/account/request-card-password-change')"
+              variant="primary"
+            >
+              Alterar Senha do Cartão
             </Button>
             <Button
               @click="router.push('/account/change-password')"
               variant="primary"
             >
-              Alterar Senha
+              Alterar Senha do Portal
+            </Button>
+            <Button
+              @click="router.push('/account/change-password')"
+              variant="primary"
+            >
+              Ver Extrato
             </Button>
             <Button @click="logout()" variant="outline">Sair da Conta</Button>
           </div>

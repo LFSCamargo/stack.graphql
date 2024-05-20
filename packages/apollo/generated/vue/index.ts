@@ -56,6 +56,7 @@ export type CardUser = {
   balance?: Maybe<Scalars["String"]["output"]>;
   balanceChange?: Maybe<Scalars["String"]["output"]>;
   cardNumber: Scalars["String"]["output"];
+  email: Scalars["String"]["output"];
   name: Scalars["String"]["output"];
   newAccount: Scalars["Boolean"]["output"];
 };
@@ -84,6 +85,7 @@ export type CreateCardPasswordChangeRequestInput = {
 
 export type CreateCardUserInput = {
   cardNumber: Scalars["String"]["input"];
+  email: Scalars["String"]["input"];
   name: Scalars["String"]["input"];
   password: Scalars["String"]["input"];
 };
@@ -130,6 +132,11 @@ export type InjestTransactionsInput = {
   transactions: Array<TransactionInput>;
 };
 
+export type MessageOutput = {
+  __typename?: "MessageOutput";
+  message: Scalars["String"]["output"];
+};
+
 export type Mutation = {
   __typename?: "Mutation";
   approveRequest: IRequest;
@@ -144,7 +151,9 @@ export type Mutation = {
   deleteCardUser?: Maybe<Scalars["Boolean"]["output"]>;
   editCardUser?: Maybe<CardUser>;
   injestTransactions: Array<Maybe<Transaction>>;
+  recoverPassword?: Maybe<MessageOutput>;
   rejectRequest: IRequest;
+  resetPasswordWithCode?: Maybe<MessageOutput>;
   signIn?: Maybe<AuthPayload>;
   signInCardUser?: Maybe<CardAuthPayload>;
 };
@@ -193,8 +202,16 @@ export type MutationInjestTransactionsArgs = {
   input?: InputMaybe<InjestTransactionsInput>;
 };
 
+export type MutationRecoverPasswordArgs = {
+  input: RecoverPassword;
+};
+
 export type MutationRejectRequestArgs = {
   id: Scalars["ID"]["input"];
+};
+
+export type MutationResetPasswordWithCodeArgs = {
+  input: ResetPasswordWithCodeInput;
 };
 
 export type MutationSignInArgs = {
@@ -228,6 +245,7 @@ export type Query = {
   cardUsers?: Maybe<CardUsersOutput>;
   health: Health;
   me?: Maybe<User>;
+  myRequests: RequestsOutput;
   request?: Maybe<IRequest>;
   requests: RequestsOutput;
   transactionsByCardNumber: TransactionsOutput;
@@ -247,6 +265,10 @@ export type QueryCardUserTransactionsArgs = {
 };
 
 export type QueryCardUsersArgs = {
+  input: PaginationInput;
+};
+
+export type QueryMyRequestsArgs = {
   input: PaginationInput;
 };
 
@@ -270,6 +292,10 @@ export type QueryTransactionsByCardUserIdArgs = {
   input: PaginationInput;
 };
 
+export type RecoverPassword = {
+  cardNumber: Scalars["String"]["input"];
+};
+
 export enum RequestStatus {
   Approved = "APPROVED",
   Canceled = "CANCELED",
@@ -287,6 +313,11 @@ export type RequestsOutput = {
   count: Scalars["Int"]["output"];
   data: Array<IRequest>;
   pageInfo: PageInfo;
+};
+
+export type ResetPasswordWithCodeInput = {
+  code: Scalars["String"]["input"];
+  newPassword: Scalars["String"]["input"];
 };
 
 export type SignInInput = {
@@ -430,13 +461,49 @@ export type CreateCardUserMutation = {
   } | null;
 };
 
-export type CreateTedRequestMutationVariables = Exact<{
+export type CreateChangeCardPasswordRequestMutationVariables = Exact<{
+  input: CreateCardPasswordChangeRequestInput;
+}>;
+
+export type CreateChangeCardPasswordRequestMutation = {
+  __typename?: "Mutation";
+  createCardPasswordChangeRequest: {
+    __typename?: "IRequest";
+    reason?: string | null;
+    payload: any;
+    createdAt: string;
+    active: boolean;
+    cardUserId: string;
+    type: RequestType;
+    status: RequestStatus;
+  };
+};
+
+export type CreatePixRequestMutationVariables = Exact<{
   input: CreatePixRequestInput;
+}>;
+
+export type CreatePixRequestMutation = {
+  __typename?: "Mutation";
+  createPixRequest: {
+    __typename?: "IRequest";
+    reason?: string | null;
+    payload: any;
+    createdAt: string;
+    active: boolean;
+    cardUserId: string;
+    type: RequestType;
+    status: RequestStatus;
+  };
+};
+
+export type CreateTedRequestMutationVariables = Exact<{
+  input: CreateTedRequestInput;
 }>;
 
 export type CreateTedRequestMutation = {
   __typename?: "Mutation";
-  createPixRequest: {
+  createTedRequest: {
     __typename?: "IRequest";
     reason?: string | null;
     payload: any;
@@ -495,6 +562,30 @@ export type MeQueryVariables = Exact<{ [key: string]: never }>;
 export type MeQuery = {
   __typename?: "Query";
   me?: { __typename?: "User"; email: string; name: string } | null;
+};
+
+export type MyRequestsQueryVariables = Exact<{
+  input: PaginationInput;
+}>;
+
+export type MyRequestsQuery = {
+  __typename?: "Query";
+  myRequests: {
+    __typename?: "RequestsOutput";
+    count: number;
+    data: Array<{
+      __typename?: "IRequest";
+      _id: string;
+      reason?: string | null;
+      payload: any;
+      createdAt: string;
+      active: boolean;
+      cardUserId: string;
+      type: RequestType;
+      status: RequestStatus;
+    }>;
+    pageInfo: { __typename?: "PageInfo"; hasNextPage: boolean };
+  };
 };
 
 export type SignInMutationVariables = Exact<{
@@ -981,9 +1072,119 @@ export type CreateCardUserMutationCompositionFunctionResult =
     CreateCardUserMutation,
     CreateCardUserMutationVariables
   >;
-export const CreateTedRequestDocument = gql`
-  mutation CreateTedRequest($input: CreatePixRequestInput!) {
+export const CreateChangeCardPasswordRequestDocument = gql`
+  mutation CreateChangeCardPasswordRequest(
+    $input: CreateCardPasswordChangeRequestInput!
+  ) {
+    createCardPasswordChangeRequest(input: $input) {
+      reason
+      payload
+      createdAt
+      active
+      cardUserId
+      type
+      status
+    }
+  }
+`;
+
+/**
+ * __useCreateChangeCardPasswordRequestMutation__
+ *
+ * To run a mutation, you first call `useCreateChangeCardPasswordRequestMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useCreateChangeCardPasswordRequestMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useCreateChangeCardPasswordRequestMutation({
+ *   variables: {
+ *     input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateChangeCardPasswordRequestMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<
+        CreateChangeCardPasswordRequestMutation,
+        CreateChangeCardPasswordRequestMutationVariables
+      >
+    | ReactiveFunction<
+        VueApolloComposable.UseMutationOptions<
+          CreateChangeCardPasswordRequestMutation,
+          CreateChangeCardPasswordRequestMutationVariables
+        >
+      > = {},
+) {
+  return VueApolloComposable.useMutation<
+    CreateChangeCardPasswordRequestMutation,
+    CreateChangeCardPasswordRequestMutationVariables
+  >(CreateChangeCardPasswordRequestDocument, options);
+}
+export type CreateChangeCardPasswordRequestMutationCompositionFunctionResult =
+  VueApolloComposable.UseMutationReturn<
+    CreateChangeCardPasswordRequestMutation,
+    CreateChangeCardPasswordRequestMutationVariables
+  >;
+export const CreatePixRequestDocument = gql`
+  mutation CreatePixRequest($input: CreatePixRequestInput!) {
     createPixRequest(input: $input) {
+      reason
+      payload
+      createdAt
+      active
+      cardUserId
+      type
+      status
+    }
+  }
+`;
+
+/**
+ * __useCreatePixRequestMutation__
+ *
+ * To run a mutation, you first call `useCreatePixRequestMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePixRequestMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useCreatePixRequestMutation({
+ *   variables: {
+ *     input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreatePixRequestMutation(
+  options:
+    | VueApolloComposable.UseMutationOptions<
+        CreatePixRequestMutation,
+        CreatePixRequestMutationVariables
+      >
+    | ReactiveFunction<
+        VueApolloComposable.UseMutationOptions<
+          CreatePixRequestMutation,
+          CreatePixRequestMutationVariables
+        >
+      > = {},
+) {
+  return VueApolloComposable.useMutation<
+    CreatePixRequestMutation,
+    CreatePixRequestMutationVariables
+  >(CreatePixRequestDocument, options);
+}
+export type CreatePixRequestMutationCompositionFunctionResult =
+  VueApolloComposable.UseMutationReturn<
+    CreatePixRequestMutation,
+    CreatePixRequestMutationVariables
+  >;
+export const CreateTedRequestDocument = gql`
+  mutation CreateTedRequest($input: CreateTedRequestInput!) {
+    createTedRequest(input: $input) {
       reason
       payload
       createdAt
@@ -1241,6 +1442,100 @@ export function useMeLazyQuery(
 }
 export type MeQueryCompositionFunctionResult =
   VueApolloComposable.UseQueryReturn<MeQuery, MeQueryVariables>;
+export const MyRequestsDocument = gql`
+  query MyRequests($input: PaginationInput!) {
+    myRequests(input: $input) {
+      count
+      data {
+        _id
+        reason
+        payload
+        createdAt
+        active
+        cardUserId
+        type
+        status
+      }
+      pageInfo {
+        hasNextPage
+      }
+    }
+  }
+`;
+
+/**
+ * __useMyRequestsQuery__
+ *
+ * To run a query within a Vue component, call `useMyRequestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyRequestsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useMyRequestsQuery({
+ *   input: // value for 'input'
+ * });
+ */
+export function useMyRequestsQuery(
+  variables:
+    | MyRequestsQueryVariables
+    | VueCompositionApi.Ref<MyRequestsQueryVariables>
+    | ReactiveFunction<MyRequestsQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<
+        MyRequestsQuery,
+        MyRequestsQueryVariables
+      >
+    | VueCompositionApi.Ref<
+        VueApolloComposable.UseQueryOptions<
+          MyRequestsQuery,
+          MyRequestsQueryVariables
+        >
+      >
+    | ReactiveFunction<
+        VueApolloComposable.UseQueryOptions<
+          MyRequestsQuery,
+          MyRequestsQueryVariables
+        >
+      > = {},
+) {
+  return VueApolloComposable.useQuery<
+    MyRequestsQuery,
+    MyRequestsQueryVariables
+  >(MyRequestsDocument, variables, options);
+}
+export function useMyRequestsLazyQuery(
+  variables?:
+    | MyRequestsQueryVariables
+    | VueCompositionApi.Ref<MyRequestsQueryVariables>
+    | ReactiveFunction<MyRequestsQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<
+        MyRequestsQuery,
+        MyRequestsQueryVariables
+      >
+    | VueCompositionApi.Ref<
+        VueApolloComposable.UseQueryOptions<
+          MyRequestsQuery,
+          MyRequestsQueryVariables
+        >
+      >
+    | ReactiveFunction<
+        VueApolloComposable.UseQueryOptions<
+          MyRequestsQuery,
+          MyRequestsQueryVariables
+        >
+      > = {},
+) {
+  return VueApolloComposable.useLazyQuery<
+    MyRequestsQuery,
+    MyRequestsQueryVariables
+  >(MyRequestsDocument, variables, options);
+}
+export type MyRequestsQueryCompositionFunctionResult =
+  VueApolloComposable.UseQueryReturn<MyRequestsQuery, MyRequestsQueryVariables>;
 export const SignInDocument = gql`
   mutation SignIn($input: SignInInput!) {
     signIn(input: $input) {

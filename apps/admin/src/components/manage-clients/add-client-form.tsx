@@ -11,6 +11,7 @@ type AddClientForm = {
   cardNumber: string;
   password: string;
   name: string;
+  email: string;
 };
 
 interface AddClientFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -28,6 +29,7 @@ export function AddClientForm(props: AddClientFormProps) {
         cardNumber: z.string().min(16),
         password: z.string().min(6),
         name: z.string().min(3),
+        email: z.string().email(),
       }),
     ),
   });
@@ -41,6 +43,7 @@ export function AddClientForm(props: AddClientFormProps) {
             cardNumber: values.cardNumber,
             password: values.password,
             name: values.name,
+            email: values.email,
           },
         },
         refetchQueries: ["CardUsers"],
@@ -81,6 +84,23 @@ export function AddClientForm(props: AddClientFormProps) {
           </div>
           <div className="mt-2 grid gap-2">
             <Label className="sr-only" htmlFor="cardNumber">
+              Email do Usuário
+            </Label>
+            <FormField
+              id="email"
+              name="email"
+              placeholder="Ex: jondoe@example.com"
+              type="email"
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect="off"
+              disabled={isSubmitting}
+              error={errors.email}
+              register={register}
+            />
+          </div>
+          <div className="mt-2 grid gap-2">
+            <Label className="sr-only" htmlFor="cardNumber">
               Número do Cartão
             </Label>
             <FormField
@@ -92,7 +112,7 @@ export function AddClientForm(props: AddClientFormProps) {
               autoComplete="off"
               autoCorrect="off"
               disabled={isSubmitting}
-              error={errors.name}
+              error={errors.cardNumber}
               register={register}
             />
           </div>

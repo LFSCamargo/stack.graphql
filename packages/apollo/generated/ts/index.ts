@@ -52,6 +52,7 @@ export type CardUser = {
   balance?: Maybe<Scalars["String"]["output"]>;
   balanceChange?: Maybe<Scalars["String"]["output"]>;
   cardNumber: Scalars["String"]["output"];
+  email: Scalars["String"]["output"];
   name: Scalars["String"]["output"];
   newAccount: Scalars["Boolean"]["output"];
 };
@@ -80,6 +81,7 @@ export type CreateCardPasswordChangeRequestInput = {
 
 export type CreateCardUserInput = {
   cardNumber: Scalars["String"]["input"];
+  email: Scalars["String"]["input"];
   name: Scalars["String"]["input"];
   password: Scalars["String"]["input"];
 };
@@ -126,6 +128,11 @@ export type InjestTransactionsInput = {
   transactions: Array<TransactionInput>;
 };
 
+export type MessageOutput = {
+  __typename?: "MessageOutput";
+  message: Scalars["String"]["output"];
+};
+
 export type Mutation = {
   __typename?: "Mutation";
   approveRequest: IRequest;
@@ -140,7 +147,9 @@ export type Mutation = {
   deleteCardUser?: Maybe<Scalars["Boolean"]["output"]>;
   editCardUser?: Maybe<CardUser>;
   injestTransactions: Array<Maybe<Transaction>>;
+  recoverPassword?: Maybe<MessageOutput>;
   rejectRequest: IRequest;
+  resetPasswordWithCode?: Maybe<MessageOutput>;
   signIn?: Maybe<AuthPayload>;
   signInCardUser?: Maybe<CardAuthPayload>;
 };
@@ -189,8 +198,16 @@ export type MutationInjestTransactionsArgs = {
   input?: InputMaybe<InjestTransactionsInput>;
 };
 
+export type MutationRecoverPasswordArgs = {
+  input: RecoverPassword;
+};
+
 export type MutationRejectRequestArgs = {
   id: Scalars["ID"]["input"];
+};
+
+export type MutationResetPasswordWithCodeArgs = {
+  input: ResetPasswordWithCodeInput;
 };
 
 export type MutationSignInArgs = {
@@ -224,6 +241,7 @@ export type Query = {
   cardUsers?: Maybe<CardUsersOutput>;
   health: Health;
   me?: Maybe<User>;
+  myRequests: RequestsOutput;
   request?: Maybe<IRequest>;
   requests: RequestsOutput;
   transactionsByCardNumber: TransactionsOutput;
@@ -243,6 +261,10 @@ export type QueryCardUserTransactionsArgs = {
 };
 
 export type QueryCardUsersArgs = {
+  input: PaginationInput;
+};
+
+export type QueryMyRequestsArgs = {
   input: PaginationInput;
 };
 
@@ -266,6 +288,10 @@ export type QueryTransactionsByCardUserIdArgs = {
   input: PaginationInput;
 };
 
+export type RecoverPassword = {
+  cardNumber: Scalars["String"]["input"];
+};
+
 export enum RequestStatus {
   Approved = "APPROVED",
   Canceled = "CANCELED",
@@ -283,6 +309,11 @@ export type RequestsOutput = {
   count: Scalars["Int"]["output"];
   data: Array<IRequest>;
   pageInfo: PageInfo;
+};
+
+export type ResetPasswordWithCodeInput = {
+  code: Scalars["String"]["input"];
+  newPassword: Scalars["String"]["input"];
 };
 
 export type SignInInput = {
@@ -426,13 +457,49 @@ export type CreateCardUserMutation = {
   } | null;
 };
 
-export type CreateTedRequestMutationVariables = Exact<{
+export type CreateChangeCardPasswordRequestMutationVariables = Exact<{
+  input: CreateCardPasswordChangeRequestInput;
+}>;
+
+export type CreateChangeCardPasswordRequestMutation = {
+  __typename?: "Mutation";
+  createCardPasswordChangeRequest: {
+    __typename?: "IRequest";
+    reason?: string | null;
+    payload: any;
+    createdAt: string;
+    active: boolean;
+    cardUserId: string;
+    type: RequestType;
+    status: RequestStatus;
+  };
+};
+
+export type CreatePixRequestMutationVariables = Exact<{
   input: CreatePixRequestInput;
+}>;
+
+export type CreatePixRequestMutation = {
+  __typename?: "Mutation";
+  createPixRequest: {
+    __typename?: "IRequest";
+    reason?: string | null;
+    payload: any;
+    createdAt: string;
+    active: boolean;
+    cardUserId: string;
+    type: RequestType;
+    status: RequestStatus;
+  };
+};
+
+export type CreateTedRequestMutationVariables = Exact<{
+  input: CreateTedRequestInput;
 }>;
 
 export type CreateTedRequestMutation = {
   __typename?: "Mutation";
-  createPixRequest: {
+  createTedRequest: {
     __typename?: "IRequest";
     reason?: string | null;
     payload: any;
@@ -491,6 +558,30 @@ export type MeQueryVariables = Exact<{ [key: string]: never }>;
 export type MeQuery = {
   __typename?: "Query";
   me?: { __typename?: "User"; email: string; name: string } | null;
+};
+
+export type MyRequestsQueryVariables = Exact<{
+  input: PaginationInput;
+}>;
+
+export type MyRequestsQuery = {
+  __typename?: "Query";
+  myRequests: {
+    __typename?: "RequestsOutput";
+    count: number;
+    data: Array<{
+      __typename?: "IRequest";
+      _id: string;
+      reason?: string | null;
+      payload: any;
+      createdAt: string;
+      active: boolean;
+      cardUserId: string;
+      type: RequestType;
+      status: RequestStatus;
+    }>;
+    pageInfo: { __typename?: "PageInfo"; hasNextPage: boolean };
+  };
 };
 
 export type SignInMutationVariables = Exact<{

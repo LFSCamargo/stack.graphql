@@ -1,4 +1,4 @@
-mutation CreateTedRequest($input: CreatePixRequestInput!) {
+mutation CreatePixRequest($input: CreatePixRequestInput!) {
   createPixRequest(input: $input) {
     reason
     payload

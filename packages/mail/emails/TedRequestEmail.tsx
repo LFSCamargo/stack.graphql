@@ -45,7 +45,7 @@ export const TedRequest = ({
           Banco: {bankCode} <br />
           Agência: {agency} <br />
           Conta: {accountDigit} <br />
-          Valor: {ammount} <br />
+          Valor: {Number(ammount).toFixed(2)} <br />
           Data: {date} <br />
         </Text>
 

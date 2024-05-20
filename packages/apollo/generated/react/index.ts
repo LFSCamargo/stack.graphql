@@ -55,6 +55,7 @@ export type CardUser = {
   balance?: Maybe<Scalars["String"]["output"]>;
   balanceChange?: Maybe<Scalars["String"]["output"]>;
   cardNumber: Scalars["String"]["output"];
+  email: Scalars["String"]["output"];
   name: Scalars["String"]["output"];
   newAccount: Scalars["Boolean"]["output"];
 };
@@ -83,6 +84,7 @@ export type CreateCardPasswordChangeRequestInput = {
 
 export type CreateCardUserInput = {
   cardNumber: Scalars["String"]["input"];
+  email: Scalars["String"]["input"];
   name: Scalars["String"]["input"];
   password: Scalars["String"]["input"];
 };
@@ -129,6 +131,11 @@ export type InjestTransactionsInput = {
   transactions: Array<TransactionInput>;
 };
 
+export type MessageOutput = {
+  __typename?: "MessageOutput";
+  message: Scalars["String"]["output"];
+};
+
 export type Mutation = {
   __typename?: "Mutation";
   approveRequest: IRequest;
@@ -143,7 +150,9 @@ export type Mutation = {
   deleteCardUser?: Maybe<Scalars["Boolean"]["output"]>;
   editCardUser?: Maybe<CardUser>;
   injestTransactions: Array<Maybe<Transaction>>;
+  recoverPassword?: Maybe<MessageOutput>;
   rejectRequest: IRequest;
+  resetPasswordWithCode?: Maybe<MessageOutput>;
   signIn?: Maybe<AuthPayload>;
   signInCardUser?: Maybe<CardAuthPayload>;
 };
@@ -192,8 +201,16 @@ export type MutationInjestTransactionsArgs = {
   input?: InputMaybe<InjestTransactionsInput>;
 };
 
+export type MutationRecoverPasswordArgs = {
+  input: RecoverPassword;
+};
+
 export type MutationRejectRequestArgs = {
   id: Scalars["ID"]["input"];
+};
+
+export type MutationResetPasswordWithCodeArgs = {
+  input: ResetPasswordWithCodeInput;
 };
 
 export type MutationSignInArgs = {
@@ -227,6 +244,7 @@ export type Query = {
   cardUsers?: Maybe<CardUsersOutput>;
   health: Health;
   me?: Maybe<User>;
+  myRequests: RequestsOutput;
   request?: Maybe<IRequest>;
   requests: RequestsOutput;
   transactionsByCardNumber: TransactionsOutput;
@@ -246,6 +264,10 @@ export type QueryCardUserTransactionsArgs = {
 };
 
 export type QueryCardUsersArgs = {
+  input: PaginationInput;
+};
+
+export type QueryMyRequestsArgs = {
   input: PaginationInput;
 };
 
@@ -269,6 +291,10 @@ export type QueryTransactionsByCardUserIdArgs = {
   input: PaginationInput;
 };
 
+export type RecoverPassword = {
+  cardNumber: Scalars["String"]["input"];
+};
+
 export enum RequestStatus {
   Approved = "APPROVED",
   Canceled = "CANCELED",
@@ -286,6 +312,11 @@ export type RequestsOutput = {
   count: Scalars["Int"]["output"];
   data: Array<IRequest>;
   pageInfo: PageInfo;
+};
+
+export type ResetPasswordWithCodeInput = {
+  code: Scalars["String"]["input"];
+  newPassword: Scalars["String"]["input"];
 };
 
 export type SignInInput = {
@@ -429,13 +460,49 @@ export type CreateCardUserMutation = {
   } | null;
 };
 
-export type CreateTedRequestMutationVariables = Exact<{
+export type CreateChangeCardPasswordRequestMutationVariables = Exact<{
+  input: CreateCardPasswordChangeRequestInput;
+}>;
+
+export type CreateChangeCardPasswordRequestMutation = {
+  __typename?: "Mutation";
+  createCardPasswordChangeRequest: {
+    __typename?: "IRequest";
+    reason?: string | null;
+    payload: any;
+    createdAt: string;
+    active: boolean;
+    cardUserId: string;
+    type: RequestType;
+    status: RequestStatus;
+  };
+};
+
+export type CreatePixRequestMutationVariables = Exact<{
   input: CreatePixRequestInput;
+}>;
+
+export type CreatePixRequestMutation = {
+  __typename?: "Mutation";
+  createPixRequest: {
+    __typename?: "IRequest";
+    reason?: string | null;
+    payload: any;
+    createdAt: string;
+    active: boolean;
+    cardUserId: string;
+    type: RequestType;
+    status: RequestStatus;
+  };
+};
+
+export type CreateTedRequestMutationVariables = Exact<{
+  input: CreateTedRequestInput;
 }>;
 
 export type CreateTedRequestMutation = {
   __typename?: "Mutation";
-  createPixRequest: {
+  createTedRequest: {
     __typename?: "IRequest";
     reason?: string | null;
     payload: any;
@@ -494,6 +561,30 @@ export type MeQueryVariables = Exact<{ [key: string]: never }>;
 export type MeQuery = {
   __typename?: "Query";
   me?: { __typename?: "User"; email: string; name: string } | null;
+};
+
+export type MyRequestsQueryVariables = Exact<{
+  input: PaginationInput;
+}>;
+
+export type MyRequestsQuery = {
+  __typename?: "Query";
+  myRequests: {
+    __typename?: "RequestsOutput";
+    count: number;
+    data: Array<{
+      __typename?: "IRequest";
+      _id: string;
+      reason?: string | null;
+      payload: any;
+      createdAt: string;
+      active: boolean;
+      cardUserId: string;
+      type: RequestType;
+      status: RequestStatus;
+    }>;
+    pageInfo: { __typename?: "PageInfo"; hasNextPage: boolean };
+  };
 };
 
 export type SignInMutationVariables = Exact<{
@@ -976,9 +1067,124 @@ export type CreateCardUserMutationOptions = Apollo.BaseMutationOptions<
   CreateCardUserMutation,
   CreateCardUserMutationVariables
 >;
-export const CreateTedRequestDocument = gql`
-  mutation CreateTedRequest($input: CreatePixRequestInput!) {
+export const CreateChangeCardPasswordRequestDocument = gql`
+  mutation CreateChangeCardPasswordRequest(
+    $input: CreateCardPasswordChangeRequestInput!
+  ) {
+    createCardPasswordChangeRequest(input: $input) {
+      reason
+      payload
+      createdAt
+      active
+      cardUserId
+      type
+      status
+    }
+  }
+`;
+export type CreateChangeCardPasswordRequestMutationFn = Apollo.MutationFunction<
+  CreateChangeCardPasswordRequestMutation,
+  CreateChangeCardPasswordRequestMutationVariables
+>;
+
+/**
+ * __useCreateChangeCardPasswordRequestMutation__
+ *
+ * To run a mutation, you first call `useCreateChangeCardPasswordRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateChangeCardPasswordRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createChangeCardPasswordRequestMutation, { data, loading, error }] = useCreateChangeCardPasswordRequestMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateChangeCardPasswordRequestMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateChangeCardPasswordRequestMutation,
+    CreateChangeCardPasswordRequestMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateChangeCardPasswordRequestMutation,
+    CreateChangeCardPasswordRequestMutationVariables
+  >(CreateChangeCardPasswordRequestDocument, options);
+}
+export type CreateChangeCardPasswordRequestMutationHookResult = ReturnType<
+  typeof useCreateChangeCardPasswordRequestMutation
+>;
+export type CreateChangeCardPasswordRequestMutationResult =
+  Apollo.MutationResult<CreateChangeCardPasswordRequestMutation>;
+export type CreateChangeCardPasswordRequestMutationOptions =
+  Apollo.BaseMutationOptions<
+    CreateChangeCardPasswordRequestMutation,
+    CreateChangeCardPasswordRequestMutationVariables
+  >;
+export const CreatePixRequestDocument = gql`
+  mutation CreatePixRequest($input: CreatePixRequestInput!) {
     createPixRequest(input: $input) {
+      reason
+      payload
+      createdAt
+      active
+      cardUserId
+      type
+      status
+    }
+  }
+`;
+export type CreatePixRequestMutationFn = Apollo.MutationFunction<
+  CreatePixRequestMutation,
+  CreatePixRequestMutationVariables
+>;
+
+/**
+ * __useCreatePixRequestMutation__
+ *
+ * To run a mutation, you first call `useCreatePixRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePixRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPixRequestMutation, { data, loading, error }] = useCreatePixRequestMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreatePixRequestMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreatePixRequestMutation,
+    CreatePixRequestMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreatePixRequestMutation,
+    CreatePixRequestMutationVariables
+  >(CreatePixRequestDocument, options);
+}
+export type CreatePixRequestMutationHookResult = ReturnType<
+  typeof useCreatePixRequestMutation
+>;
+export type CreatePixRequestMutationResult =
+  Apollo.MutationResult<CreatePixRequestMutation>;
+export type CreatePixRequestMutationOptions = Apollo.BaseMutationOptions<
+  CreatePixRequestMutation,
+  CreatePixRequestMutationVariables
+>;
+export const CreateTedRequestDocument = gql`
+  mutation CreateTedRequest($input: CreateTedRequestInput!) {
+    createTedRequest(input: $input) {
       reason
       payload
       createdAt
@@ -1238,6 +1444,94 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const MyRequestsDocument = gql`
+  query MyRequests($input: PaginationInput!) {
+    myRequests(input: $input) {
+      count
+      data {
+        _id
+        reason
+        payload
+        createdAt
+        active
+        cardUserId
+        type
+        status
+      }
+      pageInfo {
+        hasNextPage
+      }
+    }
+  }
+`;
+
+/**
+ * __useMyRequestsQuery__
+ *
+ * To run a query within a React component, call `useMyRequestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyRequestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyRequestsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useMyRequestsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    MyRequestsQuery,
+    MyRequestsQueryVariables
+  > &
+    (
+      | { variables: MyRequestsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<MyRequestsQuery, MyRequestsQueryVariables>(
+    MyRequestsDocument,
+    options,
+  );
+}
+export function useMyRequestsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    MyRequestsQuery,
+    MyRequestsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<MyRequestsQuery, MyRequestsQueryVariables>(
+    MyRequestsDocument,
+    options,
+  );
+}
+export function useMyRequestsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    MyRequestsQuery,
+    MyRequestsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<MyRequestsQuery, MyRequestsQueryVariables>(
+    MyRequestsDocument,
+    options,
+  );
+}
+export type MyRequestsQueryHookResult = ReturnType<typeof useMyRequestsQuery>;
+export type MyRequestsLazyQueryHookResult = ReturnType<
+  typeof useMyRequestsLazyQuery
+>;
+export type MyRequestsSuspenseQueryHookResult = ReturnType<
+  typeof useMyRequestsSuspenseQuery
+>;
+export type MyRequestsQueryResult = Apollo.QueryResult<
+  MyRequestsQuery,
+  MyRequestsQueryVariables
+>;
 export const SignInDocument = gql`
   mutation SignIn($input: SignInInput!) {
     signIn(input: $input) {

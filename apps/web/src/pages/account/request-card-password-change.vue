@@ -1,24 +1,45 @@
 <script lang="ts" setup>
 import * as zod from "zod";
-import { useChangeCardUserPasswordMutation } from "@ipe.stack/apollo";
+import { toast } from "vue-sonner";
+import { useCreateChangeCardPasswordRequestMutation } from "@ipe.stack/apollo";
 import { toTypedSchema } from "@vee-validate/zod";
 import { BackButton, Button } from "../../components";
 import { useRequireAuth } from "../../guards";
 import { useField, useForm } from "vee-validate";
 import { useRouter } from "vue-router";
 
-const { mutate: changePassword, loading } = useChangeCardUserPasswordMutation();
+const { mutate: changePassword, loading } =
+  useCreateChangeCardPasswordRequestMutation();
 
 const router = useRouter();
 
 const validationSchema = toTypedSchema(
   zod
     .object({
-      password: zod.string().nonempty("A senha atual é obrigatória"),
-      newPassword: zod.string().nonempty("A nova senha é obrigatória"),
-      confirmNewPassword: zod.string().nonempty({
-        message: "A confirmação da nova senha é obrigatória",
-      }),
+      password: zod.string().refine(
+        (data) => {
+          return !isNaN(Number(data));
+        },
+        {
+          message: "A senha atual deve ser um número",
+        },
+      ),
+      newPassword: zod.string().refine(
+        (data) => {
+          return !isNaN(Number(data));
+        },
+        {
+          message: "A senha atual deve ser um número",
+        },
+      ),
+      confirmNewPassword: zod.string().refine(
+        (data) => {
+          return !isNaN(Number(data));
+        },
+        {
+          message: "A senha atual deve ser um número",
+        },
+      ),
     })
     .refine((data) => data.newPassword === data.confirmNewPassword, {
       message: "As senhas não coincidem",
@@ -38,14 +59,25 @@ const { value: confirmNewPassword } = useField(
 );
 
 const onSubmit = handleSubmit(async (values) => {
-  await changePassword({
-    input: {
-      newPassword: values.newPassword,
-      oldPassword: values.password,
-    },
-  });
-
-  router.go(-1);
+  const t = toast.loading("Fazendo Solicitação...");
+  try {
+    await changePassword({
+      input: {
+        oldCardPassword: values.newPassword.toString(),
+        newCardPassword: values.password.toString(),
+      },
+    });
+    toast.success("Solicitação Realizada com Sucesso", {
+      id: t,
+    });
+    router.go(-1);
+  } catch (error) {
+    if (error instanceof Error) {
+      toast.error(error.message, {
+        id: t,
+      });
+    }
+  }
 });
 
 useRequireAuth();
@@ -65,10 +97,9 @@ useRequireAuth();
       <BackButton />
       <div class="flex flex-col p-2 gap-2">
         <img src="/logo-name.svg" class="h-10 w-32" />
-        <h1 class="text-2xl">Alterar Senha do Portal</h1>
+        <h1 class="text-2xl">Solicitar Troca de Senha do Cartão</h1>
         <span class="opacity-40 max-w-xs">
-          Preencha os campos abaixo para alterar sua senha de acesso ao portal
-          de usuário
+          Preencha os campos abaixo para alterar a senha do seu cartão no-name
         </span>
       </div>
       <input

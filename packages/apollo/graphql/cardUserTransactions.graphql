@@ -1,0 +1,15 @@
+query CardUserTransactions($input: PaginationInput!) {
+  cardUserTransactions(input: $input) {
+    count
+    data {
+      _id
+      amount
+      description
+      date
+      createdAt
+    }
+    pageInfo {
+      hasNextPage
+    }
+  }
+}

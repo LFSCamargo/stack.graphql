@@ -58,6 +58,7 @@ export const RequestsDefinitions = gql`
       status: RequestStatus
       type: RequestType
     ): RequestsOutput!
+    myRequests(input: PaginationInput!): RequestsOutput!
   }
 
   type Mutation {

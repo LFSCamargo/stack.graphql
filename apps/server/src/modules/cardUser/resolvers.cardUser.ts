@@ -64,6 +64,7 @@ export const CardUserResolvers: TResolvers = {
     },
   },
   Mutation: {
+    // TODO: Test this function to see if its working well
     resetPasswordWithCode: async (
       _,
       { input }: GraphQLInput<{ code: string; newPassword: string }>,
@@ -98,6 +99,7 @@ export const CardUserResolvers: TResolvers = {
         message: "Password updated successfully.",
       };
     },
+    // TODO: Check this function to see if its working well
     recoverPassword: async (
       _,
       { input }: GraphQLInput<{ cardNumber: string }>,
@@ -184,6 +186,7 @@ export const CardUserResolvers: TResolvers = {
 
       return await CardUserModel.findOne({ cardNumber });
     },
+    // TODO: Test this function to see if it's sending the email
     createCardUser: async (
       _,
       { input }: GraphQLInput<CreateCardUserInput>,

@@ -1,0 +1,18 @@
+query MyRequests($input: PaginationInput!) {
+  myRequests(input: $input) {
+    count
+    data {
+      _id
+      reason
+      payload
+      createdAt
+      active
+      cardUserId
+      type
+      status
+    }
+    pageInfo {
+      hasNextPage
+    }
+  }
+}
