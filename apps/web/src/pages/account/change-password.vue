@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import * as zod from "zod";
+import { toast } from "vue-sonner";
 import { useChangeCardUserPasswordMutation } from "@ipe.stack/apollo";
 import { toTypedSchema } from "@vee-validate/zod";
 import { BackButton, Button } from "../../components";
@@ -38,14 +39,29 @@ const { value: confirmNewPassword } = useField(
 );
 
 const onSubmit = handleSubmit(async (values) => {
-  await changePassword({
-    input: {
-      newPassword: values.newPassword,
-      oldPassword: values.password,
-    },
-  });
+  const t = toast.loading("Alterando senha...");
+  try {
+    await changePassword({
+      input: {
+        newPassword: values.newPassword,
+        oldPassword: values.password,
+      },
+    });
 
-  router.go(-1);
+    toast.success("Senha alterada com sucesso", {
+      id: t,
+    });
+    router.go(-1);
+  } catch (error) {
+    if (error instanceof Error) {
+      return toast.error(error.message, {
+        id: t,
+      });
+    }
+    toast.error("Erro ao alterar senha", {
+      id: t,
+    });
+  }
 });
 
 useRequireAuth();

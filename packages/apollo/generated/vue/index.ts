@@ -414,6 +414,27 @@ export type CardUserSignInMutation = {
   } | null;
 };
 
+export type LoggedCardUserTransactionsQueryVariables = Exact<{
+  input: PaginationInput;
+}>;
+
+export type LoggedCardUserTransactionsQuery = {
+  __typename?: "Query";
+  cardUserTransactions: {
+    __typename?: "TransactionsOutput";
+    count: number;
+    data: Array<{
+      __typename?: "Transaction";
+      _id: string;
+      amount: number;
+      description: string;
+      date: string;
+      createdAt: string;
+    }>;
+    pageInfo: { __typename?: "PageInfo"; hasNextPage: boolean };
+  };
+};
+
 export type CardUsersQueryVariables = Exact<{
   input: PaginationInput;
 }>;
@@ -880,6 +901,100 @@ export type CardUserSignInMutationCompositionFunctionResult =
   VueApolloComposable.UseMutationReturn<
     CardUserSignInMutation,
     CardUserSignInMutationVariables
+  >;
+export const LoggedCardUserTransactionsDocument = gql`
+  query LoggedCardUserTransactions($input: PaginationInput!) {
+    cardUserTransactions(input: $input) {
+      count
+      data {
+        _id
+        amount
+        description
+        date
+        createdAt
+      }
+      pageInfo {
+        hasNextPage
+      }
+    }
+  }
+`;
+
+/**
+ * __useLoggedCardUserTransactionsQuery__
+ *
+ * To run a query within a Vue component, call `useLoggedCardUserTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLoggedCardUserTransactionsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param variables that will be passed into the query
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useLoggedCardUserTransactionsQuery({
+ *   input: // value for 'input'
+ * });
+ */
+export function useLoggedCardUserTransactionsQuery(
+  variables:
+    | LoggedCardUserTransactionsQueryVariables
+    | VueCompositionApi.Ref<LoggedCardUserTransactionsQueryVariables>
+    | ReactiveFunction<LoggedCardUserTransactionsQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<
+        LoggedCardUserTransactionsQuery,
+        LoggedCardUserTransactionsQueryVariables
+      >
+    | VueCompositionApi.Ref<
+        VueApolloComposable.UseQueryOptions<
+          LoggedCardUserTransactionsQuery,
+          LoggedCardUserTransactionsQueryVariables
+        >
+      >
+    | ReactiveFunction<
+        VueApolloComposable.UseQueryOptions<
+          LoggedCardUserTransactionsQuery,
+          LoggedCardUserTransactionsQueryVariables
+        >
+      > = {},
+) {
+  return VueApolloComposable.useQuery<
+    LoggedCardUserTransactionsQuery,
+    LoggedCardUserTransactionsQueryVariables
+  >(LoggedCardUserTransactionsDocument, variables, options);
+}
+export function useLoggedCardUserTransactionsLazyQuery(
+  variables?:
+    | LoggedCardUserTransactionsQueryVariables
+    | VueCompositionApi.Ref<LoggedCardUserTransactionsQueryVariables>
+    | ReactiveFunction<LoggedCardUserTransactionsQueryVariables>,
+  options:
+    | VueApolloComposable.UseQueryOptions<
+        LoggedCardUserTransactionsQuery,
+        LoggedCardUserTransactionsQueryVariables
+      >
+    | VueCompositionApi.Ref<
+        VueApolloComposable.UseQueryOptions<
+          LoggedCardUserTransactionsQuery,
+          LoggedCardUserTransactionsQueryVariables
+        >
+      >
+    | ReactiveFunction<
+        VueApolloComposable.UseQueryOptions<
+          LoggedCardUserTransactionsQuery,
+          LoggedCardUserTransactionsQueryVariables
+        >
+      > = {},
+) {
+  return VueApolloComposable.useLazyQuery<
+    LoggedCardUserTransactionsQuery,
+    LoggedCardUserTransactionsQueryVariables
+  >(LoggedCardUserTransactionsDocument, variables, options);
+}
+export type LoggedCardUserTransactionsQueryCompositionFunctionResult =
+  VueApolloComposable.UseQueryReturn<
+    LoggedCardUserTransactionsQuery,
+    LoggedCardUserTransactionsQueryVariables
   >;
 export const CardUsersDocument = gql`
   query CardUsers($input: PaginationInput!) {

@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui";
 import { UserSwitcher } from "../ui";
-import { Home, Package, Users, Lock, ChevronRight, LogOut } from "lucide-react";
+import { Home, Users, Lock, ChevronRight, LogOut } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { StorageUtility } from "@/utils";
@@ -66,10 +66,6 @@ export function SideMenu() {
             <Home className="h-4 w-4" />
             Dashboard
           </SidebarLink>
-          <SidebarLink to="/dashboard/requests">
-            <Package className="h-4 w-4" />
-            Solicitações
-          </SidebarLink>
           <SidebarLink to="/dashboard/manage-clients">
             <Users className="h-4 w-4" />
             Gerenciar Clientes
@@ -84,7 +80,7 @@ export function SideMenu() {
         </SidebarLink>
         <SidebarLink to="/user/change-password">
           <Lock className="h-3.5 w-3.5" />
-          Change password
+          Alterar Senha
         </SidebarLink>
         <UserSwitcher className="w-full !bg-transparent" />
       </div>

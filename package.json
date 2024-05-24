@@ -10,6 +10,7 @@
     "mail:export": "pnpm run --filter @ipe.stack/mail export",
     "admin:dev": "pnpm run --filter @ipe.stack/admin dev",
     "server:dev": "pnpm run --filter @ipe.stack/server dev",
+    "server:start": "pnpm run --filter @ipe.stack/server start",
     "server:seeds": "pnpm run --filter @ipe.stack/server seeds",
     "apollo:codegen": "pnpm run --filter @ipe.stack/apollo codegen"
   },

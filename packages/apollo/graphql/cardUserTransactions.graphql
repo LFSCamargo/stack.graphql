@@ -1,4 +1,4 @@
-query CardUserTransactions($input: PaginationInput!) {
+query LoggedCardUserTransactions($input: PaginationInput!) {
   cardUserTransactions(input: $input) {
     count
     data {

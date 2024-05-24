@@ -410,6 +410,27 @@ export type CardUserSignInMutation = {
   } | null;
 };
 
+export type LoggedCardUserTransactionsQueryVariables = Exact<{
+  input: PaginationInput;
+}>;
+
+export type LoggedCardUserTransactionsQuery = {
+  __typename?: "Query";
+  cardUserTransactions: {
+    __typename?: "TransactionsOutput";
+    count: number;
+    data: Array<{
+      __typename?: "Transaction";
+      _id: string;
+      amount: number;
+      description: string;
+      date: string;
+      createdAt: string;
+    }>;
+    pageInfo: { __typename?: "PageInfo"; hasNextPage: boolean };
+  };
+};
+
 export type CardUsersQueryVariables = Exact<{
   input: PaginationInput;
 }>;

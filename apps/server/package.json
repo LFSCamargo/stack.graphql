@@ -5,7 +5,9 @@
   "scripts": {
     "start": "ts-node src/main.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
-    "seeds": "tsx scripts/seed-admin.script.ts && tsx scripts/seed-card-user.script.ts"
+    "seeds": "tsx scripts/seed-admin.script.ts && tsx scripts/seed-card-user.script.ts",
+    "env:development": "cp .env.development .env",
+    "env:production": "cp .env.production .env"
   },
   "keywords": [],
   "author": "",

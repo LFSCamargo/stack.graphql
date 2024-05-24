@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import dayjs from "dayjs";
 import { Button, BalanceCard, CreditCard } from "../../components";
 import {
   useCardUserQuery,
   CardUserDocument,
   CardUser,
 } from "@ipe.stack/apollo";
-import { FormatUtility } from "../../utils";
 import { useRouter } from "vue-router";
 import { useRequireAuth } from "../../guards";
+import { useCardUserPaginatedTransactions } from "../../hooks";
 import { useApolloClient } from "@vue/apollo-composable";
 import { onMounted } from "vue";
 
@@ -21,6 +22,8 @@ onMounted(() => {
   refetch();
 });
 
+const { data, fetchMoreTransactions } = useCardUserPaginatedTransactions();
+
 async function logout() {
   localStorage.clear();
 
@@ -33,33 +36,10 @@ async function logout() {
 
   router.push("/auth/login");
 }
-
-const transactionHistory = {
-  transactions: [
-    {
-      id: 1,
-      title: "Transferencia Recebida",
-      value: 30000.0,
-      date: "19/07/2022 22:04",
-    },
-    {
-      id: 2,
-      title: "Transferencia Recebida",
-      value: 30000.0,
-      date: "19/07/2022 22:04",
-    },
-    {
-      id: 3,
-      title: "Transferencia Recebida",
-      value: 30000.0,
-      date: "19/07/2022 22:04",
-    },
-  ],
-};
 </script>
 
 <template>
-  <div class="bg-dot-white/20 items-center w-screen h-screen flex-col">
+  <div class="bg-dot-white/20 items-center min-h-screen flex-col">
     <div
       class="max-w-screen-xl animate-fade flex flex-col p-4 pt-32 md:pt-40 mx-auto gap-10"
     >
@@ -116,8 +96,8 @@ const transactionHistory = {
         </div>
         <div class="mt-4 flex flex-col gap-4">
           <div
-            v-for="transaction in transactionHistory.transactions"
-            :key="transaction.id"
+            v-for="transaction in data?.cardUserTransactions.data"
+            :key="transaction._id"
             class="w-full px-3.5 py-2.5 bg-neutral-700/30 rounded-2xl backdrop-blur-xl justify-start items-center gap-3 inline-flex"
           >
             <div
@@ -130,7 +110,7 @@ const transactionHistory = {
                   <div
                     class="text-white px-2 text-base font-medium leading-snug"
                   >
-                    {{ transaction.title }}
+                    {{ transaction.description }}
                   </div>
                 </div>
               </div>
@@ -143,19 +123,29 @@ const transactionHistory = {
                   <div
                     class="grow shrink basis-0 text-right text-lime-300 text-base font-medium leading-snug"
                   >
-                    R$ {{ FormatUtility.formatCurrency(transaction.value) }}
+                    R$ {{ transaction.amount.toFixed(2) }}
                   </div>
                 </div>
                 <div class="flex-col justify-start items-start gap-1 flex">
                   <div
                     class="self-stretch text-sm text-right text-neutral-400 font-medium leading-snug"
                   >
-                    19/07/2022 22:04
+                    {{
+                      dayjs(transaction.createdAt).format("DD/MM/YYYY HH:mm")
+                    }}
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <Button
+            v-if="data?.cardUserTransactions.pageInfo.hasNextPage"
+            variant="primary"
+            @click="fetchMoreTransactions()"
+          >
+            Carregar mais
+          </Button>
         </div>
       </div>
     </div>

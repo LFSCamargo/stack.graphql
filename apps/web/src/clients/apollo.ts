@@ -21,7 +21,7 @@ const authLink = setContext(async (_, { headers }) => {
 const errorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors) {
     for (const error of graphQLErrors) {
-      if (error.message === "Invalid authorization token provided") {
+      if (error.message.includes("Invalid authorization token provided.")) {
         StorageUtility.removeToken();
       }
     }

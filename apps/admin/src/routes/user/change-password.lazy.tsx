@@ -1,5 +1,6 @@
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { ChangePasswordForm } from "@/components/user/change-password-form";
 
 function ChangePassword() {
   return (
@@ -10,7 +11,7 @@ function ChangePassword() {
         { name: "Alterar Senha", href: "/user/change-password" },
       ]}
     >
-      <div>Hello /user/change-password!</div>
+      <ChangePasswordForm />
     </DashboardLayout>
   );
 }

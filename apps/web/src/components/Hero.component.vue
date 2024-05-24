@@ -47,12 +47,12 @@ function scrollIntoView(id: string) {
     </div>
 
     <img
-      class="sm:h-[500px] h-[300px] w-[100px] xl:w-[400px] sm:w-[300px] absolute -left-0 top-32 z-0 object-cover rounded-r-3xl lg:block animate-fade-right"
+      class="sm:h-[500px] hidden xl:w-[400px] sm:w-[300px] absolute -left-0 top-32 z-0 object-cover rounded-r-3xl lg:block animate-fade-right"
       src="/img/hero-4.png"
       alt=""
     />
     <img
-      class="md:h-[350px] md:w-[400px] h-[250px] w-[120px] absolute right-0 top-28 z-0 object-cover rounded-l-3xl lg:block animate-fade-left"
+      class="md:h-[350px] md:w-[400px] hidden h-[250px] w-[120px] absolute right-0 top-28 z-0 object-cover rounded-l-3xl lg:block animate-fade-left"
       src="/img/hero-1.png"
       alt=""
     />

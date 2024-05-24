@@ -413,6 +413,27 @@ export type CardUserSignInMutation = {
   } | null;
 };
 
+export type LoggedCardUserTransactionsQueryVariables = Exact<{
+  input: PaginationInput;
+}>;
+
+export type LoggedCardUserTransactionsQuery = {
+  __typename?: "Query";
+  cardUserTransactions: {
+    __typename?: "TransactionsOutput";
+    count: number;
+    data: Array<{
+      __typename?: "Transaction";
+      _id: string;
+      amount: number;
+      description: string;
+      date: string;
+      createdAt: string;
+    }>;
+    pageInfo: { __typename?: "PageInfo"; hasNextPage: boolean };
+  };
+};
+
 export type CardUsersQueryVariables = Exact<{
   input: PaginationInput;
 }>;
@@ -878,6 +899,93 @@ export type CardUserSignInMutationResult =
 export type CardUserSignInMutationOptions = Apollo.BaseMutationOptions<
   CardUserSignInMutation,
   CardUserSignInMutationVariables
+>;
+export const LoggedCardUserTransactionsDocument = gql`
+  query LoggedCardUserTransactions($input: PaginationInput!) {
+    cardUserTransactions(input: $input) {
+      count
+      data {
+        _id
+        amount
+        description
+        date
+        createdAt
+      }
+      pageInfo {
+        hasNextPage
+      }
+    }
+  }
+`;
+
+/**
+ * __useLoggedCardUserTransactionsQuery__
+ *
+ * To run a query within a React component, call `useLoggedCardUserTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLoggedCardUserTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLoggedCardUserTransactionsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useLoggedCardUserTransactionsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    LoggedCardUserTransactionsQuery,
+    LoggedCardUserTransactionsQueryVariables
+  > &
+    (
+      | { variables: LoggedCardUserTransactionsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    LoggedCardUserTransactionsQuery,
+    LoggedCardUserTransactionsQueryVariables
+  >(LoggedCardUserTransactionsDocument, options);
+}
+export function useLoggedCardUserTransactionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    LoggedCardUserTransactionsQuery,
+    LoggedCardUserTransactionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    LoggedCardUserTransactionsQuery,
+    LoggedCardUserTransactionsQueryVariables
+  >(LoggedCardUserTransactionsDocument, options);
+}
+export function useLoggedCardUserTransactionsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    LoggedCardUserTransactionsQuery,
+    LoggedCardUserTransactionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    LoggedCardUserTransactionsQuery,
+    LoggedCardUserTransactionsQueryVariables
+  >(LoggedCardUserTransactionsDocument, options);
+}
+export type LoggedCardUserTransactionsQueryHookResult = ReturnType<
+  typeof useLoggedCardUserTransactionsQuery
+>;
+export type LoggedCardUserTransactionsLazyQueryHookResult = ReturnType<
+  typeof useLoggedCardUserTransactionsLazyQuery
+>;
+export type LoggedCardUserTransactionsSuspenseQueryHookResult = ReturnType<
+  typeof useLoggedCardUserTransactionsSuspenseQuery
+>;
+export type LoggedCardUserTransactionsQueryResult = Apollo.QueryResult<
+  LoggedCardUserTransactionsQuery,
+  LoggedCardUserTransactionsQueryVariables
 >;
 export const CardUsersDocument = gql`
   query CardUsers($input: PaginationInput!) {

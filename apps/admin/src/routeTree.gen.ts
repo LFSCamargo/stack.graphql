@@ -19,17 +19,8 @@ import { Route as rootRoute } from './routes/__root'
 const IndexLazyImport = createFileRoute('/')()
 const DashboardIndexLazyImport = createFileRoute('/dashboard/')()
 const UserChangePasswordLazyImport = createFileRoute('/user/change-password')()
-const DashboardRequestsIndexLazyImport = createFileRoute(
-  '/dashboard/requests/',
-)()
-const DashboardManageUsersIndexLazyImport = createFileRoute(
-  '/dashboard/manage-users/',
-)()
 const DashboardManageClientsIndexLazyImport = createFileRoute(
   '/dashboard/manage-clients/',
-)()
-const DashboardRequestsRequestIdLazyImport = createFileRoute(
-  '/dashboard/requests/$requestId',
 )()
 const DashboardManageClientsAddIndexLazyImport = createFileRoute(
   '/dashboard/manage-clients/add/',
@@ -59,37 +50,12 @@ const UserChangePasswordLazyRoute = UserChangePasswordLazyImport.update({
   import('./routes/user/change-password.lazy').then((d) => d.Route),
 )
 
-const DashboardRequestsIndexLazyRoute = DashboardRequestsIndexLazyImport.update(
-  {
-    path: '/dashboard/requests/',
-    getParentRoute: () => rootRoute,
-  } as any,
-).lazy(() =>
-  import('./routes/dashboard/requests/index.lazy').then((d) => d.Route),
-)
-
-const DashboardManageUsersIndexLazyRoute =
-  DashboardManageUsersIndexLazyImport.update({
-    path: '/dashboard/manage-users/',
-    getParentRoute: () => rootRoute,
-  } as any).lazy(() =>
-    import('./routes/dashboard/manage-users/index.lazy').then((d) => d.Route),
-  )
-
 const DashboardManageClientsIndexLazyRoute =
   DashboardManageClientsIndexLazyImport.update({
     path: '/dashboard/manage-clients/',
     getParentRoute: () => rootRoute,
   } as any).lazy(() =>
     import('./routes/dashboard/manage-clients/index.lazy').then((d) => d.Route),
-  )
-
-const DashboardRequestsRequestIdLazyRoute =
-  DashboardRequestsRequestIdLazyImport.update({
-    path: '/dashboard/requests/$requestId',
-    getParentRoute: () => rootRoute,
-  } as any).lazy(() =>
-    import('./routes/dashboard/requests/$requestId.lazy').then((d) => d.Route),
   )
 
 const DashboardManageClientsAddIndexLazyRoute =
@@ -128,20 +94,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard/requests/$requestId': {
-      preLoaderRoute: typeof DashboardRequestsRequestIdLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/dashboard/manage-clients/': {
       preLoaderRoute: typeof DashboardManageClientsIndexLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/dashboard/manage-users/': {
-      preLoaderRoute: typeof DashboardManageUsersIndexLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/dashboard/requests/': {
-      preLoaderRoute: typeof DashboardRequestsIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/dashboard/manage-clients/details/$cardUserId': {
@@ -161,10 +115,7 @@ export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   UserChangePasswordLazyRoute,
   DashboardIndexLazyRoute,
-  DashboardRequestsRequestIdLazyRoute,
   DashboardManageClientsIndexLazyRoute,
-  DashboardManageUsersIndexLazyRoute,
-  DashboardRequestsIndexLazyRoute,
   DashboardManageClientsDetailsCardUserIdLazyRoute,
   DashboardManageClientsAddIndexLazyRoute,
 ])
