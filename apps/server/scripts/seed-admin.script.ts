@@ -11,7 +11,11 @@ import { PasswordUtility } from "../src/utils";
  * - name: IpeBank Admin
  */
 async function seed() {
-  await connect(Env.MONGO_URI);
+  console.log(Env);
+
+  await connect(Env.MONGO_URI, {
+    dbName: Env.DB_NAME,
+  });
 
   const password = "ipe@bank@2024@admin";
 

@@ -7,7 +7,9 @@ import { Env } from "./env";
 import { context } from "./context";
 
 async function main() {
-  await connect(Env.MONGO_URI);
+  await connect(Env.MONGO_URI, {
+    dbName: Env.DB_NAME,
+  });
 
   const { url } = await startStandaloneServer(apolloServer, {
     listen: {

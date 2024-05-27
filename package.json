@@ -11,7 +11,9 @@
     "admin:dev": "pnpm run --filter @ipe.stack/admin dev",
     "server:dev": "pnpm run --filter @ipe.stack/server dev",
     "server:start": "pnpm run --filter @ipe.stack/server start",
-    "server:seeds": "pnpm run --filter @ipe.stack/server seeds",
+    "server:start:development": "pnpm run --filter @ipe.stack/server start:development",
+    "server:seeds:development": "pnpm run --filter @ipe.stack/server seeds:development",
+    "server:seeds:production": "pnpm run --filter @ipe.stack/server seeds:production",
     "apollo:codegen": "pnpm run --filter @ipe.stack/apollo codegen"
   },
   "keywords": [],

@@ -11,7 +11,9 @@ import { PasswordUtility } from "../src/utils";
  * - name: Luiz Fernando
  */
 async function seed() {
-  await connect(Env.MONGO_URI);
+  await connect(Env.MONGO_URI, {
+    dbName: Env.DB_NAME,
+  });
 
   const password = "meucartao@2024";
 

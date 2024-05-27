@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Apollo Server",
   "scripts": {
-    "start": "ts-node src/main.ts",
+    "start": "pnpm env:production && ts-node src/main.ts",
+    "start:development": "pnpm env:production && ts-node src/main.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
-    "seeds": "tsx scripts/seed-admin.script.ts && tsx scripts/seed-card-user.script.ts",
+    "seeds:development": "pnpm env:development && tsx scripts/seed-admin.script.ts",
+    "seeds:production": "pnpm env:production && tsx scripts/seed-admin.script.ts",
     "env:development": "cp .env.development .env",
     "env:production": "cp .env.production .env"
   },

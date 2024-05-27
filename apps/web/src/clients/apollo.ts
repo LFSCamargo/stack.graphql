@@ -5,7 +5,7 @@ import { onError } from "@apollo/client/link/error";
 import { StorageUtility } from "../utils";
 
 const link = createHttpLink({
-  uri: "http://localhost:4000/graphql",
+  uri: import.meta.env.API_URL,
 });
 
 const authLink = setContext(async (_, { headers }) => {
