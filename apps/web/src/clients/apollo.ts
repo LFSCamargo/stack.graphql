@@ -5,7 +5,7 @@ import { onError } from "@apollo/client/link/error";
 import { StorageUtility } from "../utils";
 
 const link = createHttpLink({
-  uri: import.meta.env.API_URL,
+  uri: import.meta.env.VITE_API_URL,
 });
 
 const authLink = setContext(async (_, { headers }) => {

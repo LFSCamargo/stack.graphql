@@ -4,9 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "dev": "vite --mode development",
+    "build:development": "vue-tsc && vite build --mode development",
+    "build:production": "vue-tsc && vite build --mode production",
+    "preview:development": "vite preview --mode development",
+    "preview:production": "vite preview --mode production"
   },
   "dependencies": {
     "@apollo/client": "^3.9.7",
