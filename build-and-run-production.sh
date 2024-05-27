@@ -1,0 +1,1 @@
+docker build -f dockerfile.production -t ipe.production . && docker run -d -p 4000:4000 ipe.production

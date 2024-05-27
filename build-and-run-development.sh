@@ -1,0 +1,1 @@
+docker build -f dockerfile.development -t ipe.development . && docker run -d -p 4000:4000 ipe.development

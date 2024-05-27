@@ -14,7 +14,8 @@
     "server:start:development": "pnpm run --filter @ipe.stack/server start:development",
     "server:seeds:development": "pnpm run --filter @ipe.stack/server seeds:development",
     "server:seeds:production": "pnpm run --filter @ipe.stack/server seeds:production",
-    "apollo:codegen": "pnpm run --filter @ipe.stack/apollo codegen"
+    "apollo:codegen": "pnpm run --filter @ipe.stack/apollo codegen",
+    "docker:dev": "docker build -f dockerfile.development -t ipe.development . && docker run -d -p 4000:4000 -v . ipe.development"
   },
   "keywords": [],
   "author": "",

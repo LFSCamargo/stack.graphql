@@ -7,9 +7,10 @@ import {
   TransactionsModule,
   RequestsModule,
 } from "./modules";
+import { Env } from "./env";
 
 const apolloServer = new ApolloServer({
-  introspection: true,
+  introspection: Env.MODE === "development",
   resolvers: [
     HealthModule.resolvers,
     UserModule.resolvers,
