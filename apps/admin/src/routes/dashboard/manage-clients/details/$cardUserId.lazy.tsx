@@ -1,6 +1,10 @@
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
 import { TransactionSkeleton } from "@/components/manage-clients";
-import { InjestTransactionModal } from "@/components/modals";
+import { useDeleteCardUserMutation } from "@ipe.stack/apollo/generated/react";
+import {
+  AddUserBalanceModal,
+  InjestTransactionModal,
+} from "@/components/modals";
 import {
   Button,
   Card,
@@ -18,20 +22,33 @@ import {
   useCardUserByIdQuery,
   useTransactionsByCardUserIdQuery,
 } from "@ipe.stack/apollo/generated/react";
-import { createLazyFileRoute, useParams } from "@tanstack/react-router";
+import {
+  createLazyFileRoute,
+  useNavigate,
+  useParams,
+} from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useMediaQuery } from "usehooks-ts";
+import { useApolloClient } from "@apollo/client";
+import { ConfirmDeleteUserModal } from "@/components/modals/confirm-delete-user";
 
 const ClientDetais = () => {
+  const apolloClient = useApolloClient();
   const isMobile = useMediaQuery(Breakpoints.md);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [transactionsModalVisible, setTransactionModalVisible] =
     useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [addBalanceVisible, setAddBalanceVisible] = useState(false);
   const { items, setItems, isFetchingMore, setIsFetchingMore, pageSize } =
     usePaginationState();
   const { cardUserId } = useParams({
     from: "/dashboard/manage-clients/details/$cardUserId",
   });
+  const [deleteClient] = useDeleteCardUserMutation();
+
+  const navigate = useNavigate();
 
   const { data, loading } = useCardUserByIdQuery({
     variables: {
@@ -52,6 +69,38 @@ const ClientDetais = () => {
       },
     },
   });
+
+  async function onDeleteClient(e: React.SyntheticEvent) {
+    e.preventDefault();
+    if (isDeleting) return;
+    setIsDeleting(true);
+    const t = toast.loading("Removendo cliente...");
+    try {
+      await deleteClient({
+        variables: {
+          input: {
+            id: cardUserId,
+          },
+        },
+      });
+      toast.success("Cliente removido com sucesso.", {
+        id: t,
+      });
+      setDeleteModalVisible(false);
+      await apolloClient.refetchQueries({
+        include: ["CardUsers"],
+      });
+      navigate({
+        to: "/dashboard/manage-clients",
+      });
+    } catch (error) {
+      toast.error("Erro ao remover cliente.", {
+        id: t,
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   async function onLoadMore(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -112,14 +161,27 @@ const ClientDetais = () => {
             Detalhes do Cliente
           </h1>
           {!loading && (
-            <h1 className="text-2xl font-bold tracking-tight">
-              {data?.cardUserById?.name}
-            </h1>
+            <div className="mb-4 flex flex-col items-start gap-2">
+              <h1 className="text-2xl font-bold tracking-tight">
+                {data?.cardUserById?.name}
+              </h1>
+              <span className="mt-3 px-0.5 text-sm opacity-50">Ações</span>
+              <div className="flex flex-row gap-2">
+                <AddUserBalanceModal
+                  cardUserId={cardUserId}
+                  visible={addBalanceVisible}
+                  onOpenChange={setAddBalanceVisible}
+                />
+                <ConfirmDeleteUserModal
+                  visible={deleteModalVisible}
+                  onOpenChange={setDeleteModalVisible}
+                  isConfirming={isDeleting}
+                  confirmDeletion={onDeleteClient}
+                />
+              </div>
+            </div>
           )}
           {loading && <Skeleton className="h-6 w-40" />}
-          <p className="opacity-40">
-            Aqui você pode visualizar, adicionar, editar e remover clientes.
-          </p>
         </div>
         <div className="mt-4 flex flex-col items-center gap-4 md:flex-row">
           <Card className="w-full md:w-auto md:flex-[0.3]">

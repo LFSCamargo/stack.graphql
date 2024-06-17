@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "email dev",
+    "dev": "email dev --port 6503",
     "export": "email export"
   },
   "keywords": [],

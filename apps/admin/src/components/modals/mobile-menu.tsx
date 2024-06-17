@@ -11,7 +11,7 @@ import {
 } from "../ui";
 import { Bars3Icon } from "@heroicons/react/24/solid";
 import { SidebarLink } from "../dashboard/side-menu";
-import { Home, Lock, LogOut, Package, Users } from "lucide-react";
+import { Home, Lock, LogOut, Users } from "lucide-react";
 import { StorageUtility } from "@/utils";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -58,13 +58,6 @@ export function MobileMenuModal({
           <SidebarLink to="/dashboard" className="border border-white/10">
             <Home className="h-4 w-4" />
             Dashboard
-          </SidebarLink>
-          <SidebarLink
-            to="/dashboard/requests"
-            className="border border-white/10"
-          >
-            <Package className="h-4 w-4" />
-            Solicitações
           </SidebarLink>
           <SidebarLink
             to="/dashboard/manage-clients"

@@ -21,13 +21,16 @@
         </div>
 
         <div class="flex flex-col gap-4">
-          <div
+          <a
+            href="https://x.com/ipebank"
             class="h-14 p-1 bg-white rounded-full justify-start items-center gap-4 pr-5 inline-flex"
           >
-            <div class="w-12 h-12 relative">
+            <div class="cursor-pointer w-12 h-12 relative">
               <div
-                class="w-12 h-12 left-0 top-0 absolute bg-lime-300 rounded-full"
-              ></div>
+                class="w-12 h-12 left-0 top-0 absolute bg-lime-300 rounded-full flex items-center justify-center"
+              >
+                <img src="/twitter.svg" class="w-6" />
+              </div>
               <div
                 class="w-6 h-6 px-1.5 left-[12px] top-[12px] absolute justify-center items-center inline-flex"
               ></div>
@@ -35,47 +38,30 @@
             <div
               class="grow shrink basis-0 text-zinc-900 text-base font-medium font-['DM Sans'] leading-normal"
             >
-              Siga-nos no Linkedin
+              Siga-nos no X
             </div>
-          </div>
-          <div
+          </a>
+          <a
+            href="https://www.instagram.com/ipebank/"
             class="h-14 p-1 bg-white rounded-full justify-start items-center gap-4 pr-5 inline-flex"
           >
             <div class="w-12 h-12 relative">
               <div
-                class="w-12 h-12 left-0 top-0 absolute bg-lime-300 rounded-full"
+                class="w-12 h-12 left-0 top-0 absolute bg-lime-300 rounded-full flex items-center justify-center"
               ></div>
               <div
-                class="w-6 h-6 px-1.5 left-[12px] top-[12px] absolute justify-center items-center inline-flex"
-              ></div>
+                class="w-6 h-6 px-0 left-[12px] top-[12px] absolute items-center justify-center inline-flex"
+              >
+                <img src="/instagram.svg" class="w-96" />
+              </div>
             </div>
             <div
               class="grow shrink basis-0 text-zinc-900 text-base font-medium font-['DM Sans'] leading-normal"
             >
-              Siga-nos no Twitter
+              Siga-nos no Instagram
             </div>
-          </div>
-          <div
-            class="h-14 p-1 bg-white rounded-full justify-start items-center gap-4 pr-5 inline-flex"
-          >
-            <div class="w-12 h-12 relative">
-              <div
-                class="w-12 h-12 left-0 top-0 absolute bg-lime-300 rounded-full"
-              ></div>
-              <div
-                class="w-6 h-6 px-1.5 left-[12px] top-[12px] absolute justify-center items-center inline-flex"
-              ></div>
-            </div>
-            <div
-              class="grow shrink basis-0 text-zinc-900 text-base font-medium font-['DM Sans'] leading-normal"
-            >
-              Siga-nos no Facebook
-            </div>
-          </div>
+          </a>
         </div>
-        <!-- <p class="mt-4 text-center text-sm text-gray-500 lg:mt-0 lg:text-right">
-          Copyright &copy; 2022. All rights reserved.
-        </p> -->
       </div>
     </div>
     <img src="/waves.svg" class="relative bottom-0 left-0" />

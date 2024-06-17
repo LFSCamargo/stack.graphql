@@ -138,6 +138,15 @@ export const TransactionsResolvers: TResolvers = {
     },
   },
   Mutation: {
+    deleteTransaction: async (_, { id }: { id: string }, { user }) => {
+      onlyAdmin(user);
+
+      await CardUserTransactionsModel.deleteOne({ _id: id });
+
+      return {
+        message: "Transaction deleted successfully",
+      };
+    },
     injestTransactions: async (
       _,
       { input }: GraphQLInput<Inputs["injestTransactions"]>,

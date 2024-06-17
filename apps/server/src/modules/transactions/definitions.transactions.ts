@@ -43,6 +43,7 @@ export const TransactionsDefinitions = gql`
   type Mutation {
     # Only Admin can call this mutation =>> injest transactions into the database for card users
     injestTransactions(input: InjestTransactionsInput): [Transaction]!
+    deleteTransaction(_id: ID!): MessageOutput!
     # Only Admin can call this mutation =>> clear all old 12 months transactions from the database
     clearTransactions: [Transaction]!
   }
