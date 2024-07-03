@@ -52,8 +52,8 @@ function scrollIntoView(id: string) {
       alt=""
     />
     <img
-      class="md:h-[350px] md:w-[400px] hidden h-[250px] w-[120px] absolute right-0 top-28 z-0 object-cover rounded-l-3xl lg:block animate-fade-left"
-      src="/img/hero-1.png"
+      class="md:h-[250px] md:w-[400px] hidden h-[250px] w-[120px] absolute right-0 top-28 z-0 object-cover rounded-l-3xl lg:block animate-fade-left"
+      src="/img/ipe-card.png"
       alt=""
     />
     <img

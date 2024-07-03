@@ -1,5 +1,14 @@
 <script lang="ts" setup>
+import { ref } from "vue";
 import { Button } from ".";
+
+const email = ref("");
+const name = ref("");
+const lastName = ref("");
+
+const sendEmail = () => {
+  window.location.href = `mailto:atendimento@ipebank.com.br?subject=Contato Rápido&body=Nome: ${name.value} ${lastName.value}%0D%0AEmail: ${email.value}`;
+};
 </script>
 
 <template>
@@ -24,7 +33,7 @@ import { Button } from ".";
         />
 
         <div>
-          <Button variant="primary" class="p-4 px-6">
+          <Button variant="primary" @click="sendEmail()" class="p-4 px-6">
             Enviar Informações
           </Button>
         </div>
