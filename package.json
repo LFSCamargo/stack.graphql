@@ -9,7 +9,7 @@
     "web:build:dev": "pnpm run --filter @ipe.stack/web build:development",
     "web:build:prod": "pnpm run --filter @ipe.stack/web build:production",
     "web:deploy:dev": "pnpm web:build:dev && aws s3 sync ./apps/web/dist s3://no-name-card-user-platform-web",
-    "web:deploy:prod": "pnpm web:build:prod && aws s3 sync ./apps/web/dist s3://no-name-card-web-production",
+    "web:deploy:prod": "pnpm web:build:prod && aws s3 sync ./apps/web/dist s3://ipebank.com.br",
     "mail:dev": "pnpm run --filter @ipe.stack/mail dev",
     "mail:export": "pnpm run --filter @ipe.stack/mail export",
     "admin:dev": "pnpm run --filter @ipe.stack/admin dev",
