@@ -12,15 +12,15 @@ import { AccountUserRecoveryCodeModel } from "../../models/account-user-recovery
 
 export const AccountUserResolvers: TResolvers = {
   Query: {
-    accountUserById: async (_, { id }: { id: string }, { user }) => {
+    getAccountUserById: async (_, { id }: { id: string }, { user }) => {
       onlyAdmin(user);
 
       return await AccountUserModel.findOne({ _id: id });
     },
-    accountUser: async (_, __, { accountUser }) => {
+    getAccountUser: async (_, __, { accountUser }) => {
       return accountUser;
     },
-    accountUsers: async (
+    listAccountUsers: async (
       _,
       { input }: GraphQLInput<GraphQLPaginationInput>,
       { user },
@@ -59,7 +59,6 @@ export const AccountUserResolvers: TResolvers = {
     },
   },
   Mutation: {
-    //criar também no asaas
     createAccountUser: async (_, { input }, { user }) => {
       onlyAdmin(user);
 
@@ -75,7 +74,7 @@ export const AccountUserResolvers: TResolvers = {
       }
     },
 
-    resetPasswordWithCode: async (
+    resetAccountUserPasswordWithCode: async (
       _,
       { input }: GraphQLInput<{ code: string; newPassword: string }>,
     ) => {
@@ -110,7 +109,10 @@ export const AccountUserResolvers: TResolvers = {
       };
     },
 
-    recoverPassword: async (_, { input }: GraphQLInput<{ email: string }>) => {
+    recoverAccountUserPassword: async (
+      _,
+      { input }: GraphQLInput<{ email: string }>,
+    ) => {
       const { email } = input;
 
       const accountUser = await AccountUserModel.findOne({
@@ -168,7 +170,7 @@ export const AccountUserResolvers: TResolvers = {
 
       return true;
     },
-    editAccountUser: async (
+    updateAccountUser: async (
       _,
       { input }: GraphQLInput<CreateAccountUserInput>,
       { user },

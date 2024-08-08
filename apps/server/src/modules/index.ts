@@ -4,3 +4,5 @@ export * from "./cardUser";
 export * from "./transactions";
 export * from "./requests";
 export * from "./accountUser";
+export * from "./pix/pixKey";
+export * from "./pix/staticQrCode";
