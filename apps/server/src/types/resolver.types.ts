@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ICardUserSchema, IUserSchema } from "../models";
+import { ICardUserSchema, IUserSchema, IAccountUserSchema } from "../models";
 
 type Resolver = (
   parent: any,
@@ -30,4 +30,5 @@ export type GraphQLInput<T> = {
 export type GraphQLContext = {
   user: IUserSchema | null;
   creditUser: ICardUserSchema | null;
+  accountUser: IAccountUserSchema | null;
 };

@@ -11,6 +11,11 @@ type JWTPayload =
       type: "credit";
       id: string;
       expiresAt?: number;
+    }
+  | {
+      type: "account_user";
+      id: string;
+      expiresAt?: number;
     };
 
 export const TokenUtility = {

@@ -6,6 +6,7 @@ import {
   CardUserModule,
   TransactionsModule,
   RequestsModule,
+  AccountUserModule,
 } from "./modules";
 import { Env } from "./env";
 
@@ -17,6 +18,7 @@ const apolloServer = new ApolloServer({
     CardUserModule.resolvers,
     TransactionsModule.resolvers,
     RequestsModule.resolvers,
+    AccountUserModule.resolvers,
   ],
   typeDefs: [
     HealthModule.typeDefs,
@@ -24,6 +26,7 @@ const apolloServer = new ApolloServer({
     CardUserModule.typeDefs,
     TransactionsModule.typeDefs,
     RequestsModule.typeDefs,
+    AccountUserModule.typeDefs,
     GlobalTypes,
   ],
 });

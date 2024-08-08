@@ -1,7 +1,7 @@
 import { GraphQLError } from "graphql";
 import { GraphQLContext } from "./types";
 import { TokenUtility } from "./utils";
-import { CardUserModel, UserModel } from "./models";
+import { CardUserModel, UserModel, AccountUserModel } from "./models";
 import { ContextFunction } from "@apollo/server";
 import { StandaloneServerContextFunctionArgument } from "@apollo/server/dist/esm/standalone";
 
@@ -44,6 +44,14 @@ export const context: ContextFunction<
       });
 
       payload.creditUser = creditUser;
+    }
+
+    if (jwtPayload.type === "account_user") {
+      const accountUser = await AccountUserModel.findOne({
+        email: jwtPayload.id,
+      });
+
+      payload.accountUser = accountUser;
     }
   }
 

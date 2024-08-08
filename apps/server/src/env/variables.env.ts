@@ -13,4 +13,6 @@ export const Env = {
   SMTP_PORT: Number(process.env.SMTP_PORT || 587),
   MAIL_USER: process.env.MAIL_USER || "naorespondaipebank@gmail.com",
   MAIL_PASS: process.env.MAIL_PASS || "ligs xjpr tisb fojg",
+  ASAAS_API_KEY: process.env.ASAAS_API_KEY || "",
+  ASAAS_API_SANDBOX_URL: process.env.ASAAS_API_SANDBOX_URL || "",
 };
