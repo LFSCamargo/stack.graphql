@@ -1,8 +1,8 @@
 import { GraphQLError } from "graphql";
-import { TResolvers } from "../../types";
-import { onlyLoggedAccountUser } from "../../guards";
-import { pixService } from "./services/pixKey.service";
-import { IAccountUserSchema } from "../../models";
+import { TResolvers } from "../../../types";
+import { onlyLoggedAccountUser } from "../../../guards";
+import { pixService } from "../services/pixKey.service";
+import { IAccountUserSchema } from "../../../models";
 
 export const QrCodeResolvers: TResolvers = {
   Mutation: {

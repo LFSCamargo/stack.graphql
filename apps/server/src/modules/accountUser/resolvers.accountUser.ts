@@ -28,7 +28,7 @@ export const AccountUserResolvers: TResolvers = {
       onlyAdmin(user);
 
       const params = {
-        active: true,
+        // active: true,
       } as Record<string, unknown>;
 
       if (input.search) {
@@ -64,10 +64,9 @@ export const AccountUserResolvers: TResolvers = {
 
       try {
         input.password = PasswordUtility.encryptPassword(input.password);
-        const newUser = new AccountUserModel(input);
-        await newUser.save();
+        const newUser = await AccountUserModel.create(input);
 
-        await asaasCustomersService.createCustomer(input);
+        //await asaasCustomersService.createCustomer(input);
         return newUser;
       } catch (error) {
         throw new GraphQLError(error.message);

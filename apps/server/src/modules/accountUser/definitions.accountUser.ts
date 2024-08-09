@@ -43,7 +43,7 @@ export const AccountUserDefinitions = gql`
     newPassword: String!
   }
 
-  input RecoverPassword {
+  input RecoverPasswordInput {
     email: String!
   }
 
@@ -92,25 +92,32 @@ export const AccountUserDefinitions = gql`
     pageInfo: PageInfo!
   }
 
+  type SignInResponse {
+    accountUser: AccountUser!
+    token: String!
+  }
+
+  type MessageOutput {
+    message: String!
+  }
   # GraphQL Main Types
   type Query {
-    accountUserById(id: String!): AccountUser
-    accountUser: AccountUser
-    accountUsers(input: PaginationInput!): AccountUserPagination
+    getAccountUserById(id: String!): AccountUser
+    getAccountUser: AccountUser
+    listAccountUsers(input: PaginationInput!): AccountUserPagination
     listAsaasCustomers: [AccountUser!]!
   }
 
   type Mutation {
-    # Admin mutations
-    deleteAccountUser(input: DeleteAccountUserInput!): Boolean
-    editAccountUser(input: CreateAccountUserInput!): AccountUser
-    createAccountUser(input: CreateAccountUserInput!): AccountUser
+    createAccountUser(input: CreateAccountUserInput!): AccountUser!
+    deleteAccountUser(input: DeleteAccountUserInput!): Boolean!
+    resetAccountUserPasswordWithCode(
+      input: ResetPasswordWithCodeInput!
+    ): MessageOutput!
 
-    # Account user mutations
-    signInAccountUser(input: AccountSignInInput!): AccountAuthPayload
-    changeAccountUserPassword(input: ChangeAccountUserPassword!): Boolean
-
-    recoverPassword(input: RecoverPassword!): MessageOutput
-    resetPasswordWithCode(input: ResetPasswordWithCodeInput!): MessageOutput
+    recoverAccountUserPassword(input: RecoverPasswordInput!): MessageOutput!
+    updateAccountUser(input: CreateAccountUserInput!): AccountUser!
+    changeAccountUserPassword(input: ChangeAccountUserPassword!): Boolean!
+    signInAccountUser(input: SignInInput!): SignInResponse!
   }
 `;
