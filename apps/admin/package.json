@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode development",
-    "build:development": "tsc && vite build --mode development",
-    "build:production": "tsc && vite build --mode production",
+    "tsbuild": "tsc",
+    "build:development": "pnpm tsbuild && vite build --mode development",
+    "build:production": "pnpm tsbuild && vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview:development": "vite preview --mode development",
     "preview:production": "vite preview --mode production"
