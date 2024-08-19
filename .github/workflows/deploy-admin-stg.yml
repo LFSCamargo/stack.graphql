@@ -26,11 +26,11 @@ jobs:
 
       # Deploy to Digital Ocean App Platform the dist folder at apps/admin/dist
       - name: Deploy to Digital Ocean App Platform
-        uses: digitalocean/action-do-app-deploy@v2
+        uses: digitalocean/app-action/deploy@v2
         with:
-          app_id: ipe-admin-staging
-          token: ${{ secrets.CI_CD_TOKEN_DIGITAL_OCEAN }}
-          image: "ghcr.io/username/repo:latest"
-          env: "production"
-          source_dir: "./apps/admin/dist"
-          run_on: "deployment"
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          app_name: ipe-admin-staging
+          build_command: pnpm run admin:build:dev
+          start_command: pnpm run admin:preview:dev
+          port: 4173
+          env: development

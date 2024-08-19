@@ -13,6 +13,8 @@
     "mail:dev": "pnpm run --filter @ipe.stack/mail dev",
     "mail:export": "pnpm run --filter @ipe.stack/mail export",
     "admin:dev": "pnpm run --filter @ipe.stack/admin dev",
+    "admin:preview:dev": "pnpm run --filter @ipe.stack/admin preview:development",
+    "admin:preview:prod": "pnpm run --filter @ipe.stack/admin preview:production",
     "admin:build:dev": "pnpm run --filter @ipe.stack/admin build:development",
     "admin:build:prod": "pnpm run --filter @ipe.stack/admin build:production",
     "admin:deploy:dev": "pnpm admin:build:dev && aws s3 sync ./apps/admin/dist s3://no-name-card-admin-platform-web",
