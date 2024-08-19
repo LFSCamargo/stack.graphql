@@ -1,0 +1,36 @@
+name: Publish Admin to Digital Ocean
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - name: Install dependencies with PNPM
+        run: pnpm install
+
+      - name: Build Admin
+        run: pnpm run admin:build:dev
+
+      # Deploy to Digital Ocean App Platform the dist folder at apps/admin/dist
+      - name: Deploy to Digital Ocean App Platform
+        uses: digitalocean/action-do-app-deploy@v2
+        with:
+          app_id: ipe-admin-staging
+          token: ${{ secrets.CI_CD_TOKEN_DIGITAL_OCEAN }}
+          image: "ghcr.io/username/repo:latest"
+          env: "production"
+          source_dir: "./apps/admin/dist"
+          run_on: "deployment"
