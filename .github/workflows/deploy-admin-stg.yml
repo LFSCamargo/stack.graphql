@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: "20.14.0"
 
-      - name: Install PNPM using ubuntu package manager
-        run: sudo apt-get update && sudo apt-get install pnpm
+      - name: Install PNPM
+        run: wget -qO- https://get.pnpm.io/install.sh | sh -
 
       - name: Install dependencies with PNPM
         run: pnpm install
