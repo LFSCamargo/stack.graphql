@@ -19,7 +19,9 @@ jobs:
           node-version: "20.14.0"
 
       - name: Install PNPM
-        run: wget -qO- https://get.pnpm.io/install.sh | sh -
+        uses: pnpm/action-setup@v4
+          with:
+          version: 9
 
       - name: Install dependencies with PNPM
         run: pnpm install
