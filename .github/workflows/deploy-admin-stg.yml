@@ -6,35 +6,28 @@ on:
       - development
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          version: 9
+          node-version: "20.14"
+      - name: Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@8.6.0 --activate
 
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - run: pnpm install typescript@5.4.2 --global
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - name: Cache pnpm
+        uses: actions/cache@v3
         with:
-          node-version: "20.14.0"
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
-      - name: Install dependencies with PNPM
-        run: pnpm install
-
-      - name: Build Admin
-        run: pnpm run admin:build:dev
-
-      # Deploy to Digital Ocean App Platform the dist folder at apps/admin/dist
-      - name: Deploy to Digital Ocean App Platform
-        uses: digitalocean/app_action/deploy@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          app_name: ipe-admin-staging
-          build_command: pnpm run admin:build:dev
-          start_command: pnpm run admin:preview:dev
-          port: 4173
-          env: development
+      - name: Build
+        run: pnpm admin:build:dev
