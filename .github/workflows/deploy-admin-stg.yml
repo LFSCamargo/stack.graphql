@@ -19,8 +19,6 @@ jobs:
           corepack enable
           corepack prepare pnpm@8.6.0 --activate
 
-      - run: pnpm install typescript@5.4.2 --global
-
       - name: Cache pnpm
         uses: actions/cache@v3
         with:
