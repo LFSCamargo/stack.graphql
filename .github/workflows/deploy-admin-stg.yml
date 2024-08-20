@@ -30,4 +30,7 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: cd apps/admin && ls -la && pnpm run build
+        run: cd apps/admin && ls -la && pnpm run build:development
+
+      - name: List Files
+        run: ls -la
