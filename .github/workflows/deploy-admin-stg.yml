@@ -16,7 +16,7 @@ jobs:
           node-version: "20.14"
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm@8.15.4
 
       - name: Cache pnpm
         uses: actions/cache@v3
