@@ -14,10 +14,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20.14"
+
       - name: Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@8.6.0 --activate
+        run: npm install -g pnpm
 
       - name: Cache pnpm
         uses: actions/cache@v3
@@ -31,4 +30,4 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm admin:build:dev
+        run: node -v && pnpm -v && pnpm admin:build:dev
