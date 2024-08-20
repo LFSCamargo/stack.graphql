@@ -30,4 +30,4 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: node -v && pnpm -v && pnpm admin:build:dev
+        run: cd apps/admin && ls -la && pnpm run build
