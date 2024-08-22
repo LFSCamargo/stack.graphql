@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode development",
-    "tsbuild": "tsc",
+    "tsbuild": "npx tsc --project tsconfig.json",
     "build:development": "pnpm tsbuild && vite build --mode development",
     "build:production": "pnpm tsbuild && vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -72,7 +72,7 @@
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.2.2",
+    "typescript": "^5.4.2",
     "vite": "^5.2.0"
   }
 }
