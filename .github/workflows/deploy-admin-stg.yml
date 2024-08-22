@@ -1,15 +1,9 @@
-name: Publish Admin to Digital Ocean
-
-on:
-  push:
-    branches:
-      - development
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -29,8 +23,34 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Print Node.js and pnpm versions
+        run: |
+          node -v
+          pnpm -v
+
+      - name: Print TypeScript Configuration
+        run: cat apps/admin/tsconfig.json
+
+      - name: Compile TypeScript
+        run: pnpm exec tsc --project apps/admin/tsconfig.json --noEmit
+
       - name: Build
-        run: cd apps/admin && ls -la && pnpm run build:development
+        run: pnpm run admin:build:dev
 
       - name: List Files
-        run: ls -la
+        run: ls -la apps/admin/dist
+
+      - name: Print Environment Variables
+        run: printenv
+
+      - name: Print Disk Usage
+        run: df -h
+
+      - name: Print Memory Usage
+        run: free -m
+
+      - name: Print pnpm Dependencies
+        run: pnpm list --depth 0
+
+      - name: Print pnpm Workspaces
+        run: pnpm workspaces list --json
