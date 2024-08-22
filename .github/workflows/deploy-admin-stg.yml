@@ -1,3 +1,10 @@
+name: Publish Admin to Digital Ocean
+
+on:
+  push:
+    branches:
+      - development
+
 jobs:
   build:
     runs-on: ubuntu-latest
