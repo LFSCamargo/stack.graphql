@@ -9,6 +9,7 @@ import {
   AccountUserModule,
   pixModule,
   pixStaticQrCodeModule,
+  transactionPixModule,
 } from "./modules";
 import { Env } from "./env";
 
@@ -23,6 +24,7 @@ const apolloServer = new ApolloServer({
     AccountUserModule.resolvers,
     pixModule.resolvers,
     pixStaticQrCodeModule.resolvers,
+    transactionPixModule.resolvers,
   ],
   typeDefs: [
     HealthModule.typeDefs,
@@ -33,6 +35,7 @@ const apolloServer = new ApolloServer({
     AccountUserModule.typeDefs,
     pixModule.typeDefs,
     pixStaticQrCodeModule.typeDefs,
+    transactionPixModule.typeDefs,
     GlobalTypes,
   ],
 });

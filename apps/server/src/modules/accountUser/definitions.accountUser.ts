@@ -7,26 +7,113 @@ export const AccountUserDefinitions = gql`
     password: String!
   }
 
-  input CreateAccountUserInput {
+  type AccountUser {
+    _id: ID!
     name: String!
     cpfCnpj: String!
     email: String!
-    password: String!
-    phone: String!
-    mobilePhone: String!
-    address: String!
-    addressNumber: String!
+    asaasId: String!
+    phone: String
+    mobilePhone: String
+    address: String
+    addressNumber: String
     complement: String
-    province: String!
-    postalCode: String!
+    province: String
+    postalCode: String
     externalReference: String
     notificationDisabled: Boolean
-    additionalEmails: [String!]
     municipalInscription: String
     stateInscription: String
     observations: String
     groupName: String
     company: String
+    createdAt: String!
+  }
+
+  input CreateAccountUserInput {
+    name: String!
+    password: String!
+    cpfCnpj: String!
+    email: String
+    phone: String
+    mobilePhone: String
+    address: String
+    addressNumber: String
+    complement: String
+    province: String
+    postalCode: String
+    externalReference: String
+    notificationDisabled: Boolean
+    municipalInscription: String
+    stateInscription: String
+    observations: String
+    groupName: String
+    company: String
+  }
+
+  input UpdateAccountUserInput {
+    name: String
+    password: String
+    cpfCnpj: String
+    email: String
+    asaasId: String
+    phone: String
+    mobilePhone: String
+    address: String
+    addressNumber: String
+    complement: String
+    province: String
+    postalCode: String
+    externalReference: String
+    notificationDisabled: Boolean
+    municipalInscription: String
+    stateInscription: String
+    observations: String
+    groupName: String
+    company: String
+  }
+
+  input ListAsaasCustomersInput {
+    name: String
+    email: String
+    cpfCnpj: String
+    groupName: String
+    externalReference: String
+    offset: Int
+    limit: Int
+  }
+
+  type AsaasCustomer {
+    id: String!
+    dateCreated: String!
+    name: String!
+    email: String!
+    cpfCnpj: String!
+    phone: String
+    mobilePhone: String
+    address: String
+    addressNumber: String
+    complement: String
+    province: String
+    postalCode: String
+    city: Int
+    cityName: String
+    deleted: Boolean
+    externalReference: String
+    notificationDisabled: Boolean
+    groups: [Group]
+  }
+
+  type Group {
+    name: String!
+  }
+
+  type AsaasCustomerPagination {
+    hasMore: Boolean!
+    totalCount: Int!
+    limit: Int!
+    offset: Int!
+    data: [AsaasCustomer!]!
   }
 
   input ChangeAccountUserPassword {
@@ -53,6 +140,7 @@ export const AccountUserDefinitions = gql`
     name: String!
     cpfCnpj: String!
     email: String!
+    asaasId: String!
     phone: String!
     mobilePhone: String!
     address: String!
@@ -62,7 +150,6 @@ export const AccountUserDefinitions = gql`
     postalCode: String!
     externalReference: String
     notificationDisabled: Boolean
-    additionalEmails: [String!]
     municipalInscription: String
     stateInscription: String
     observations: String
@@ -105,18 +192,21 @@ export const AccountUserDefinitions = gql`
     getAccountUserById(id: String!): AccountUser
     getAccountUser: AccountUser
     listAccountUsers(input: PaginationInput!): AccountUserPagination
-    listAsaasCustomers: [AccountUser!]!
+    listAsaasCustomers(
+      input: ListAsaasCustomersInput!
+    ): AsaasCustomerPagination!
+    getAsaasCustomerById(id: String!): AsaasCustomer!
   }
 
   type Mutation {
     createAccountUser(input: CreateAccountUserInput!): AccountUser!
-    deleteAccountUser(input: DeleteAccountUserInput!): Boolean!
+    deleteAccountUser(id: String!): Boolean!
     resetAccountUserPasswordWithCode(
       input: ResetPasswordWithCodeInput!
     ): MessageOutput!
 
     recoverAccountUserPassword(input: RecoverPasswordInput!): MessageOutput!
-    updateAccountUser(input: CreateAccountUserInput!): AccountUser!
+    updateAccountUser(id: String!, input: UpdateAccountUserInput!): AccountUser!
     changeAccountUserPassword(input: ChangeAccountUserPassword!): Boolean!
     signInAccountUser(input: SignInInput!): SignInResponse!
   }

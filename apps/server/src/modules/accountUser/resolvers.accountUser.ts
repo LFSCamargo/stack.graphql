@@ -4,7 +4,10 @@ import { GraphQLInput, GraphQLPaginationInput, TResolvers } from "../../types";
 import { PaginationUtility, PasswordUtility, TokenUtility } from "../../utils";
 import { onlyAdmin, onlyLoggedAccountUser } from "../../guards";
 import { asaasCustomersService } from "./services/customer.service";
-import { CreateAccountUserInput } from "./types/createAccountUser.accountUser.types";
+import {
+  ListAsaasCustomersInput,
+  UpdateAccountUserInput,
+} from "./types/AccountUser.accountUser.types";
 import { SignInInput } from "./types/signIn.accountUser.types";
 import { ChangeAccountUserPassword } from "./types/changePassword.accountUser.types";
 import { MailingHandler } from "../../mailing/handlers.mailing";
@@ -49,10 +52,37 @@ export const AccountUserResolvers: TResolvers = {
         pageInfo,
       };
     },
-    listAsaasCustomers: async () => {
+    getAsaasCustomerById: async (_, { id }: { id: string }) => {
       try {
-        const customers = await asaasCustomersService.listCustomers();
-        return customers;
+        const customer = await asaasCustomersService.getCustomerById(id);
+        return customer;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+    listAsaasCustomers: async (
+      _,
+      { input }: GraphQLInput<ListAsaasCustomersInput>,
+    ) => {
+      try {
+        const params = {
+          name: input.name,
+          email: input.email,
+          cpfCnpj: input.cpfCnpj,
+          groupName: input.groupName,
+          externalReference: input.externalReference,
+          offset: input.offset,
+          limit: input.limit,
+        } as Record<string, unknown>;
+
+        const response = await asaasCustomersService.listCustomers(params);
+        return {
+          hasMore: response.hasMore,
+          totalCount: response.totalCount,
+          limit: response.limit,
+          offset: response.offset,
+          data: response.data,
+        };
       } catch (error) {
         throw new GraphQLError(error.message);
       }
@@ -61,18 +91,72 @@ export const AccountUserResolvers: TResolvers = {
   Mutation: {
     createAccountUser: async (_, { input }, { user }) => {
       onlyAdmin(user);
-
       try {
-        input.password = PasswordUtility.encryptPassword(input.password);
-        const newUser = await AccountUserModel.create(input);
+        const hashedPassword = PasswordUtility.encryptPassword(input.password);
 
-        //await asaasCustomersService.createCustomer(input);
+        const { password, ...asaasInput } = input;
+
+        const asaasCustomer =
+          await asaasCustomersService.createCustomer(asaasInput);
+
+        const newUser = await AccountUserModel.create({
+          ...input,
+          password: hashedPassword,
+          asaasId: asaasCustomer.id,
+        });
+
         return newUser;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
     },
+    updateAccountUser: async (
+      _,
+      { id, input }: { id: string; input: UpdateAccountUserInput },
+      { user },
+    ) => {
+      onlyAdmin(user);
 
+      const payload: Partial<UpdateAccountUserInput> = { ...input };
+
+      const accountUser = await AccountUserModel.findOneAndUpdate(
+        { asaasId: id },
+        payload,
+        { new: true },
+      );
+
+      if (!accountUser) {
+        console.error(`Account user with externalReference ${id} not found.`);
+        throw new GraphQLError("Account user not found.");
+      }
+
+      await asaasCustomersService.updateCustomer(id, input);
+
+      return accountUser;
+    },
+
+    deleteAccountUser: async (_, { id }: { id: string }, { user }) => {
+      onlyAdmin(user);
+
+      const accountUser = await AccountUserModel.findOne({ asaasId: id });
+
+      if (!accountUser) {
+        console.error(`Account user with asaasId ${id} not found.`);
+        throw new GraphQLError("Account user not found.");
+      }
+
+      // Deactivate the user in the database
+      await AccountUserModel.updateOne(
+        { asaasId: id },
+        {
+          active: false,
+        },
+      );
+
+      await asaasCustomersService.deleteCustomer(id);
+
+      return true;
+    },
     resetAccountUserPasswordWithCode: async (
       _,
       { input }: GraphQLInput<{ code: string; newPassword: string }>,
@@ -107,7 +191,6 @@ export const AccountUserResolvers: TResolvers = {
         message: "Password updated successfully.",
       };
     },
-
     recoverAccountUserPassword: async (
       _,
       { input }: GraphQLInput<{ email: string }>,
@@ -144,63 +227,13 @@ export const AccountUserResolvers: TResolvers = {
           changePasswordCode: recovery.recoveryCode,
           name: accountUser.name,
         },
-        accountUser.email,
+        accountUser.email as string,
       );
 
       return {
         message: "A recovery code has been sent to your email.",
       };
     },
-    deleteAccountUser: async (
-      _,
-      { input }: GraphQLInput<{ id: string }>,
-      { user },
-    ) => {
-      onlyAdmin(user);
-
-      await AccountUserModel.updateOne(
-        { _id: input.id },
-        {
-          active: false,
-        },
-      );
-
-      await asaasCustomersService.deleteCustomer(input.id);
-
-      return true;
-    },
-    updateAccountUser: async (
-      _,
-      { input }: GraphQLInput<CreateAccountUserInput>,
-      { user },
-    ) => {
-      onlyAdmin(user);
-
-      const { email, name, password } = input;
-
-      const payload: Partial<typeof input> = {
-        name,
-      };
-
-      if (password) {
-        payload.password = PasswordUtility.encryptPassword(password);
-      }
-
-      const accountUser = await AccountUserModel.findOneAndUpdate(
-        { email },
-        payload,
-        { new: true },
-      );
-
-      if (!accountUser) {
-        throw new GraphQLError("Account user not found.");
-      }
-
-      await asaasCustomersService.updateCustomer(accountUser.id, input);
-
-      return accountUser;
-    },
-
     changeAccountUserPassword: async (
       _,
       { input }: GraphQLInput<ChangeAccountUserPassword>,
@@ -241,8 +274,8 @@ export const AccountUserResolvers: TResolvers = {
       }
 
       const token = TokenUtility.generateToken({
-        id: accountUser.email,
-        type: "account_user",
+        id: accountUser.email as string,
+        type: "account",
         expiresAt: Date.now() + 24 * 60 * 60 * 1000,
       });
 

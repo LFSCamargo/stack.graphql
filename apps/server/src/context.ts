@@ -46,11 +46,10 @@ export const context: ContextFunction<
       payload.creditUser = creditUser;
     }
 
-    if (jwtPayload.type === "account_user") {
+    if (jwtPayload.type === "account") {
       const accountUser = await AccountUserModel.findOne({
         email: jwtPayload.id,
       });
-
       payload.accountUser = accountUser;
     }
   }

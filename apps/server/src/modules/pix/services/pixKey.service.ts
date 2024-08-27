@@ -1,19 +1,23 @@
 import { asaasClient } from "../../../utils/asaasClient.utils";
-import { PixKeyModel } from "../../../models/PixKey.model";
+import { AccountUserModel, PixKeyModel } from "../../../models";
 
 class PixService {
-  async createPixKey(accountUserId: string, keyType: string, keyValue: string) {
+  async createPixKey(userId: string, keyType: string) {
     try {
-      const response = await asaasClient.post("/pix/keys", {
-        keyType,
-        keyValue,
+      const response = await asaasClient.post("/pix/addressKeys", {
+        type: keyType,
+        sendType: "SEQUENTIALLY",
       });
 
+      const user = await AccountUserModel.findOne({ _id: userId });
+      if (!user) {
+        throw new Error("User not found.");
+      }
+
       const pixKey = new PixKeyModel({
-        keyType,
-        keyValue,
-        accountUserId,
-        asaasKeyId: response.data.id,
+        id: response.data.id,
+        key: response.data.key,
+        type: keyType || "EVP",
         status: response.data.status,
         dateCreated: new Date(response.data.dateCreated),
         canBeDeleted: response.data.canBeDeleted,
@@ -22,53 +26,113 @@ class PixService {
           encodedImage: response.data.qrCode.encodedImage,
           payload: response.data.qrCode.payload,
         },
+        userMail: user.email,
+        accountUserId: user._id,
+        asaasId: user.asaasId,
       });
 
       await pixKey.save();
 
       return pixKey;
     } catch (error) {
-      console.error("Error creating Pix key in Asaas:", error);
+      console.log("error", JSON.stringify(error.response.data, null, 2));
       throw new Error("Failed to create Pix key in Asaas");
     }
   }
-  async getPixKeyFromAsaas(asaasKeyId: string) {
+
+  async listAsaasPixKeys(filters: {
+    status?: string;
+    statusList?: string;
+    offset?: number;
+    limit?: number;
+  }) {
+    const params = Object.entries(filters)
+      .filter(([_, value]) => value !== undefined)
+      .map(
+        ([key, value]) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`,
+      )
+      .join("&");
     try {
-      const response = await asaasClient.get(`/pix/addressKeys/${asaasKeyId}`);
-      return response.data;
+      const response = await asaasClient.get(`/pix/addressKeys?${params}`);
+      return response.data.data || [];
     } catch (error) {
-      console.error("Error fetching Pix key from Asaas:", error);
-      throw new Error("Failed to fetch Pix key from Asaas");
+      console.error("Error listing Pix keys in Asaas:", error);
+      throw new Error("Failed to list Pix keys in Asaas");
     }
   }
 
-  async listPixKeysFromAsaas() {
+  async listPixKeys(
+    filters: {
+      status?: string;
+      statusList?: string;
+      offset?: number;
+      limit?: number;
+    },
+    accountUserId: string,
+  ) {
+    const query = {
+      accountUserId,
+      ...(filters.status && { status: filters.status }),
+      ...(filters.statusList && {
+        status: { $in: filters.statusList.split(",") },
+      }),
+    };
+
+    const options = {
+      skip: filters.offset || 0,
+      limit: filters.limit || 100,
+    };
+
     try {
-      const response = await asaasClient.get("/pix/addressKeys");
-      return response.data;
+      const pixKeys = await PixKeyModel.find(query, null, options);
+      return pixKeys.map((pixKey) => ({
+        ...pixKey.toObject(),
+        keyType: pixKey.type || "EVP",
+        keyValue: pixKey.key || "",
+      }));
     } catch (error) {
-      console.error("Error fetching Pix keys from Asaas:", error);
-      throw new Error("Failed to fetch Pix keys from Asaas");
+      console.error("Error listing Pix keys from database:", error);
+      throw new Error("Failed to list Pix keys from database");
     }
   }
 
-  async deletePixKey(accountUserId: string, pixKeyId: string) {
+  async getAsaasPixKey(id: string) {
     try {
-      const pixKey = await PixKeyModel.findOne({
-        _id: pixKeyId,
-        accountUserId,
-      });
+      const response = await asaasClient.get(`/pix/addressKeys/${id}`);
+      if (!response.data) {
+        throw new Error("Pix key not found.");
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Error retrieving Pix key from Asaas:", error);
+      throw new Error("Failed to retrieve Pix key from Asaas");
+    }
+  }
+
+  async getPixKeyById(id: string) {
+    try {
+      const pixKey = await PixKeyModel.findOne({ id: id });
       if (!pixKey) {
         throw new Error("Pix key not found.");
       }
+      return pixKey;
+    } catch (error) {
+      console.error("Error retrieving Pix key from database:", error);
+      throw new Error("Failed to retrieve Pix key from database");
+    }
+  }
 
-      // Delete the Pix key from Asaas
-      await asaasClient.delete(`/pix/addressKeys/${pixKey.asaasKeyId}`);
+  async deletePixKey(id: string) {
+    try {
+      await asaasClient.delete(`/pix/addressKeys/${id}`);
 
-      // Delete the Pix key from the database
-      await PixKeyModel.deleteOne({ _id: pixKeyId });
+      const result = await PixKeyModel.findOneAndDelete({ id: id });
+      if (!result) {
+        throw new Error("Pix key not found in database.");
+      }
 
-      return true;
+      return { success: true, message: "Pix key deleted successfully." };
     } catch (error) {
       console.error("Error deleting Pix key:", error);
       throw new Error("Failed to delete Pix key");

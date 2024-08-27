@@ -2,95 +2,57 @@ import { GraphQLError } from "graphql";
 import { TResolvers } from "../../../types";
 import { onlyAdmin, onlyLoggedAccountUser } from "../../../guards";
 import { pixService } from "../services/pixKey.service";
-import { PixKeyModel } from "../../../models/PixKey.model";
+import { PixKeyModel } from "../../../models";
 import { IAccountUserSchema } from "../../../models";
 
 export const PixKeyResolvers: TResolvers = {
   Query: {
-    listPixKeys: async (_, __, { user }) => {
-      onlyAdmin(user);
-
+    listAsaasPixKeys: async (_, { filters }) => {
       try {
-        const pixKeys = await PixKeyModel.find({ accountUserId: user.id });
+        const pixKeys = await pixService.listAsaasPixKeys(filters);
         return pixKeys;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
     },
-    getPixKey: async (_, { id }, { user }) => {
-      // tirar duvida com o luiz
-      if (!user || !("cpfCnpj" in user)) {
-        throw new GraphQLError("User not found.");
-      }
-      onlyLoggedAccountUser(user as IAccountUserSchema);
-
+    listPixKeys: async (_, { filters }, { accountUser }) => {
+      onlyLoggedAccountUser(accountUser);
       try {
-        const pixKey = await PixKeyModel.findOne({
-          _id: id,
-          accountUserId: user.id,
-        });
-        if (!pixKey) {
-          throw new GraphQLError("Pix key not found.");
-        }
-        return pixKey;
-      } catch (error) {
-        throw new GraphQLError(error.message);
-      }
-    },
-    listPixKeysFromAsaas: async (_, __, { user }) => {
-      onlyAdmin(user);
-
-      try {
-        const pixKeys = await pixService.listPixKeysFromAsaas();
+        const pixKeys = await pixService.listPixKeys(filters, accountUser._id);
         return pixKeys;
       } catch (error) {
-        throw new GraphQLError(error.message);
+        throw new GraphQLError("Failed to retrieve Pix keys in Database");
       }
     },
-    getPixKeyFromAsaas: async (_, { asaasKeyId }, { user }) => {
-      if (!user || !("cpfCnpj" in user)) {
-        throw new GraphQLError("User not found.");
-      }
-      onlyLoggedAccountUser(user as IAccountUserSchema);
-
+    getAsaasPixKey: async (_, { id }) => {
       try {
-        const pixKey = await pixService.getPixKeyFromAsaas(asaasKeyId);
+        const pixKey = await pixService.getAsaasPixKey(id);
         return pixKey;
       } catch (error) {
         throw new GraphQLError(error.message);
+      }
+    },
+
+    getPixKey: async (_, { id }) => {
+      try {
+        const pixKey = await pixService.getPixKeyById(id);
+        return pixKey;
+      } catch (error) {
+        throw new GraphQLError("Failed to retrieve Pix key in Database");
       }
     },
   },
 
   Mutation: {
-    createPixKey: async (_, { input }, { user }) => {
-      if (!user || !("cpfCnpj" in user)) {
-        throw new GraphQLError("User not found.");
-      }
-      onlyLoggedAccountUser(user as IAccountUserSchema);
+    createPixKey: async (_, { input }, { accountUser }) => {
+      onlyLoggedAccountUser(accountUser);
 
-      const { keyType, keyValue } = input;
-
+      const { keyType } = input;
+      const userId = accountUser._id;
       try {
-        const pixKey = await pixService.createPixKey(
-          user.id,
-          keyType,
-          keyValue,
-        );
+        const pixKey = await pixService.createPixKey(userId, keyType);
+
         return pixKey;
-      } catch (error) {
-        throw new GraphQLError(error.message);
-      }
-    },
-    deletePixKey: async (_, { id }, { user }) => {
-      if (!user || !("cpfCnpj" in user)) {
-        throw new GraphQLError("User not found.");
-      }
-      onlyLoggedAccountUser(user as IAccountUserSchema);
-
-      try {
-        const success = await pixService.deletePixKey(user.id, id);
-        return success;
       } catch (error) {
         throw new GraphQLError(error.message);
       }

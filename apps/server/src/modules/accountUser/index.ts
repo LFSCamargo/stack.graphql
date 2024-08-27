@@ -1,4 +1,4 @@
-export * from "./types/createAccountUser.accountUser.types";
+export * from "./types/AccountUser.accountUser.types";
 import { AccountUserResolvers } from "./resolvers.accountUser";
 import { AccountUserDefinitions } from "./definitions.accountUser";
 

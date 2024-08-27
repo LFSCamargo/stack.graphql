@@ -13,7 +13,7 @@ type JWTPayload =
       expiresAt?: number;
     }
   | {
-      type: "account_user";
+      type: "account";
       id: string;
       expiresAt?: number;
     };

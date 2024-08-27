@@ -1,6 +1,6 @@
 import { gql } from "graphql-tag";
 
-export const pixKeyTypeDefs = gql`
+export const pixKeyDefinitions = gql`
   type QrCode {
     encodedImage: String!
     payload: String!
@@ -8,10 +8,22 @@ export const pixKeyTypeDefs = gql`
 
   type PixKey {
     id: ID!
-    keyType: String!
-    keyValue: String!
+    type: String!
+    key: String!
+    status: String!
     accountUserId: ID!
     asaasKeyId: String!
+    userMail: String!
+    dateCreated: String!
+    canBeDeleted: Boolean!
+    cannotBeDeletedReason: String
+    qrCode: QrCode!
+  }
+
+  type PixKeyReturn {
+    id: ID!
+    type: String
+    key: String
     status: String!
     dateCreated: String!
     canBeDeleted: Boolean!
@@ -19,19 +31,31 @@ export const pixKeyTypeDefs = gql`
     qrCode: QrCode!
   }
 
+  type DeletePixKeyResponse {
+    success: Boolean!
+    message: String!
+  }
+
+  input PixKeyFilterInput {
+    status: String
+    statusList: String
+    offset: Int
+    limit: Int
+  }
+
   input CreatePixKeyInput {
     keyType: String!
-    keyValue: String!
   }
-  extend type Query {
-    listPixKeys: [PixKey!]!
+
+  type Query {
+    listAsaasPixKeys(filters: PixKeyFilterInput): [PixKeyReturn!]!
+    getAsaasPixKey(id: ID!): PixKey!
+    listPixKeys(filters: PixKeyFilterInput): [PixKey!]!
     getPixKey(id: ID!): PixKey!
-    listPixKeysFromAsaas: [PixKey!]!
-    getPixKeyFromAsaas(asaasKeyId: ID!): PixKey!
   }
 
   type Mutation {
     createPixKey(input: CreatePixKeyInput!): PixKey!
-    deletePixKey(id: ID!): Boolean!
+    deletePixKey(id: String!): DeletePixKeyResponse!
   }
 `;

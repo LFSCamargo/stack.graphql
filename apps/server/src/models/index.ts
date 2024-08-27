@@ -4,3 +4,6 @@ export * from "./card-user-transaction.model";
 export * from "./account-user.model";
 export * from "./requests.model";
 export * from "./recovery-code.model";
+export * from "./pix-key.model";
+export * from "./transaction-pix.model";
+export * from "./decoded-pix.model";

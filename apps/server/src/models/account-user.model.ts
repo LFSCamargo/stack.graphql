@@ -5,6 +5,7 @@ export interface IAccountUserSchema extends Document {
   cpfCnpj: string;
   email: string;
   password: string;
+  asaasId: string;
   phone: string;
   mobilePhone: string;
   address: string;
@@ -14,7 +15,6 @@ export interface IAccountUserSchema extends Document {
   postalCode: string;
   externalReference: string;
   notificationDisabled: boolean;
-  additionalEmails: string[];
   municipalInscription: string;
   stateInscription: string;
   observations: string;
@@ -36,6 +36,9 @@ const accountUserSchema = new Schema(
     password: {
       type: String,
       required: true,
+    },
+    asaasId: {
+      type: String,
     },
     email: {
       type: String,
@@ -67,9 +70,6 @@ const accountUserSchema = new Schema(
     notificationDisabled: {
       type: Boolean,
       default: false,
-    },
-    additionalEmails: {
-      type: [String],
     },
     municipalInscription: {
       type: String,
