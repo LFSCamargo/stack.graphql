@@ -1,11 +1,11 @@
 import { asaasClient } from "../../../utils/asaasClient.utils";
 import {
-  CreateAccountUserInput,
-  UpdateAccountUserInput,
-} from "../types/AccountUser.accountUser.types";
+  CreateClientInput,
+  UpdateClientInput,
+} from "../types/Clients.clients.types";
 
-class AsaasCustomersService {
-  async getCustomerById(id: string) {
+class AsaasClientsService {
+  async getClientById(id: string) {
     try {
       const response = await asaasClient.get(`/customers/${id}`);
       return response.data;
@@ -18,7 +18,7 @@ class AsaasCustomersService {
     }
   }
 
-  async listCustomers(params: Record<string, unknown>) {
+  async listClients(params: Record<string, unknown>) {
     try {
       const response = await asaasClient.get("/customers", { params });
       return {
@@ -37,7 +37,7 @@ class AsaasCustomersService {
     }
   }
 
-  async createCustomer(input: CreateAccountUserInput) {
+  async createClient(input: CreateClientInput) {
     try {
       const response = await asaasClient.post("/customers", input);
       return response.data;
@@ -50,7 +50,7 @@ class AsaasCustomersService {
     }
   }
 
-  async updateCustomer(id: string, input: Partial<UpdateAccountUserInput>) {
+  async updateClient(id: string, input: Partial<UpdateClientInput>) {
     try {
       const response = await asaasClient.put(`/customers/${id}`, input);
       return response.data;
@@ -60,7 +60,7 @@ class AsaasCustomersService {
     }
   }
 
-  async deleteCustomer(id: string) {
+  async deleteClient(id: string) {
     try {
       const response = await asaasClient.delete(`/customers/${id}`);
       return response.data;
@@ -71,4 +71,4 @@ class AsaasCustomersService {
   }
 }
 
-export const asaasCustomersService = new AsaasCustomersService();
+export const asaasClientsService = new AsaasClientsService();

@@ -36,6 +36,23 @@ export const pixKeyDefinitions = gql`
     message: String!
   }
 
+  type DeleteStaticQRCodeResponse {
+    id: ID!
+    deleted: Boolean!
+  }
+
+  type StaticQRCode {
+    id: ID!
+    encodedImage: String!
+    payload: String!
+    allowsMultiplePayments: Boolean!
+    expirationDate: String!
+    externalReference: String
+    dateCreated: String!
+    accountUserId: ID!
+    asaasId: String!
+  }
+
   input PixKeyFilterInput {
     status: String
     statusList: String
@@ -45,6 +62,17 @@ export const pixKeyDefinitions = gql`
 
   input CreatePixKeyInput {
     keyType: String!
+  }
+
+  input CreateStaticQRCodeInput {
+    addressKey: String!
+    description: String!
+    value: Float
+    format: String!
+    expirationDate: String
+    expirationSeconds: Int
+    allowsMultiplePayments: Boolean
+    externalReference: String
   }
 
   type Query {
@@ -57,5 +85,7 @@ export const pixKeyDefinitions = gql`
   type Mutation {
     createPixKey(input: CreatePixKeyInput!): PixKey!
     deletePixKey(id: String!): DeletePixKeyResponse!
+    createStaticQRCode(input: CreateStaticQRCodeInput!): StaticQRCode!
+    deleteStaticQRCode(id: String!): DeleteStaticQRCodeResponse!
   }
 `;

@@ -3,8 +3,9 @@ import { AccountUserModel } from "../../models";
 import { GraphQLInput, GraphQLPaginationInput, TResolvers } from "../../types";
 import { PaginationUtility, PasswordUtility, TokenUtility } from "../../utils";
 import { onlyAdmin, onlyLoggedAccountUser } from "../../guards";
-import { asaasCustomersService } from "./services/customer.service";
+import { accountUserService } from "./services/accountUser.service";
 import {
+  CreateAccountUserInput,
   ListAsaasCustomersInput,
   UpdateAccountUserInput,
 } from "./types/AccountUser.accountUser.types";
@@ -12,150 +13,91 @@ import { SignInInput } from "./types/signIn.accountUser.types";
 import { ChangeAccountUserPassword } from "./types/changePassword.accountUser.types";
 import { MailingHandler } from "../../mailing/handlers.mailing";
 import { AccountUserRecoveryCodeModel } from "../../models/account-user-recovery-code.model";
+import { AccountStatus } from "./enums/accountStatus.enum";
 
 export const AccountUserResolvers: TResolvers = {
   Query: {
-    getAccountUserById: async (_, { id }: { id: string }, { user }) => {
+    getPendingAccounts: async (_, __, { user }) => {
       onlyAdmin(user);
-
-      return await AccountUserModel.findOne({ _id: id });
-    },
-    getAccountUser: async (_, __, { accountUser }) => {
-      return accountUser;
-    },
-    listAccountUsers: async (
-      _,
-      { input }: GraphQLInput<GraphQLPaginationInput>,
-      { user },
-    ) => {
-      onlyAdmin(user);
-
-      const params = {
-        // active: true,
-      } as Record<string, unknown>;
-
-      if (input.search) {
-        params.name = { $regex: input.search, $options: "i" };
-      }
-
-      const { count, data, pageInfo } =
-        await PaginationUtility.paginateCollection(
-          AccountUserModel,
-          params,
-          input.limit,
-          input.offset,
-        );
-
-      return {
-        count,
-        data,
-        pageInfo,
-      };
-    },
-    getAsaasCustomerById: async (_, { id }: { id: string }) => {
       try {
-        const customer = await asaasCustomersService.getCustomerById(id);
-        return customer;
+        const accountUsers = await accountUserService.getPendingAccounts();
+        return accountUsers;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
     },
-    listAsaasCustomers: async (
-      _,
-      { input }: GraphQLInput<ListAsaasCustomersInput>,
-    ) => {
+    getPendingAccountByEmail: async (_, { email }, { user }) => {
+      onlyAdmin(user);
       try {
-        const params = {
-          name: input.name,
-          email: input.email,
-          cpfCnpj: input.cpfCnpj,
-          groupName: input.groupName,
-          externalReference: input.externalReference,
-          offset: input.offset,
-          limit: input.limit,
-        } as Record<string, unknown>;
-
-        const response = await asaasCustomersService.listCustomers(params);
-        return {
-          hasMore: response.hasMore,
-          totalCount: response.totalCount,
-          limit: response.limit,
-          offset: response.offset,
-          data: response.data,
-        };
+        const accountUser =
+          await accountUserService.getPendingAccountByEmail(email);
+        return accountUser;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
     },
   },
   Mutation: {
-    createAccountUser: async (_, { input }, { user }) => {
-      onlyAdmin(user);
+    preRegisterAccount: async (
+      _,
+      { input }: { input: CreateAccountUserInput },
+    ) => {
       try {
-        const hashedPassword = PasswordUtility.encryptPassword(input.password);
-
-        const { password, ...asaasInput } = input;
-
-        const asaasCustomer =
-          await asaasCustomersService.createCustomer(asaasInput);
-
-        const newUser = await AccountUserModel.create({
-          ...input,
-          password: hashedPassword,
-          asaasId: asaasCustomer.id,
-        });
-
-        return newUser;
+        const accountUser = await accountUserService.preRegisterAccount(input);
+        return accountUser;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
     },
-    updateAccountUser: async (
+    linkBasketToUser: async (
       _,
-      { id, input }: { id: string; input: UpdateAccountUserInput },
-      { user },
+      { input }: GraphQLInput<{ userId: string; basketId: string }>,
     ) => {
-      onlyAdmin(user);
-
-      const payload: Partial<UpdateAccountUserInput> = { ...input };
-
-      const accountUser = await AccountUserModel.findOneAndUpdate(
-        { asaasId: id },
-        payload,
-        { new: true },
-      );
-
-      if (!accountUser) {
-        console.error(`Account user with externalReference ${id} not found.`);
-        throw new GraphQLError("Account user not found.");
+      try {
+        const accountUser = await accountUserService.linkBasketToUser(
+          input.userId,
+          input.basketId,
+        );
+        return accountUser;
+      } catch (error) {
+        throw new GraphQLError(error.message);
       }
-
-      await asaasCustomersService.updateCustomer(id, input);
-
-      return accountUser;
     },
+    signInAccountUser: async (_, { input }: GraphQLInput<SignInInput>) => {
+      const { email, password } = input;
 
-    deleteAccountUser: async (_, { id }: { id: string }, { user }) => {
-      onlyAdmin(user);
-
-      const accountUser = await AccountUserModel.findOne({ asaasId: id });
+      const accountUser = await AccountUserModel.findOne({ email });
 
       if (!accountUser) {
-        console.error(`Account user with asaasId ${id} not found.`);
-        throw new GraphQLError("Account user not found.");
+        throw new GraphQLError(
+          "Invalid email or password. Please check your credentials and try again.",
+        );
       }
 
-      // Deactivate the user in the database
-      await AccountUserModel.updateOne(
-        { asaasId: id },
-        {
-          active: false,
-        },
+      if (!PasswordUtility.authenticate(password, accountUser.password)) {
+        throw new GraphQLError(
+          "Invalid email or password. Please check your credentials and try again.",
+        );
+      }
+
+      const pendingStatus = await accountUserService.checkPendingStatus(
+        accountUser.email as string,
       );
 
-      await asaasCustomersService.deleteCustomer(id);
+      if (pendingStatus !== AccountStatus.ACTIVE) {
+        throw new GraphQLError(pendingStatus);
+      }
 
-      return true;
+      const token = TokenUtility.generateToken({
+        id: accountUser.email as string,
+        type: "account",
+        expiresAt: Date.now() + 24 * 60 * 60 * 1000,
+      });
+
+      return {
+        accountUser,
+        token,
+      };
     },
     resetAccountUserPasswordWithCode: async (
       _,
@@ -255,34 +197,6 @@ export const AccountUserResolvers: TResolvers = {
       );
 
       return true;
-    },
-    signInAccountUser: async (_, { input }: GraphQLInput<SignInInput>) => {
-      const { email, password } = input;
-
-      const accountUser = await AccountUserModel.findOne({ email });
-
-      if (!accountUser) {
-        throw new GraphQLError(
-          "Invalid email or password. Please check your credentials and try again.",
-        );
-      }
-
-      if (!PasswordUtility.authenticate(password, accountUser.password)) {
-        throw new GraphQLError(
-          "Invalid email or password. Please check your credentials and try again.",
-        );
-      }
-
-      const token = TokenUtility.generateToken({
-        id: accountUser.email as string,
-        type: "account",
-        expiresAt: Date.now() + 24 * 60 * 60 * 1000,
-      });
-
-      return {
-        accountUser,
-        token,
-      };
     },
   },
 };

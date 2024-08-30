@@ -1,95 +1,79 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
+import { AccountStatus } from "../modules/accountUser/enums/accountStatus.enum";
 
 export interface IAccountUserSchema extends Document {
   name: string;
-  cpfCnpj: string;
   email: string;
+  loginEmail?: string;
   password: string;
-  asaasId: string;
-  phone: string;
+  accountStatus: AccountStatus;
+  basketId?: Types.ObjectId;
+  cpfCnpj: string;
+  birthDate?: Date;
+  companyType?: string;
+  phone?: string;
   mobilePhone: string;
+  site?: string;
+  incomeValue: number;
   address: string;
   addressNumber: string;
-  complement: string;
+  complement?: string;
   province: string;
   postalCode: string;
-  externalReference: string;
-  notificationDisabled: boolean;
-  municipalInscription: string;
-  stateInscription: string;
-  observations: string;
-  groupName: string;
-  company: string;
-  createdAt: Date;
+  webhooks: {
+    name: string;
+    url: string;
+    email: string;
+    sendType: "SEQUENTIALLY" | "NON_SEQUENTIALLY";
+    apiVersion?: number;
+    enabled?: boolean;
+    interrupted?: boolean;
+    authToken?: string;
+    events: string[];
+  }[];
 }
 
 const accountUserSchema = new Schema(
   {
-    name: {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    loginEmail: { type: String },
+    password: { type: String, required: true },
+    accountStatus: {
       type: String,
-      required: true,
+      enum: Object.values(AccountStatus),
+      default: AccountStatus.PENDING,
     },
-    cpfCnpj: {
-      type: String,
-      required: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    asaasId: {
-      type: String,
-    },
-    email: {
-      type: String,
-    },
-    phone: {
-      type: String,
-    },
-    mobilePhone: {
-      type: String,
-    },
-    address: {
-      type: String,
-    },
-    addressNumber: {
-      type: String,
-    },
-    complement: {
-      type: String,
-    },
-    province: {
-      type: String,
-    },
-    postalCode: {
-      type: String,
-    },
-    externalReference: {
-      type: String,
-    },
-    notificationDisabled: {
-      type: Boolean,
-      default: false,
-    },
-    municipalInscription: {
-      type: String,
-    },
-    stateInscription: {
-      type: String,
-    },
-    observations: {
-      type: String,
-    },
-    groupName: {
-      type: String,
-    },
-    company: {
-      type: String,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
+    basketId: { type: Types.ObjectId, ref: "Basket" },
+    cpfCnpj: { type: String, required: true },
+    birthDate: { type: Date },
+    companyType: { type: String },
+    phone: { type: String },
+    mobilePhone: { type: String, required: true },
+    site: { type: String },
+    incomeValue: { type: Number, required: true },
+    address: { type: String, required: true },
+    addressNumber: { type: String, required: true },
+    complement: { type: String },
+    province: { type: String, required: true },
+    postalCode: { type: String, required: true },
+    webhooks: [
+      {
+        name: { type: String, required: true },
+        url: { type: String, required: true },
+        email: { type: String, required: true },
+        sendType: {
+          type: String,
+          enum: ["SEQUENTIALLY", "NON_SEQUENTIALLY"],
+          default: "SEQUENTIALLY",
+        },
+        apiVersion: { type: Number, default: 3 },
+        enabled: { type: Boolean, default: true },
+        interrupted: { type: Boolean, default: false },
+        authToken: { type: String },
+        events: { type: [String], required: true },
+      },
+    ],
   },
   {
     timestamps: true,

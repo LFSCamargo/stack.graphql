@@ -7,113 +7,36 @@ export const AccountUserDefinitions = gql`
     password: String!
   }
 
-  type AccountUser {
-    _id: ID!
+  input PreRegisterAccountInput {
     name: String!
-    cpfCnpj: String!
     email: String!
-    asaasId: String!
-    phone: String
-    mobilePhone: String
-    address: String
-    addressNumber: String
-    complement: String
-    province: String
-    postalCode: String
-    externalReference: String
-    notificationDisabled: Boolean
-    municipalInscription: String
-    stateInscription: String
-    observations: String
-    groupName: String
-    company: String
-    createdAt: String!
-  }
-
-  input CreateAccountUserInput {
-    name: String!
+    loginEmail: String
     password: String!
     cpfCnpj: String!
-    email: String
+    birthDate: String
+    companyType: String
     phone: String
-    mobilePhone: String
-    address: String
-    addressNumber: String
+    mobilePhone: String!
+    site: String
+    incomeValue: Float!
+    address: String!
+    addressNumber: String!
     complement: String
-    province: String
-    postalCode: String
-    externalReference: String
-    notificationDisabled: Boolean
-    municipalInscription: String
-    stateInscription: String
-    observations: String
-    groupName: String
-    company: String
+    province: String!
+    postalCode: String!
+    webhooks: [WebhookAccountUserInput!]!
   }
 
-  input UpdateAccountUserInput {
-    name: String
-    password: String
-    cpfCnpj: String
-    email: String
-    asaasId: String
-    phone: String
-    mobilePhone: String
-    address: String
-    addressNumber: String
-    complement: String
-    province: String
-    postalCode: String
-    externalReference: String
-    notificationDisabled: Boolean
-    municipalInscription: String
-    stateInscription: String
-    observations: String
-    groupName: String
-    company: String
-  }
-
-  input ListAsaasCustomersInput {
-    name: String
-    email: String
-    cpfCnpj: String
-    groupName: String
-    externalReference: String
-    offset: Int
-    limit: Int
-  }
-
-  type AsaasCustomer {
-    id: String!
-    dateCreated: String!
+  input WebhookAccountUserInput {
     name: String!
+    url: String!
     email: String!
-    cpfCnpj: String!
-    phone: String
-    mobilePhone: String
-    address: String
-    addressNumber: String
-    complement: String
-    province: String
-    postalCode: String
-    city: Int
-    cityName: String
-    deleted: Boolean
-    externalReference: String
-    notificationDisabled: Boolean
-    groups: [Group]
-  }
-
-  type Group {
-    name: String!
-  }
-
-  type AsaasCustomerPagination {
-    hasMore: Boolean!
-    totalCount: Int!
-    limit: Int!
-    offset: Int!
-    data: [AsaasCustomer!]!
+    sendType: String!
+    apiVersion: Int
+    enabled: Boolean
+    interrupted: Boolean
+    authToken: String
+    events: [String!]!
   }
 
   input ChangeAccountUserPassword {
@@ -134,38 +57,53 @@ export const AccountUserDefinitions = gql`
     email: String!
   }
 
-  # Output types
-  type AccountUser {
-    _id: ID!
+  input MessageOutput {
+    message: String!
+  }
+
+  input LinkBasketToUserInput {
+    userId: String!
+    basketId: String!
+  }
+
+  type WebhookAccountUser {
     name: String!
-    cpfCnpj: String!
+    url: String!
     email: String!
-    asaasId: String!
-    phone: String!
+    sendType: String!
+    apiVersion: Int
+    enabled: Boolean
+    interrupted: Boolean
+    authToken: String
+    events: [String!]!
+  }
+
+  type AccountUser {
+    id: ID!
+    name: String!
+    email: String!
+    loginEmail: String
+    password: String!
+    accountStatus: String!
+    basketId: ID
+    cpfCnpj: String!
+    birthDate: String
+    companyType: String
+    phone: String
     mobilePhone: String!
+    site: String
+    incomeValue: Float!
     address: String!
     addressNumber: String!
     complement: String
     province: String!
     postalCode: String!
-    externalReference: String
-    notificationDisabled: Boolean
-    municipalInscription: String
-    stateInscription: String
-    observations: String
-    groupName: String
-    company: String
-    createdAt: String!
+    webhooks: [WebhookAccountUser!]!
   }
 
-  type AccountAuthPayload {
-    token: String!
-    accountUser: AccountUser!
-  }
+  # type AccountAuthPayload {
 
-  input MessageOutput {
-    message: String!
-  }
+  # }
 
   type AccountUsersOutput {
     count: Int!
@@ -187,27 +125,21 @@ export const AccountUserDefinitions = gql`
   type MessageOutput {
     message: String!
   }
-  # GraphQL Main Types
+
   type Query {
-    getAccountUserById(id: String!): AccountUser
-    getAccountUser: AccountUser
-    listAccountUsers(input: PaginationInput!): AccountUserPagination
-    listAsaasCustomers(
-      input: ListAsaasCustomersInput!
-    ): AsaasCustomerPagination!
-    getAsaasCustomerById(id: String!): AsaasCustomer!
+    getPendingAccounts: [AccountUser!]!
+    getPendingAccountByEmail(email: String!): AccountUser
   }
 
   type Mutation {
-    createAccountUser(input: CreateAccountUserInput!): AccountUser!
-    deleteAccountUser(id: String!): Boolean!
+    preRegisterAccount(input: PreRegisterAccountInput!): AccountUser!
+    linkBasketToUser(input: LinkBasketToUserInput!): AccountUser!
+    signInAccountUser(input: AccountSignInInput!): SignInResponse!
+
     resetAccountUserPasswordWithCode(
       input: ResetPasswordWithCodeInput!
     ): MessageOutput!
-
     recoverAccountUserPassword(input: RecoverPasswordInput!): MessageOutput!
-    updateAccountUser(id: String!, input: UpdateAccountUserInput!): AccountUser!
     changeAccountUserPassword(input: ChangeAccountUserPassword!): Boolean!
-    signInAccountUser(input: SignInInput!): SignInResponse!
   }
 `;

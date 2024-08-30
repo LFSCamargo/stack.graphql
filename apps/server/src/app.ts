@@ -10,6 +10,11 @@ import {
   pixModule,
   pixStaticQrCodeModule,
   transactionPixModule,
+  AccountTransactionModule,
+  ClientModule,
+  webhookModule,
+  BasketModule,
+  BasketItemsModule,
 } from "./modules";
 import { Env } from "./env";
 
@@ -25,6 +30,11 @@ const apolloServer = new ApolloServer({
     pixModule.resolvers,
     pixStaticQrCodeModule.resolvers,
     transactionPixModule.resolvers,
+    AccountTransactionModule.resolvers,
+    ClientModule.resolvers,
+    webhookModule.resolvers,
+    BasketModule.resolvers,
+    BasketItemsModule.resolvers,
   ],
   typeDefs: [
     HealthModule.typeDefs,
@@ -36,6 +46,11 @@ const apolloServer = new ApolloServer({
     pixModule.typeDefs,
     pixStaticQrCodeModule.typeDefs,
     transactionPixModule.typeDefs,
+    AccountTransactionModule.typeDefs,
+    webhookModule.typeDefs,
+    ClientModule.typeDefs,
+    BasketModule.typeDefs,
+    BasketItemsModule.typeDefs,
     GlobalTypes,
   ],
 });
