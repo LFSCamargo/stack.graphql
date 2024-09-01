@@ -14,3 +14,12 @@ export interface UpdateBasketInput {
   }[];
   basketValue?: number;
 }
+
+export interface BasketType {
+  _id: Types.ObjectId;
+  name: string;
+  items: {
+    id: Types.ObjectId;
+  }[];
+  basketValue: number;
+}

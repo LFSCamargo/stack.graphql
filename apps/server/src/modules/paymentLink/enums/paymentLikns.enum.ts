@@ -1,0 +1,21 @@
+export enum BillingType {
+  UNDEFINED = "UNDEFINED",
+  BOLETO = "BOLETO",
+  CREDIT_CARD = "CREDIT_CARD",
+  PIX = "PIX",
+}
+
+export enum ChargeType {
+  DETACHED = "DETACHED",
+  RECURRENT = "RECURRENT",
+  INSTALLMENT = "INSTALLMENT",
+}
+
+export enum SubscriptionCycle {
+  WEEKLY = "WEEKLY",
+  BIWEEKLY = "BIWEEKLY",
+  MONTHLY = "MONTHLY",
+  QUARTERLY = "QUARTERLY",
+  SEMIANNUALLY = "SEMIANNUALLY",
+  YEARLY = "YEARLY",
+}

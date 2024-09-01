@@ -3,8 +3,10 @@ import { PasswordUtility } from "../../../utils/password.utils";
 import { IAccountUserSchema } from "../../../models/account-user.model";
 import { CreateAccountUserInput } from "../types/AccountUser.accountUser.types";
 import { AccountStatus } from "../enums/accountStatus.enum";
-import { BasketModel } from "../../../models";
+import { BasketModel, IPaymentLinkSchema, PaymentLinkModel } from "../../../models";
 import { Types } from "mongoose";
+import { ErrorMessages } from "../../../utils/errorMessages.enum";
+import { BasketType } from '../../basket/types/basket.types';
 
 class AccountUserService {
   async preRegisterAccount(
@@ -39,38 +41,59 @@ class AccountUserService {
     });
   }
 
-  async checkPendingStatus(email: string): Promise<string> {
+  async checkUserStatus(email: string): Promise<string> {
     const user = await AccountUserModel.findOne({ email });
     if (user && user.accountStatus === AccountStatus.PENDING) {
-      return "The benefits and amounts for opening the account for this user have not yet been selected.";
+      return ErrorMessages.USER_STATUS_PENDING;
     }
-    return "User can proceed with login.";
+
+    if (user && user.accountStatus === AccountStatus.WAITING_PAYMENT) {
+      return ErrorMessages.USER_STATUS_WAITING_PAYMENT;
+    }
+
+    return ErrorMessages.USER_CAN_PROCEED_WITH_LOGIN;
   }
 
   async linkBasketToUser(
     userId: string,
     basketId: string,
+    adminUserId: string,
   ): Promise<IAccountUserSchema> {
-    const user = await AccountUserModel.findById(userId);
-    if (!user) {
-      throw new Error("User not found.");
+    const accountUser = await AccountUserModel.findById(userId);
+    if (!accountUser) {
+      throw new Error(ErrorMessages.USER_NOT_FOUND);
     }
 
-    const basket = await BasketModel.findById(basketId);
+    const basket: BasketType | null = await BasketModel.findById(basketId);
     if (!basket) {
-      throw new Error("Basket not found.");
+      throw new Error(ErrorMessages.BASKET_NOT_FOUND);
     }
 
-    user.basketId = new Types.ObjectId(basketId);
-    user.accountStatus = AccountStatus.WAITING_PAYMENT;
+    accountUser.basketId = new Types.ObjectId(basketId);
+    accountUser.accountStatus = AccountStatus.WAITING_PAYMENT;
 
-    await user.save();
+    await accountUser.save();
 
     // Generate charge and send to user (not yet implemented)
-    // generateCharge(user);
-    // sendChargeSlip(user);
+    // generatePaymentLink(user);
+    
+    const paymentLink: IPaymentLinkSchema = await PaymentLinkModel.create({
+      userId: adminUserId,
+      intendedUserId: accountUser._id,
+      basketId: basket._id,
+      amount: basket.basketValue,
+      dueDate: new Date(Date.now() + 1000 * 60 * 60 * 24),
+    });
 
-    return user;
+    const billingPaymentLink: IPaymentLinkSchema | null = await PaymentLinkModel.findById(paymentLink._id);
+
+    if(!billingPaymentLink) {
+      throw new Error(ErrorMessages.PAYMENT_LINK_NOT_FOUND);
+    }
+
+    // sendPaymentLinkByEmail(user);
+
+    return accountUser;
   }
 }
 

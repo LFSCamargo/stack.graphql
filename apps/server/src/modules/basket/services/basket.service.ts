@@ -1,10 +1,8 @@
 import { BasketModel } from "../../../models/basket.model";
-import {
-  BasketItemModel,
-  IBasketItemSchema,
-} from "../../../models/basket-item.model";
+import { BasketItemModel } from "../../../models/basket-item.model";
 import { IBasketSchema } from "../../../models/basket.model";
 import { CreateBasketInput, UpdateBasketInput } from "../types/basket.types";
+import { ErrorMessages } from "../../../utils/errorMessages.enum";
 
 class BasketService {
   async createBasket(data: CreateBasketInput) {
@@ -123,7 +121,7 @@ class BasketService {
     try {
       const basket = await BasketModel.findByIdAndDelete(id);
       if (!basket) {
-        throw new Error("Basket not found.");
+        throw new Error(ErrorMessages.BASKET_NOT_FOUND);
       }
       return {
         id: basket.id,

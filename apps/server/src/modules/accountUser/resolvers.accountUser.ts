@@ -1,19 +1,16 @@
 import { GraphQLError } from "graphql";
 import { AccountUserModel } from "../../models";
-import { GraphQLInput, GraphQLPaginationInput, TResolvers } from "../../types";
-import { PaginationUtility, PasswordUtility, TokenUtility } from "../../utils";
+import { GraphQLInput, TResolvers } from "../../types";
+import { PasswordUtility, TokenUtility } from "../../utils";
 import { onlyAdmin, onlyLoggedAccountUser } from "../../guards";
 import { accountUserService } from "./services/accountUser.service";
-import {
-  CreateAccountUserInput,
-  ListAsaasCustomersInput,
-  UpdateAccountUserInput,
-} from "./types/AccountUser.accountUser.types";
+import { CreateAccountUserInput } from "./types/AccountUser.accountUser.types";
 import { SignInInput } from "./types/signIn.accountUser.types";
 import { ChangeAccountUserPassword } from "./types/changePassword.accountUser.types";
 import { MailingHandler } from "../../mailing/handlers.mailing";
 import { AccountUserRecoveryCodeModel } from "../../models/account-user-recovery-code.model";
 import { AccountStatus } from "./enums/accountStatus.enum";
+import { ErrorMessages } from "../../utils/errorMessages.enum";
 
 export const AccountUserResolvers: TResolvers = {
   Query: {
@@ -52,11 +49,14 @@ export const AccountUserResolvers: TResolvers = {
     linkBasketToUser: async (
       _,
       { input }: GraphQLInput<{ userId: string; basketId: string }>,
+      { user }
     ) => {
+      onlyAdmin(user);
       try {
         const accountUser = await accountUserService.linkBasketToUser(
           input.userId,
           input.basketId,
+          user._id,
         );
         return accountUser;
       } catch (error) {
@@ -69,18 +69,14 @@ export const AccountUserResolvers: TResolvers = {
       const accountUser = await AccountUserModel.findOne({ email });
 
       if (!accountUser) {
-        throw new GraphQLError(
-          "Invalid email or password. Please check your credentials and try again.",
-        );
+        throw new GraphQLError(ErrorMessages.INVALID_EMAIL_OR_PASSWORD);
       }
 
       if (!PasswordUtility.authenticate(password, accountUser.password)) {
-        throw new GraphQLError(
-          "Invalid email or password. Please check your credentials and try again.",
-        );
+        throw new GraphQLError(ErrorMessages.INVALID_EMAIL_OR_PASSWORD);
       }
 
-      const pendingStatus = await accountUserService.checkPendingStatus(
+      const pendingStatus = await accountUserService.checkUserStatus(
         accountUser.email as string,
       );
 
@@ -110,7 +106,7 @@ export const AccountUserResolvers: TResolvers = {
       });
 
       if (!recoveryCode) {
-        throw new GraphQLError("Invalid recovery code.");
+        throw new GraphQLError(ErrorMessages.INVALID_RECOVERY_CODE);
       }
 
       const accountUser = await AccountUserModel.findOne({
@@ -118,7 +114,7 @@ export const AccountUserResolvers: TResolvers = {
       });
 
       if (!accountUser) {
-        throw new GraphQLError("Invalid recovery code.");
+        throw new GraphQLError(ErrorMessages.INVALID_RECOVERY_CODE);
       }
 
       const password = PasswordUtility.encryptPassword(newPassword);
@@ -144,7 +140,7 @@ export const AccountUserResolvers: TResolvers = {
       });
 
       if (!accountUser) {
-        throw new GraphQLError("Invalid email.");
+        throw new GraphQLError(ErrorMessages.INVALID_EMAIL);
       }
 
       const recoveryCode = await AccountUserRecoveryCodeModel.findOne({
@@ -186,7 +182,7 @@ export const AccountUserResolvers: TResolvers = {
       const { oldPassword, newPassword } = input;
 
       if (!PasswordUtility.authenticate(oldPassword, accountUser.password)) {
-        throw new GraphQLError("Invalid old password.");
+        throw new GraphQLError(ErrorMessages.INVALID_OLD_PASSWORD);
       }
 
       const password = PasswordUtility.encryptPassword(newPassword);
