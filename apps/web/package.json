@@ -13,7 +13,7 @@
   "dependencies": {
     "@apollo/client": "^3.9.7",
     "@heroicons/vue": "^2.1.1",
-    "@ipe.stack/apollo": "*",
+    "@ipe.stack/apollo": "file:../../packages/apollo",
     "@vee-validate/zod": "^4.12.6",
     "@vue/apollo-composable": "^4.0.2",
     "autoprefixer": "^10.4.18",
