@@ -3,10 +3,13 @@ import { PasswordUtility } from "../../../utils/password.utils";
 import { IAccountUserSchema } from "../../../models/account-user.model";
 import { CreateAccountUserInput } from "../types/AccountUser.accountUser.types";
 import { AccountStatus } from "../enums/accountStatus.enum";
-import { BasketModel, IPaymentLinkSchema, PaymentLinkModel } from "../../../models";
+import { BasketModel } from "../../../models";
 import { Types } from "mongoose";
 import { ErrorMessages } from "../../../utils/errorMessages.enum";
 import { BasketType } from '../../basket/types/basket.types';
+import { BillingType, ChargeType } from '../../paymentLink/enums/paymentLikns.enum';
+import { paymentLinkService } from '../../paymentLink/services/paymentLink.service';
+import { CreatePaymentLinkInput } from '../../paymentLink/types/paymentLink.types';
 
 class AccountUserService {
   async preRegisterAccount(
@@ -55,11 +58,11 @@ class AccountUserService {
   }
 
   async linkBasketToUser(
-    userId: string,
+    intendedUserId: string,
     basketId: string,
     adminUserId: string,
   ): Promise<IAccountUserSchema> {
-    const accountUser = await AccountUserModel.findById(userId);
+    const accountUser = await AccountUserModel.findById(intendedUserId);
     if (!accountUser) {
       throw new Error(ErrorMessages.USER_NOT_FOUND);
     }
@@ -77,19 +80,31 @@ class AccountUserService {
     // Generate charge and send to user (not yet implemented)
     // generatePaymentLink(user);
     
-    const paymentLink: IPaymentLinkSchema = await PaymentLinkModel.create({
-      userId: adminUserId,
-      intendedUserId: accountUser._id,
-      basketId: basket._id,
-      amount: basket.basketValue,
-      dueDate: new Date(Date.now() + 1000 * 60 * 60 * 24),
-    });
+    const paymentLinkData: CreatePaymentLinkInput = {
+      userId: new Types.ObjectId(adminUserId),
+      value: basket.basketValue,
+      billingType: BillingType.BOLETO,
+      chargeType: ChargeType.DETACHED,
+      dueDateLimitDays: 30,
+      name: `Cobrança de criação de conta Ipê ${basket.basketValue}`,
+      // callback: {
+      //   successUrl: `https://www.ipetown.com.br/account-user/payment-success`,
+      // },
+    };
 
-    const billingPaymentLink: IPaymentLinkSchema | null = await PaymentLinkModel.findById(paymentLink._id);
+   
+    const paymentLink = await paymentLinkService.createPaymentLinkForUser(
+      adminUserId,
+      intendedUserId,
+      paymentLinkData
+    );
 
-    if(!billingPaymentLink) {
-      throw new Error(ErrorMessages.PAYMENT_LINK_NOT_FOUND);
-    }
+    console.log('paymentLink', paymentLink);
+    // const billingPaymentLink: IPaymentLinkSchema | null = await PaymentLinkModel.findById(paymentLink._id);
+
+    // if(!billingPaymentLink) {
+    //   throw new Error(ErrorMessages.PAYMENT_LINK_NOT_FOUND);
+    // }
 
     // sendPaymentLinkByEmail(user);
 

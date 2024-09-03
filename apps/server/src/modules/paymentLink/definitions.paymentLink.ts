@@ -36,7 +36,7 @@ export const PaymentLinkDefinitions = gql`
     subscriptionCycle: SubscriptionCycle
     maxInstallmentCount: Int
     notificationEnabled: Boolean
-    callback: CallbackInput!
+    callback: CallbackInput
   }
 
   input CallbackInput {
@@ -76,6 +76,8 @@ export const PaymentLinkDefinitions = gql`
   type Query {
     getPaymentLinksByUser(userId: ID!): [PaymentLink!]!
     listPaymentLinks(queryParams: ListPaymentLinksQueryParams!): [PaymentLink!]!
+    listAllPaymentLinks: [PaymentLink!]!
+
   }
 
   type Mutation {

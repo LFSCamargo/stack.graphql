@@ -22,23 +22,23 @@ export interface IPaymentLinkSchema extends Document {
 
 const paymentLinkSchema = new Schema(
   {
-    id: { type: String, required: true },
+    id: { type: String },
     name: { type: String, required: true },
     value: { type: Number, required: true },
     active: { type: Boolean, required: true },
     chargeType: { type: String, required: true },
-    url: { type: String, required: true },
+    url: { type: String },
+    userId: { type: Types.ObjectId, ref: "AccountUser", required: true },
+    intendedUserId: { type: Types.ObjectId, ref: "AccountUser"},
     billingType: { type: String, required: true },
     subscriptionCycle: { type: String, default: null },
     description: { type: String, default: null },
     endDate: { type: Date, default: null },
-    deleted: { type: Boolean, required: true },
+    deleted: { type: Boolean },
     viewCount: { type: Number, default: 0 },
     maxInstallmentCount: { type: Number, default: 1 },
     dueDateLimitDays: { type: Number, default: null },
     notificationEnabled: { type: Boolean, default: true },
-    userId: { type: Types.ObjectId, ref: "AccountUser", required: true },
-    intendedUserId: { type: Types.ObjectId, ref: "AccountUser"},
   },
   {
     timestamps: true,

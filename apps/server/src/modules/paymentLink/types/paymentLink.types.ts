@@ -4,8 +4,6 @@ import { BillingType, ChargeType, SubscriptionCycle } from "../enums/paymentLikn
 export interface CreatePaymentLinkInput {
   userId?: Types.ObjectId;
   intendedUserId?: Types.ObjectId;
-  amount: number;
-  dueDate: Date;
   name: string;
   description?: string;
   endDate?: Date;
@@ -16,7 +14,7 @@ export interface CreatePaymentLinkInput {
   subscriptionCycle?: SubscriptionCycle;
   maxInstallmentCount?: number;
   notificationEnabled?: boolean;
-  callback: {
+  callback?: {
     successUrl: string;
     autoRedirect?: boolean;
   };
@@ -28,21 +26,4 @@ export interface ListPaymentLinksQueryParams {
   name?: string;
   offset?: number;
   limit?: number;
-}
-
-export interface PaymentLinkType {
-  _id: Types.ObjectId;
-  userId: Types.ObjectId;
-  intendedUserId?: Types.ObjectId;
-  amount: number;
-  dueDate: Date;
-  status: boolean;
-  name: string;
-  description?: string;
-  endDate?: Date;
-  value?: number;
-  billingType: BillingType;
-  chargeType: ChargeType;
-  dueDateLimitDays?: number;
-  subscriptionCycle?: SubscriptionCycle;
 }

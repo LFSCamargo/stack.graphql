@@ -15,6 +15,7 @@ import {
   webhookModule,
   BasketModule,
   BasketItemsModule,
+  PaymentLinkModule,
 } from "./modules";
 import { Env } from "./env";
 
@@ -35,6 +36,7 @@ const apolloServer = new ApolloServer({
     webhookModule.resolvers,
     BasketModule.resolvers,
     BasketItemsModule.resolvers,
+    PaymentLinkModule.resolvers,
   ],
   typeDefs: [
     HealthModule.typeDefs,
@@ -51,6 +53,7 @@ const apolloServer = new ApolloServer({
     ClientModule.typeDefs,
     BasketModule.typeDefs,
     BasketItemsModule.typeDefs,
+    PaymentLinkModule.typeDefs,
     GlobalTypes,
   ],
 });

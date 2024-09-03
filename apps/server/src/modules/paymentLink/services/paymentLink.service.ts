@@ -23,8 +23,10 @@ class PaymentLinkService {
   }
 
   async createPaymentLinkForUser(userId: string, intendedUserId: string, paymentLinkData: CreatePaymentLinkInput): Promise<IPaymentLinkSchema> {
+    console.log('paymentLinkData', paymentLinkData);
     try {
       const response = await axios.post(this.API_URL, paymentLinkData);
+      console.log('user',response.data);
       const paymentLink = response.data;
 
       const newPaymentLink = await PaymentLinkModel.create({
@@ -35,6 +37,7 @@ class PaymentLinkService {
 
       return newPaymentLink;
     } catch (error) {
+      console.log('error', error);
       throw new Error(`Error creating payment link for user: ${error.message}`);
     }
   }
