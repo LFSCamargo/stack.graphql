@@ -13,14 +13,12 @@ interface AccountCreationEmailProps {
   name: string;
   amount: number;
   paymentLink: string;
-  basketItems: string[];
 }
 
 export const AccountCreationEmail = ({
   name,
   amount,
   paymentLink,
-  basketItems,
 }: AccountCreationEmailProps) => (
   <Html>
     <Head />
@@ -30,23 +28,16 @@ export const AccountCreationEmail = ({
         <Text style={{ ...text, marginBottom: "14px" }}>
           Bem-vindo, {name}!
         </Text>
-        <Text style={{ ...text, marginBottom: "14px" }}>
-          Estamos felizes em tê-lo conosco. Abaixo estão os detalhes da sua conta e os benefícios que você terá:
+        <Text style={{ ...text, marginBottom: "0px" }}>
+          Estamos felizes em tê-lo conosco. Abaixo estão os detalhes da sua
+          conta e os benefícios que você terá:
         </Text>
-        <Text style={{ ...text, marginBottom: "14px" }}>
+        <Text style={{ ...text, marginBottom: "20px" }}>
           Valor da cobrança: R$ {Number(amount).toFixed(2)}
         </Text>
-        <Text style={{ ...text, marginBottom: "14px" }}>
-          Itens da cesta de benefícios:
-          <ul>
-            {basketItems?.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        </Text>
-        <Button href={paymentLink} style={button}>
+        <a style={button} href={paymentLink}>
           Pagar Agora
-        </Button>
+        </a>
         <br />
         <br />
         <Text
@@ -69,7 +60,6 @@ AccountCreationEmail.PreviewProps = {
   name: "John Doe",
   amount: 1000,
   paymentLink: "https://payment-link.com",
-  basketItems: ["Benefício 1", "Benefício 2", "Benefício 3"],
 } as AccountCreationEmailProps;
 
 export default AccountCreationEmail;
@@ -104,9 +94,11 @@ const footer = {
 };
 
 const button = {
-  backgroundColor: "#007bff",
+  backgroundColor: "#000",
   color: "#ffffff",
   padding: "10px 20px",
   textDecoration: "none",
-  borderRadius: "5px",
+  borderRadius: "10px",
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
 };

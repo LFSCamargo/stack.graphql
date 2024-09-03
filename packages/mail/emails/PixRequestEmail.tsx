@@ -7,7 +7,6 @@ import {
   Text,
 } from "@react-email/components";
 import * as React from "react";
-import { formatCardNumber } from "../utils";
 
 interface PixRequestEmailProps {
   cardNumber?: string;
@@ -37,7 +36,7 @@ export const PixRequestEmail = ({
 
         <Text style={{ ...text, marginBottom: "14px" }}>
           {/* Solicitante: {cardNumber} <br /> */}
-          Solicitatnte {formatCardNumber(cardNumber as string)} <br />
+          Solicitante {cardNumber} <br />
           Nome do Favorecido: {name} <br />
           CPF: {cpf} <br />
           Chave PIX: {pixKey} <br />
