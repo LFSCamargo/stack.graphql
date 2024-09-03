@@ -77,9 +77,6 @@ class AccountUserService {
 
     await accountUser.save();
 
-    // Generate charge and send to user (not yet implemented)
-    // generatePaymentLink(user);
-    
     const paymentLinkData: CreatePaymentLinkInput = {
       userId: new Types.ObjectId(adminUserId),
       value: basket.basketValue,

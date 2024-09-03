@@ -8,6 +8,7 @@ import {
   RecoverPasswordEmail,
   TedRequest,
   WelcomeEmail,
+  CreateAccountBillingEmail,
 } from "@ipe.stack/mail";
 
 const transporter = nodemailer.createTransport({
@@ -61,10 +62,7 @@ export const MailingHandler = {
       from: Env.MAIL_USER,
       html: renderedContent,
       subject: "Ipê Bank - Solicitação de Transferência PIX",
-      to:
-        process.env.NODE_ENV === "development"
-          ? Env.MAIL_USER
-          : "admin@ipebank.com.br",
+      to: Env.ADMIN_MAIL_DESTINATION,
     });
   },
 
@@ -88,10 +86,7 @@ export const MailingHandler = {
       from: Env.MAIL_USER,
       html: renderedContent,
       subject: "Ipê Bank - Solicitação de Transferência TED",
-      to:
-        process.env.NODE_ENV === "development"
-          ? Env.MAIL_USER
-          : "admin@ipebank.com.br",
+      to: Env.ADMIN_MAIL_DESTINATION,
     });
   },
 
@@ -111,10 +106,7 @@ export const MailingHandler = {
       from: Env.MAIL_USER,
       html: renderedContent,
       subject: "Ipê Bank - Troca de Senha",
-      to:
-        process.env.NODE_ENV === "development"
-          ? Env.MAIL_USER
-          : "admin@ipebank.com.br",
+      to: Env.ADMIN_MAIL_DESTINATION,
     });
   },
 

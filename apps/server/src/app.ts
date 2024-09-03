@@ -1,5 +1,8 @@
 import { ApolloServer } from "@apollo/server";
 import GlobalTypes from "./graphql/definitions.graphql";
+import http from "http";
+import express from "express";
+
 import {
   HealthModule,
   UserModule,
@@ -18,6 +21,10 @@ import {
   PaymentLinkModule,
 } from "./modules";
 import { Env } from "./env";
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+
+const app = express();
+const httpServer = http.createServer(app);
 
 const apolloServer = new ApolloServer({
   introspection: Env.MODE === "development",
@@ -56,6 +63,7 @@ const apolloServer = new ApolloServer({
     PaymentLinkModule.typeDefs,
     GlobalTypes,
   ],
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
-export { apolloServer };
+export { app, httpServer, apolloServer };

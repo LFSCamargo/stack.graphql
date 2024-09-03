@@ -15,4 +15,5 @@ export const Env = {
   MAIL_PASS: process.env.MAIL_PASS || "ligs xjpr tisb fojg",
   ASAAS_API_KEY: process.env.ASAAS_API_KEY || "",
   ASAAS_API_SANDBOX_URL: process.env.ASAAS_API_SANDBOX_URL || "",
+  ADMIN_MAIL_DESTINATION: process.env.ADMIN_MAIL_DESTINATION || "admin@ipebank.com.br",
 };

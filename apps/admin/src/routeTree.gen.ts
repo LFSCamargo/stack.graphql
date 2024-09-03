@@ -83,26 +83,44 @@ const DashboardManageClientsDetailsCardUserIdLazyRoute =
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/user/change-password': {
+      id: '/user/change-password'
+      path: '/user/change-password'
+      fullPath: '/user/change-password'
       preLoaderRoute: typeof UserChangePasswordLazyImport
       parentRoute: typeof rootRoute
     }
     '/dashboard/': {
+      id: '/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/dashboard/manage-clients/': {
+      id: '/dashboard/manage-clients/'
+      path: '/dashboard/manage-clients'
+      fullPath: '/dashboard/manage-clients'
       preLoaderRoute: typeof DashboardManageClientsIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/dashboard/manage-clients/details/$cardUserId': {
+      id: '/dashboard/manage-clients/details/$cardUserId'
+      path: '/dashboard/manage-clients/details/$cardUserId'
+      fullPath: '/dashboard/manage-clients/details/$cardUserId'
       preLoaderRoute: typeof DashboardManageClientsDetailsCardUserIdLazyImport
       parentRoute: typeof rootRoute
     }
     '/dashboard/manage-clients/add/': {
+      id: '/dashboard/manage-clients/add/'
+      path: '/dashboard/manage-clients/add'
+      fullPath: '/dashboard/manage-clients/add'
       preLoaderRoute: typeof DashboardManageClientsAddIndexLazyImport
       parentRoute: typeof rootRoute
     }
@@ -111,13 +129,49 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([
+export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   UserChangePasswordLazyRoute,
   DashboardIndexLazyRoute,
   DashboardManageClientsIndexLazyRoute,
   DashboardManageClientsDetailsCardUserIdLazyRoute,
   DashboardManageClientsAddIndexLazyRoute,
-])
+})
 
 /* prettier-ignore-end */
+
+/* ROUTE_MANIFEST_START
+{
+  "routes": {
+    "__root__": {
+      "filePath": "__root.tsx",
+      "children": [
+        "/",
+        "/user/change-password",
+        "/dashboard/",
+        "/dashboard/manage-clients/",
+        "/dashboard/manage-clients/details/$cardUserId",
+        "/dashboard/manage-clients/add/"
+      ]
+    },
+    "/": {
+      "filePath": "index.lazy.tsx"
+    },
+    "/user/change-password": {
+      "filePath": "user/change-password.lazy.tsx"
+    },
+    "/dashboard/": {
+      "filePath": "dashboard/index.lazy.tsx"
+    },
+    "/dashboard/manage-clients/": {
+      "filePath": "dashboard/manage-clients/index.lazy.tsx"
+    },
+    "/dashboard/manage-clients/details/$cardUserId": {
+      "filePath": "dashboard/manage-clients/details/$cardUserId.lazy.tsx"
+    },
+    "/dashboard/manage-clients/add/": {
+      "filePath": "dashboard/manage-clients/add/index.lazy.tsx"
+    }
+  }
+}
+ROUTE_MANIFEST_END */
