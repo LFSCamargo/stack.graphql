@@ -1,14 +1,16 @@
-import axios from 'axios';
 import { PaymentLinkModel, IPaymentLinkSchema } from "../../../models/payment-link.model";
 import { Types } from "mongoose";
 import { CreatePaymentLinkInput, ListPaymentLinksQueryParams } from "../types/paymentLink.types";
+import { asaasClient } from '../../../utils/asaasClient.utils';
+import { BillingType, ChargeType } from '../enums/paymentLikns.enum';
 
 class PaymentLinkService {
   private API_URL = 'https://sandbox.asaas.com/api/v3/paymentLinks';
 
   async createPaymentLink(userId: string, paymentLinkData: CreatePaymentLinkInput): Promise<IPaymentLinkSchema> {
     try {
-      const response = await axios.post(this.API_URL, paymentLinkData);
+      this.validatePaymentLinkMethod(paymentLinkData);
+      const response = await asaasClient.post(this.API_URL, paymentLinkData);
       const paymentLink = response.data;
 
       const newPaymentLink = await PaymentLinkModel.create({
@@ -23,10 +25,9 @@ class PaymentLinkService {
   }
 
   async createPaymentLinkForUser(userId: string, intendedUserId: string, paymentLinkData: CreatePaymentLinkInput): Promise<IPaymentLinkSchema> {
-    console.log('paymentLinkData', paymentLinkData);
     try {
-      const response = await axios.post(this.API_URL, paymentLinkData);
-      console.log('user',response.data);
+      this.validatePaymentLinkMethod(paymentLinkData);
+      const response = await asaasClient.post(this.API_URL, paymentLinkData);
       const paymentLink = response.data;
 
       const newPaymentLink = await PaymentLinkModel.create({
@@ -37,7 +38,6 @@ class PaymentLinkService {
 
       return newPaymentLink;
     } catch (error) {
-      console.log('error', error);
       throw new Error(`Error creating payment link for user: ${error.message}`);
     }
   }
@@ -75,6 +75,22 @@ class PaymentLinkService {
     };
 
     return await PaymentLinkModel.find(query, null, options);
+  }
+
+  private validatePaymentLinkMethod(paymentLinkData: CreatePaymentLinkInput) {
+    const { billingType, chargeType, dueDateLimitDays, maxInstallmentCount, subscriptionCycle } = paymentLinkData;
+
+    if (billingType === BillingType.BOLETO && !dueDateLimitDays) {
+      throw new Error('dueDateLimitDays is required for BOLETO payment method.');
+    }
+
+    if (chargeType === ChargeType.INSTALLMENT && !maxInstallmentCount) {
+      throw new Error('maxInstallmentCount is required for INSTALLMENT payment method.');
+    }
+
+    if (chargeType === ChargeType.RECURRENT && !subscriptionCycle) {
+      throw new Error('subscriptionCycle is required for RECURRENT payment method.');
+    }
   }
 }
 

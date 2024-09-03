@@ -10,4 +10,5 @@ export enum ErrorMessages {
   INVALID_OLD_PASSWORD = "Invalid old password.",
   USER_CAN_PROCEED_WITH_LOGIN = "User can proceed with login.",
   PAYMENT_LINK_NOT_FOUND = "Payment link not found.",
+  EMAIL_ALREADY_EXISTS = "Email already exists. Please use a different email.",
 }

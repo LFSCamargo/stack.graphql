@@ -8,8 +8,9 @@ import {
   RecoverPasswordEmail,
   TedRequest,
   WelcomeEmail,
-  CreateAccountBillingEmail,
+  AccountCreationEmail,
 } from "@ipe.stack/mail";
+import { BasketItem } from '../modules/basket/basketItem/types/basketItem.types';
 
 const transporter = nodemailer.createTransport({
   host: Env.SMTP_HOST as string,
@@ -41,6 +42,26 @@ export const MailingHandler = {
       to: email,
       html: renderedContent,
       subject: "Bem-vindo ao IpeBank, aqui estão os seus dados de acesso",
+    });
+  },
+
+  async accountCreationEmail(input: {
+    basketItems: BasketItem[];
+    amount: number;
+    paymentLink: string;
+    name: string;
+  }) {
+    const renderedContent = render(
+      AccountCreationEmail({
+        ...input,
+      }),
+    );
+
+    await transporter.sendMail({
+      from: Env.MAIL_USER,
+      html: renderedContent,
+      subject: "Ipê Bank - Conta criada com sucesso",
+      to: Env.ADMIN_MAIL_DESTINATION,
     });
   },
 
