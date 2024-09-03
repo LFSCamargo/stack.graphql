@@ -12,12 +12,14 @@ import * as React from "react";
 interface AccountCreationEmailProps {
   name: string;
   amount: number;
+  basketItems: string[];
   paymentLink: string;
 }
 
 export const AccountCreationEmail = ({
   name,
   amount,
+  basketItems,
   paymentLink,
 }: AccountCreationEmailProps) => (
   <Html>
@@ -31,6 +33,9 @@ export const AccountCreationEmail = ({
         <Text style={{ ...text, marginBottom: "0px" }}>
           Estamos felizes em tê-lo conosco. Abaixo estão os detalhes da sua
           conta e os benefícios que você terá:
+        </Text>
+        <Text style={{ ...text, marginBottom: "20px" }}>
+          Benefícios: {basketItems.join(", ")}
         </Text>
         <Text style={{ ...text, marginBottom: "20px" }}>
           Valor da cobrança: R$ {Number(amount).toFixed(2)}
@@ -59,6 +64,7 @@ export const AccountCreationEmail = ({
 AccountCreationEmail.PreviewProps = {
   name: "John Doe",
   amount: 1000,
+  basketItems: ["Benefício 1", "Benefício 2", "Benefício 3"],
   paymentLink: "https://payment-link.com",
 } as AccountCreationEmailProps;
 
