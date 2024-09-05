@@ -3,14 +3,24 @@ import { PasswordUtility } from "../../../utils/password.utils";
 import { IAccountUserSchema } from "../../../models/account-user.model";
 import { CreateAccountUserInput } from "../types/AccountUser.accountUser.types";
 import { AccountStatus } from "../enums/accountStatus.enum";
-import { BasketModel, IPaymentLinkSchema, PaymentLinkModel } from "../../../models";
+import {
+  BasketModel,
+  IPaymentLinkSchema,
+  PaymentLinkModel,
+} from "../../../models";
 import { Types } from "mongoose";
 import { ErrorMessages } from "../../../utils/errorMessages.enum";
-import { BasketType } from '../../basket/types/basket.types';
-import { BillingType, ChargeType } from '../../paymentLink/enums/paymentLikns.enum';
-import { paymentLinkService } from '../../paymentLink/services/paymentLink.service';
-import { CreatePaymentLinkInput } from '../../paymentLink/types/paymentLink.types';
-import { MailingHandler } from '../../../mailing/handlers.mailing';
+import { BasketType } from "../../basket/types/basket.types";
+import {
+  BillingType,
+  ChargeType,
+} from "../../paymentLink/enums/paymentLikns.enum";
+import { paymentLinkService } from "../../paymentLink/services/paymentLink.service";
+import { CreatePaymentLinkInput } from "../../paymentLink/types/paymentLink.types";
+import { MailingHandler } from "../../../mailing/handlers.mailing";
+import { PaymentEvents } from "../../webhooks/enums/payment-events.enum";
+import { AccountDocumentsStatus } from "../../webhooks/enums/account-documents.enum";
+import { asaasClient } from '../../../utils/asaasClient.utils';
 
 class AccountUserService {
   async preRegisterAccount(
@@ -30,6 +40,66 @@ class AccountUserService {
     } catch (error) {
       throw new Error(`Error preRegisterAccount: ${error.message}`);
     }
+  }
+
+  async handlePaymentConfirmed(event: any): Promise<void> {
+    const { userId, paymentId } = event;
+
+    // Create ASAAS subaccount
+    const subaccount = await this.createAsaasSubaccount(userId);
+
+    // Update user status to active
+    await this.updateUserStatusToActive(userId);
+  }
+
+  private async createAsaasSubaccount(userId: string): Promise<any> {
+    const user = await AccountUserModel.findById(userId);
+    if (!user) {
+      throw new Error(ErrorMessages.USER_NOT_FOUND);
+    }
+
+    const subaccountData = {
+      name: user.name,
+      email: user.email,
+      cpfCnpj: user.cpfCnpj,
+      birthDate: user.birthDate,
+      companyType: user.companyType,
+      phone: user.phone,
+      mobilePhone: user.mobilePhone,
+      address: user.address,
+      addressNumber: user.addressNumber,
+      complement: user.complement,
+      province: user.province,
+      postalCode: user.postalCode,
+      webhooks: [
+        {
+          name: "Cobranças",
+          url: "http://meusite.com/webhook/payments",
+          email: "john.doe@asaas.com.br",
+          sendType: "SEQUENTIALLY",
+          interrupted: false,
+          enabled: true,
+          apiVersion: 3,
+          authToken: "5tLxsL6uoN",
+          events: Object.values(PaymentEvents),
+        },
+        {
+          name: "Documentos",
+          url: "http://localhost:3000/webhook/document-status",
+          email: "john.doe@asaas.com.br",
+          sendType: "SEQUENTIALLY",
+          interrupted: false,
+          enabled: true,
+          apiVersion: 3,
+          authToken: "5tLxsL6uoN",
+          events: Object.values(AccountDocumentsStatus),
+        },
+      ],
+    };
+
+    const response = await asaasClient.post("/accounts", subaccountData);
+
+    return response.data;
   }
 
   async getPendingAccounts(): Promise<IAccountUserSchema[]> {
@@ -70,9 +140,18 @@ class AccountUserService {
 
     await this.updateBasketAndStatusAccountUser(accountUser, basketId);
 
-    const paymentLink = await this.createPaymentLink(adminUserId, intendedUserId, basket);
+    const paymentLink = await this.createPaymentLink(
+      adminUserId,
+      intendedUserId,
+      basket,
+    );
 
-    await this.sendAccountCreationEmail(accountUser, basket, paymentLink, basketId);
+    await this.sendAccountCreationEmail(
+      accountUser,
+      basket,
+      paymentLink,
+      basketId,
+    );
 
     return accountUser;
   }
@@ -93,29 +172,45 @@ class AccountUserService {
     return basket;
   }
 
-  private async updateBasketAndStatusAccountUser(accountUser: IAccountUserSchema, basketId: string): Promise<void> {
+  private async updateBasketAndStatusAccountUser(
+    accountUser: IAccountUserSchema,
+    basketId: string,
+  ): Promise<void> {
     accountUser.basketId = new Types.ObjectId(basketId);
     accountUser.accountStatus = AccountStatus.WAITING_PAYMENT;
     await accountUser.save();
   }
 
-  private async createPaymentLink(adminUserId: string, intendedUserId: string, basket: BasketType): Promise<IPaymentLinkSchema> {
+  private async updateUserStatusToActive(userId: string): Promise<void> {
+    const user = await AccountUserModel.findById(userId);
+    if (user) {
+      user.accountStatus = AccountStatus.ACTIVE;
+      await user.save();
+    }
+  }
+
+  private async createPaymentLink(
+    adminUserId: string,
+    intendedUserId: string,
+    basket: BasketType,
+  ): Promise<IPaymentLinkSchema> {
     const paymentLinkData: CreatePaymentLinkInput = {
       userId: new Types.ObjectId(adminUserId),
       value: basket.basketValue,
       billingType: BillingType.BOLETO,
       chargeType: ChargeType.DETACHED,
       dueDateLimitDays: 30,
-      name: `Cobrança de criação de conta Ipê ${basket.basketValue}`
+      name: `Cobrança de criação de conta Ipê ${basket.basketValue}`,
     };
 
     const paymentLink = await paymentLinkService.createPaymentLinkForUser(
       adminUserId,
       intendedUserId,
-      paymentLinkData
+      paymentLinkData,
     );
 
-    const billingPaymentLink: IPaymentLinkSchema | null = await PaymentLinkModel.findById(paymentLink._id);
+    const billingPaymentLink: IPaymentLinkSchema | null =
+      await PaymentLinkModel.findById(paymentLink._id);
     if (!billingPaymentLink) {
       throw new Error(ErrorMessages.PAYMENT_LINK_NOT_FOUND);
     }
@@ -123,7 +218,12 @@ class AccountUserService {
     return billingPaymentLink;
   }
 
-  private async sendAccountCreationEmail(accountUser: IAccountUserSchema, basket: BasketType, paymentLink: IPaymentLinkSchema, basketId: string): Promise<void> {
+  private async sendAccountCreationEmail(
+    accountUser: IAccountUserSchema,
+    basket: BasketType,
+    paymentLink: IPaymentLinkSchema,
+    basketId: string,
+  ): Promise<void> {
     const basketItemsDetails = await this.getBasketItemsDetails(basketId);
 
     await MailingHandler.accountCreationEmail({

@@ -1,0 +1,28 @@
+import { PaymentConfirmedStrategy, PaymentCreatedStrategy, PaymentAnticipatedStrategy, PaymentApprovedByRiskAnalysisStrategy, PaymentAuthorizedStrategy,PaymentAwaitingChargebackReversalStrategy, PaymentAwaitingRiskAnalysisStrategy,PaymentBankSlipViewedStrategy,PaymentChargebackDisputeStrategy, PaymentChargebackRequestedStrategy, PaymentCheckoutViewedStrategy,PaymentCreditCardCaptureRefusedStrategy, PaymentDeletedStrategy, PaymentDunningReceivedStrategy, PaymentDunningRequestedStrategy, PaymentOverdueStrategy, PaymentPartiallyRefundedStrategy, PaymentReceivedInCashUndoneStrategy, PaymentReceivedStrategy, PaymentRefundInProgressStrategy, PaymentRefundedStrategy, PaymentReprovedByRiskAnalysisStrategy, PaymentRestoredStrategy, PaymentUpdatedStrategy  } from "./paymentStrategy";
+
+export const paymentStrategies = {
+  PaymentConfirmedStrategy,
+  PaymentCreatedStrategy,
+  PaymentAnticipatedStrategy,
+  PaymentApprovedByRiskAnalysisStrategy,
+  PaymentAuthorizedStrategy,
+  PaymentAwaitingChargebackReversalStrategy,
+  PaymentAwaitingRiskAnalysisStrategy,
+  PaymentBankSlipViewedStrategy,
+  PaymentChargebackDisputeStrategy,
+  PaymentChargebackRequestedStrategy,
+  PaymentCheckoutViewedStrategy,
+  PaymentCreditCardCaptureRefusedStrategy,
+  PaymentDeletedStrategy,
+  PaymentDunningReceivedStrategy,
+  PaymentDunningRequestedStrategy,
+  PaymentOverdueStrategy,
+  PaymentPartiallyRefundedStrategy,
+  PaymentReceivedInCashUndoneStrategy,
+  PaymentReceivedStrategy,
+  PaymentRefundInProgressStrategy,
+  PaymentRefundedStrategy,
+  PaymentReprovedByRiskAnalysisStrategy,
+  PaymentRestoredStrategy,
+  PaymentUpdatedStrategy,
+};

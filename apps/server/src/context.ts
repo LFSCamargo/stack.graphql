@@ -5,6 +5,7 @@ import { CardUserModel, UserModel, AccountUserModel } from "./models";
 import { ContextFunction } from "@apollo/server";
 
 export const context: ContextFunction<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [any],
   GraphQLContext
 > = async ({ req }) => {

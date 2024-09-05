@@ -13,3 +13,5 @@ export * from "./webhooks.model";
 export * from "./basket.model";
 export * from "./basket-item.model";
 export * from "./payment-link.model";
+export * from "./payment-event.model";
+export * from "./document-event.model";
