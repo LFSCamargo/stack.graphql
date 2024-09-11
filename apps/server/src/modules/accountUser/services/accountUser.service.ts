@@ -1,7 +1,7 @@
 import { AccountUserModel } from "../../../models/account-user.model";
 import { PasswordUtility } from "../../../utils/password.utils";
 import { IAccountUserSchema } from "../../../models/account-user.model";
-import { CreateAccountUserInput } from "../types/AccountUser.accountUser.types";
+import { CreateAccountUserInput, CreateAsaasSubaccountInput } from "../types/AccountUser.accountUser.types";
 import { AccountStatus } from "../enums/accountStatus.enum";
 import {
   BasketModel,
@@ -20,7 +20,8 @@ import { CreatePaymentLinkInput } from "../../paymentLink/types/paymentLink.type
 import { MailingHandler } from "../../../mailing/handlers.mailing";
 import { PaymentEvents } from "../../webhooks/enums/payment-events.enum";
 import { AccountDocumentsStatus } from "../../webhooks/enums/account-documents.enum";
-import { asaasClient } from '../../../utils/asaasClient.utils';
+import { asaasClient } from "../../../utils/asaasClient.utils";
+import { accountDocumentsService } from '../../accountDocuments/services/accountDocuments.service';
 
 class AccountUserService {
   async preRegisterAccount(
@@ -42,64 +43,79 @@ class AccountUserService {
     }
   }
 
-  async handlePaymentConfirmed(event: any): Promise<void> {
-    const { userId, paymentId } = event;
+  //
+  async handleAccountUserPaymentReceived(
+    userId: Types.ObjectId,
+  ): Promise<void | Error> {
+    try {
+      await this.createAsaasSubaccount(userId);
+    } catch (error) {
+      return new Error(`Error creating ASAAS subaccount: ${error.message}`);
+    }
 
-    // Create ASAAS subaccount
-    const subaccount = await this.createAsaasSubaccount(userId);
-
-    // Update user status to active
     await this.updateUserStatusToActive(userId);
   }
 
-  private async createAsaasSubaccount(userId: string): Promise<any> {
-    const user = await AccountUserModel.findById(userId);
-    if (!user) {
-      throw new Error(ErrorMessages.USER_NOT_FOUND);
+  private async createAsaasSubaccount(userId: Types.ObjectId): Promise<void | Error> {
+    try {
+      const user: IAccountUserSchema = await AccountUserModel.findById(userId);
+      if (!user) {
+        throw new Error(ErrorMessages.USER_NOT_FOUND);
+      }
+      console.log('user', user)
+      const subaccountData: CreateAsaasSubaccountInput = {
+        name: user.name,
+        email: user.email,
+        cpfCnpj: user.cpfCnpj,
+        birthDate: user.birthDate,
+        companyType: user.companyType,
+        phone: user.phone,
+        mobilePhone: user.mobilePhone,
+        incomeValue: user.incomeValue,
+        address: user.address,
+        addressNumber: user.addressNumber,
+        complement: user.complement,
+        province: user.province,
+        postalCode: user.postalCode,
+        webhooks: [
+          {
+            name: "Cobranças",
+            url: `${process.env.WEBHOOK_URL}/webhook/payments`,
+            email: "contato@ipe.com.br",
+            sendType: "SEQUENTIALLY",
+            interrupted: false,
+            enabled: true,
+            apiVersion: 3,
+            authToken: "5tLxsL6uoN",
+            events: Object.values(PaymentEvents),
+          },
+          {
+            name: "Documentos",
+            url: `${process.env.WEBHOOK_URL}/webhook/document-status`,
+            email: "contato@ipe.com.br",
+            sendType: "SEQUENTIALLY",
+            interrupted: false,
+            enabled: true,
+            apiVersion: 3,
+            authToken: "5tLxsL6uoN",
+            events: Object.values(AccountDocumentsStatus),
+          },
+        ],
+      };
+
+      const response = await asaasClient.post("/accounts", subaccountData);
+
+      const asaasId = response.data.id;
+      const apiKey = response.data.apiKey;
+      user.asaasId = asaasId;
+      user.asaasApiKey = apiKey;
+      await user.save();
+      await accountDocumentsService.getPendingDocuments(user._id as Types.ObjectId);
+      return user;
+    } catch (error) {
+      console.log('error', error.response.data.errors)
+      return new Error(`Error creating ASAAS subaccount: ${error.message}`);
     }
-
-    const subaccountData = {
-      name: user.name,
-      email: user.email,
-      cpfCnpj: user.cpfCnpj,
-      birthDate: user.birthDate,
-      companyType: user.companyType,
-      phone: user.phone,
-      mobilePhone: user.mobilePhone,
-      address: user.address,
-      addressNumber: user.addressNumber,
-      complement: user.complement,
-      province: user.province,
-      postalCode: user.postalCode,
-      webhooks: [
-        {
-          name: "Cobranças",
-          url: "http://meusite.com/webhook/payments",
-          email: "john.doe@asaas.com.br",
-          sendType: "SEQUENTIALLY",
-          interrupted: false,
-          enabled: true,
-          apiVersion: 3,
-          authToken: "5tLxsL6uoN",
-          events: Object.values(PaymentEvents),
-        },
-        {
-          name: "Documentos",
-          url: "http://localhost:3000/webhook/document-status",
-          email: "john.doe@asaas.com.br",
-          sendType: "SEQUENTIALLY",
-          interrupted: false,
-          enabled: true,
-          apiVersion: 3,
-          authToken: "5tLxsL6uoN",
-          events: Object.values(AccountDocumentsStatus),
-        },
-      ],
-    };
-
-    const response = await asaasClient.post("/accounts", subaccountData);
-
-    return response.data;
   }
 
   async getPendingAccounts(): Promise<IAccountUserSchema[]> {
@@ -181,7 +197,9 @@ class AccountUserService {
     await accountUser.save();
   }
 
-  private async updateUserStatusToActive(userId: string): Promise<void> {
+  private async updateUserStatusToActive(
+    userId: Types.ObjectId,
+  ): Promise<void> {
     const user = await AccountUserModel.findById(userId);
     if (user) {
       user.accountStatus = AccountStatus.ACTIVE;
@@ -232,6 +250,12 @@ class AccountUserService {
       paymentLink: paymentLink.url,
       name: accountUser.name,
     });
+  }
+
+  private async sendPendingDocumentsLinkEmail(user: IAccountUserSchema): Promise<void> {
+    // await MailingHandler.pendingDocumentsLinkEmail({
+    //   name: accountUser.name,
+    // });
   }
 
   private async getBasketItemsDetails(basketId: string) {

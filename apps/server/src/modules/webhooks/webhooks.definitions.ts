@@ -1,10 +1,6 @@
 import { gql } from "graphql-tag";
-import { WebhookEvents } from "./enums/payment-events.enum";
 
 export const webhookDefinitions = gql`
-  enum WebhookEvents {
-    ${Object.values(WebhookEvents).join("\n    ")}
-  }
 
   type Webhook {
     id: ID!
@@ -15,7 +11,7 @@ export const webhookDefinitions = gql`
     interrupted: Boolean!
     authToken: String!
     sendType: String!
-    events: [WebhookEvents!]!
+    events: [String!]!
   }
 
   input CreateWebhookInput {
@@ -26,7 +22,7 @@ export const webhookDefinitions = gql`
     enabled: Boolean
     interrupted: Boolean
     authToken: String!
-    events: [WebhookEvents!]!
+    events: [String!]!
   }
   
 
@@ -38,7 +34,7 @@ export const webhookDefinitions = gql`
     enabled: Boolean
     interrupted: Boolean
     authToken: String
-    events: [WebhookEvents!]
+    events: [String!]
   }
   
   type WebhookList {

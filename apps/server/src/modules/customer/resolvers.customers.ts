@@ -1,22 +1,22 @@
 import { GraphQLError } from "graphql";
-import { ClientModel } from "../../models";
+import { CustomerModel } from "../../models";
 import { GraphQLInput, GraphQLPaginationInput, TResolvers } from "../../types";
 import { PaginationUtility, PasswordUtility } from "../../utils";
 import { onlyAdmin } from "../../guards";
-import { asaasClientsService } from "./services/client.service";
+import { asaasCustomersService } from "./services/customer.service";
 import {
-  ListAsaasClientsInput,
-  UpdateClientInput,
-} from "./types/Clients.clients.types";
+  ListAsaasCustomersInput,
+  UpdateCustomerInput,
+} from "./types/Customer.customer.types";
 
-export const ClientResolvers: TResolvers = {
+export const CustomerResolvers: TResolvers = {
   Query: {
-    getClientById: async (_, { id }: { id: string }, { user }) => {
+    getCustomerById: async (_, { id }: { id: string }, { user }) => {
       onlyAdmin(user);
 
-      return await ClientModel.findOne({ _id: id });
+      return await CustomerModel.findOne({ _id: id });
     },
-    listClients: async (
+    listCustomers: async (
       _,
       { input }: GraphQLInput<GraphQLPaginationInput>,
       { user },
@@ -33,7 +33,7 @@ export const ClientResolvers: TResolvers = {
 
       const { count, data, pageInfo } =
         await PaginationUtility.paginateCollection(
-          ClientModel,
+          CustomerModel,
           params,
           input.limit,
           input.offset,
@@ -45,17 +45,17 @@ export const ClientResolvers: TResolvers = {
         pageInfo,
       };
     },
-    getAsaasClientById: async (_, { id }: { id: string }) => {
+    getAsaasCustomerById: async (_, { id }: { id: string }) => {
       try {
-        const customer = await asaasClientsService.getClientById(id);
+        const customer = await asaasCustomersService.getCustomerById(id);
         return customer;
       } catch (error) {
         throw new GraphQLError(error.message);
       }
     },
-    listAsaasClients: async (
+    listAsaasCustomers: async (
       _,
-      { input }: GraphQLInput<ListAsaasClientsInput>,
+      { input }: GraphQLInput<ListAsaasCustomersInput>,
     ) => {
       try {
         const params = {
@@ -68,7 +68,7 @@ export const ClientResolvers: TResolvers = {
           limit: input.limit,
         } as Record<string, unknown>;
 
-        const response = await asaasClientsService.listClients(params);
+        const response = await asaasCustomersService.listCustomers(params);
         return {
           hasMore: response.hasMore,
           totalCount: response.totalCount,
@@ -82,19 +82,14 @@ export const ClientResolvers: TResolvers = {
     },
   },
   Mutation: {
-    createClient: async (_, { input }, { user }) => {
+    createCustomer: async (_, { input }, { user }) => {
       onlyAdmin(user);
       try {
-        const hashedPassword = PasswordUtility.encryptPassword(input.password);
+        const asaasCustomer = await asaasCustomersService.createCustomer(input);
 
-        const { password, ...asaasInput } = input;
-
-        const asaasClient = await asaasClientsService.createClient(asaasInput);
-
-        const newUser = await ClientModel.create({
+        const newUser = await CustomerModel.create({
           ...input,
-          password: hashedPassword,
-          asaasId: asaasClient.id,
+          customerId: asaasCustomer.id,
         });
 
         return newUser;
@@ -102,50 +97,50 @@ export const ClientResolvers: TResolvers = {
         throw new GraphQLError(error.message);
       }
     },
-    updateClient: async (
+    updateCustomer: async (
       _,
-      { id, input }: { id: string; input: UpdateClientInput },
+      { id, input }: { id: string; input: UpdateCustomerInput },
       { user },
     ) => {
       onlyAdmin(user);
 
-      const payload: Partial<UpdateClientInput> = { ...input };
+      const payload: Partial<UpdateCustomerInput> = { ...input };
 
-      const client = await ClientModel.findOneAndUpdate(
-        { asaasId: id },
+      const customer = await CustomerModel.findOneAndUpdate(
+        { customerId: id },
         payload,
         { new: true },
       );
 
-      if (!client) {
-        console.error(`Client with externalReference ${id} not found.`);
-        throw new GraphQLError("Client not found.");
+      if (!customer) {
+        console.error(`Customer with externalReference ${id} not found.`);
+        throw new GraphQLError("Customer not found.");
       }
 
-      await asaasClientsService.updateClient(id, input);
+      await asaasCustomersService.updateCustomer(id, input);
 
-      return client;
+      return customer;
     },
 
-    deleteClient: async (_, { id }: { id: string }, { user }) => {
+    deleteCustomer: async (_, { id }: { id: string }, { user }) => {
       onlyAdmin(user);
 
-      const client = await ClientModel.findOne({ asaasId: id });
+      const customer = await CustomerModel.findOne({ customerId: id });
 
-      if (!client) {
-        console.error(`Client with asaasId ${id} not found.`);
-        throw new GraphQLError("Client not found.");
+      if (!customer) {
+        console.error(`Customer with asaasId ${id} not found.`);
+        throw new GraphQLError("Customer not found.");
       }
 
       // Deactivate the user in the database
-      await ClientModel.updateOne(
-        { asaasId: id },
+      await CustomerModel.updateOne(
+        { customerId: id },
         {
           active: false,
         },
       );
 
-      await asaasClientsService.deleteClient(id);
+      await asaasCustomersService.deleteCustomer(id);
 
       return true;
     },

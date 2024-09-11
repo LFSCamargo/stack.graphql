@@ -8,7 +8,7 @@ export * from "./pix-key.model";
 export * from "./transaction-pix.model";
 export * from "./decoded-pix.model";
 export * from "./account-transactions.model";
-export * from "./client.model";
+export * from "./customer.model";
 export * from "./webhooks.model";
 export * from "./basket.model";
 export * from "./basket-item.model";

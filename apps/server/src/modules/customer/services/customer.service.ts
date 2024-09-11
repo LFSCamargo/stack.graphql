@@ -1,11 +1,12 @@
+import { CustomerModel } from '../../../models';
 import { asaasClient } from "../../../utils/asaasClient.utils";
 import {
-  CreateClientInput,
-  UpdateClientInput,
-} from "../types/Clients.clients.types";
+  CreateCustomerInput,
+  UpdateCustomerInput,
+} from "../types/Customer.customer.types";
 
-class AsaasClientsService {
-  async getClientById(id: string) {
+class AsaasCustomersService {
+  async getCustomerById(id: string) {
     try {
       const response = await asaasClient.get(`/customers/${id}`);
       return response.data;
@@ -18,7 +19,7 @@ class AsaasClientsService {
     }
   }
 
-  async listClients(params: Record<string, unknown>) {
+  async listCustomers(params: Record<string, unknown>) {
     try {
       const response = await asaasClient.get("/customers", { params });
       return {
@@ -37,7 +38,7 @@ class AsaasClientsService {
     }
   }
 
-  async createClient(input: CreateClientInput) {
+  async createCustomer(input: CreateCustomerInput) {
     try {
       const response = await asaasClient.post("/customers", input);
       return response.data;
@@ -50,7 +51,17 @@ class AsaasClientsService {
     }
   }
 
-  async updateClient(id: string, input: Partial<UpdateClientInput>) {
+  async createCustomerDB(data) {
+    try {
+      const customer = await CustomerModel.create(data);
+      return customer;
+    } catch (error) {
+      console.error("Error creating customer in DB:", error);
+      throw new Error("Failed to create customer in DB");
+    }
+  }
+
+  async updateCustomer(id: string, input: Partial<UpdateCustomerInput>) {
     try {
       const response = await asaasClient.put(`/customers/${id}`, input);
       return response.data;
@@ -60,7 +71,7 @@ class AsaasClientsService {
     }
   }
 
-  async deleteClient(id: string) {
+  async deleteCustomer(id: string) {
     try {
       const response = await asaasClient.delete(`/customers/${id}`);
       return response.data;
@@ -71,4 +82,4 @@ class AsaasClientsService {
   }
 }
 
-export const asaasClientsService = new AsaasClientsService();
+export const asaasCustomersService = new AsaasCustomersService();

@@ -1,8 +1,7 @@
 import { gql } from "graphql-tag";
 
-export const ClientDefinitions = gql`
-  type Client {
-    _id: ID!
+export const CustomerDefinitions = gql`
+  type Customer {
     name: String!
     cpfCnpj: String!
     email: String!
@@ -24,7 +23,7 @@ export const ClientDefinitions = gql`
     createdAt: String!
   }
 
-  input CreateClientInput {
+  input CreateCustomerInput {
     name: String!
     cpfCnpj: String!
     email: String
@@ -44,7 +43,7 @@ export const ClientDefinitions = gql`
     company: String
   }
 
-  input UpdateClientInput {
+  input UpdateCustomerInput {
     name: String
     cpfCnpj: String
     email: String
@@ -65,7 +64,7 @@ export const ClientDefinitions = gql`
     company: String
   }
 
-  input ListAsaasClientsInput {
+  input ListAsaasCustomersInput {
     name: String
     email: String
     cpfCnpj: String
@@ -75,7 +74,7 @@ export const ClientDefinitions = gql`
     limit: Int
   }
 
-  type AsaasClient {
+  type AsaasCustomer {
     id: String!
     dateCreated: String!
     name: String!
@@ -100,19 +99,19 @@ export const ClientDefinitions = gql`
     name: String!
   }
 
-  type AsaasClientPagination {
+  type AsaasCustomerPagination {
     hasMore: Boolean!
     totalCount: Int!
     limit: Int!
     offset: Int!
-    data: [AsaasClient!]!
+    data: [AsaasCustomer!]!
   }
 
-  input DeleteClientInput {
+  input DeleteCustomerInput {
     id: String!
   }
   # Output types
-  type Client {
+  type Customer {
     _id: ID!
     name: String!
     cpfCnpj: String!
@@ -135,24 +134,24 @@ export const ClientDefinitions = gql`
     createdAt: String!
   }
 
-  type ClientAuthPayload {
+  type CustomerAuthPayload {
     token: String!
-    client: Client!
+    Customer: Customer!
   }
 
   input MessageOutput {
     message: String!
   }
 
-  type ClientsOutput {
+  type CustomersOutput {
     count: Int!
-    data: [Client!]!
+    data: [Customer!]!
     pageInfo: PageInfo!
   }
 
-  type ClientPagination {
+  type CustomerPagination {
     count: Int!
-    data: [Client!]!
+    data: [Customer!]!
     pageInfo: PageInfo!
   }
 
@@ -161,16 +160,16 @@ export const ClientDefinitions = gql`
   }
   # GraphQL Main Types
   type Query {
-    getClientById(id: String!): Client
-    getClient: Client
-    listClients(input: PaginationInput!): ClientPagination
-    listAsaasClients(input: ListAsaasClientsInput!): AsaasClientPagination!
-    getAsaasClientById(id: String!): AsaasClient!
+    getCustomerById(id: String!): Customer
+    getCustomer: Customer
+    listCustomers(input: PaginationInput!): CustomerPagination
+    listAsaasCustomers(input: ListAsaasCustomersInput!): AsaasCustomerPagination!
+    getAsaasCustomerById(id: String!): AsaasCustomer!
   }
 
   type Mutation {
-    createClient(input: CreateClientInput!): Client!
-    deleteClient(id: String!): Boolean!
-    updateClient(id: String!, input: UpdateClientInput!): Client!
+    createCustomer(input: CreateCustomerInput!): Customer!
+    deleteCustomer(id: String!): Boolean!
+    updateCustomer(id: String!, input: UpdateCustomerInput!): Customer!
   }
 `;

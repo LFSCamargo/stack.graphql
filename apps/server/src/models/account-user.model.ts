@@ -7,6 +7,9 @@ export interface IAccountUserSchema extends Document {
   loginEmail?: string;
   password: string;
   accountStatus: AccountStatus;
+  customerId?: string;
+  asaasId?: string;
+  asaasApiKey?: string;
   basketId?: Types.ObjectId;
   cpfCnpj: string;
   birthDate?: Date;
@@ -44,6 +47,9 @@ const accountUserSchema = new Schema(
       enum: Object.values(AccountStatus),
       default: AccountStatus.PENDING,
     },
+    customerId: { type: String },
+    asaasId: { type: String },
+    asaasApiKey: { type: String },
     basketId: { type: Types.ObjectId, ref: "Basket" },
     cpfCnpj: { type: String, required: true },
     birthDate: { type: Date },

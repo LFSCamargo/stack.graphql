@@ -1,4 +1,4 @@
-export type ChangeClientPassword = {
+export type ChangeCustomerPassword = {
   oldPassword: string;
   newPassword: string;
 };

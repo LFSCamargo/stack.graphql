@@ -1,5 +1,11 @@
 import { Schema, model, Document } from "mongoose";
 
+
+export interface typeInvoiceViewedDate {
+  date: Date | null;
+  viewed: boolean;
+}
+
 export interface IPaymentEventSchema extends Document {
   id: string;
   event: string;
@@ -19,52 +25,53 @@ export interface IPaymentEventSchema extends Document {
     originalValue?: number;
     interestValue?: number;
     nossoNumero?: string;
-    description: string;
+    description?: string;
+    canBePaidAfterDueDate?: boolean;
     externalReference: string;
     billingType: string;
     status: string;
     pixTransaction?: string;
     confirmedDate: Date;
-    paymentDate: Date;
-    clientPaymentDate: Date;
+    paymentDate?: Date;
+    clientPaymentDate?: Date;
     installmentNumber?: number;
-    creditDate: Date;
+    creditDate?: Date;
     custody?: string;
-    estimatedCreditDate: Date;
-    invoiceUrl: string;
+    estimatedCreditDate?: Date;
+    invoiceUrl?: string;
     bankSlipUrl?: string;
-    transactionReceiptUrl: string;
-    invoiceNumber: string;
-    deleted: boolean;
-    anticipated: boolean;
+    transactionReceiptUrl?: string;
+    invoiceNumber?: string;
+    deleted?: boolean;
+    anticipated?: boolean;
     anticipable: boolean;
-    lastInvoiceViewedDate: Date;
-    lastBankSlipViewedDate?: Date;
+    lastInvoiceViewedDate?: Date | null;
+    lastBankSlipViewedDate?: Date | null;
     postalService: boolean;
     creditCard?: {
-      creditCardNumber: string;
-      creditCardBrand: string;
-      creditCardToken: string;
+      creditCardNumber?: string;
+      creditCardBrand?: string;
+      creditCardToken?: string;
     };
     discount?: {
-      value: number;
-      dueDateLimitDays: number;
+      value?: number;
+      dueDateLimitDays?: number;
       limitedDate?: Date;
-      type: string;
+      type?: string;
     };
     fine?: {
-      value: number;
-      type: string;
+      value?: number;
+      type?: string;
     };
     interest?: {
-      value: number;
-      type: string;
+      value?: number;
+      type?: string;
     };
     split?: {
-      walletId: string;
+      walletId?: string;
       fixedValue?: number;
       percentualValue?: number;
-      status: string;
+      status?: string;
       refusalReason?: string;
     }[];
     chargeback?: {
@@ -89,33 +96,34 @@ const paymentEventSchema = new Schema(
       subscription: { type: String },
       installment: { type: String },
       paymentLink: { type: String },
-      dueDate: { type: Date, required: true },
-      originalDueDate: { type: Date, required: true },
+      dueDate: { type: Date },
+      originalDueDate: { type: Date },
       value: { type: Number, required: true },
       netValue: { type: Number, required: true },
       originalValue: { type: Number },
       interestValue: { type: Number },
       nossoNumero: { type: String },
-      description: { type: String, required: true },
-      externalReference: { type: String, required: true },
+      description: { type: String },
+      externalReference: { type: String },
       billingType: { type: String, required: true },
       status: { type: String, required: true },
+      canBePaidAfterDueDate: { type: Boolean },
       pixTransaction: { type: String },
-      confirmedDate: { type: Date, required: true },
-      paymentDate: { type: Date, required: true },
-      clientPaymentDate: { type: Date, required: true },
+      confirmedDate: { type: Date },
+      paymentDate: { type: Date },
+      clientPaymentDate: { type: Date },
       installmentNumber: { type: Number },
-      creditDate: { type: Date, required: true },
-      custody: { type: String },
-      estimatedCreditDate: { type: Date, required: true },
-      invoiceUrl: { type: String, required: true },
+      creditDate: { type: Date },
+      custody: { type: String },  
+      estimatedCreditDate: { type: Date },
+      invoiceUrl: { type: String },
       bankSlipUrl: { type: String },
-      transactionReceiptUrl: { type: String, required: true },
+      transactionReceiptUrl: { type: String },
       invoiceNumber: { type: String, required: true },
-      deleted: { type: Boolean, required: true },
-      anticipated: { type: Boolean, required: true },
-      anticipable: { type: Boolean, required: true },
-      lastInvoiceViewedDate: { type: Date, required: true },
+      deleted: { type: Boolean },
+      anticipated: { type: Boolean },
+      anticipable: { type: Boolean },
+      lastInvoiceViewedDate: { type: Date },
       lastBankSlipViewedDate: { type: Date },
       postalService: { type: Boolean, required: true },
       creditCard: {
@@ -155,7 +163,7 @@ const paymentEventSchema = new Schema(
   },
   {
     timestamps: true,
-    collection: "billing-events",
+    collection: "payment-events",
   },
 );
 

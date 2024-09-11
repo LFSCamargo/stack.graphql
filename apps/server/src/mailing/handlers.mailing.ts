@@ -9,8 +9,10 @@ import {
   TedRequest,
   WelcomeEmail,
   AccountCreationEmail,
+  AccountDocumentsEmail,
 } from "@ipe.stack/mail";
 import { BasketItem } from '../modules/basket/basketItem/types/basketItem.types';
+import { SendedDocument } from '../modules/accountDocuments/types/accountDocumments.types';
 
 const transporter = nodemailer.createTransport({
   host: Env.SMTP_HOST as string,
@@ -64,6 +66,26 @@ export const MailingHandler = {
       to: Env.ADMIN_MAIL_DESTINATION,
     });
   },
+
+  async accountDocumentsEmail(input: {
+    documents: SendedDocument[];
+    userEmail: string;
+  }) {
+    const renderedContent = render(
+      AccountDocumentsEmail({
+        ...input,
+      }),
+    );
+
+    await transporter.sendMail({
+      from: Env.MAIL_USER,
+      html: renderedContent,
+      subject: "Ipê Bank - Documentos da conta",
+      to: Env.ADMIN_MAIL_DESTINATION,
+    });
+  },
+
+  
 
   async pixRequestEmail(input: {
     cardNumber?: string;

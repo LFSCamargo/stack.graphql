@@ -16,3 +16,15 @@ export const asaasClient = axios.create({
     access_token: ASAAS_API_KEY,
   },
 });
+
+export const asaasClientWithUserApiKey = (userApiKey: string) => {
+  return axios.create({
+    baseURL: ASAAS_API_SANDBOX_URL,
+    headers: {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      "User-Agent": "967b15e8-331a-4252-9623-00d6056952f7",
+      access_token: userApiKey,
+    },
+  });
+};

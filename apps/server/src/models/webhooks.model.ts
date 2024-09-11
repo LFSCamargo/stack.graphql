@@ -1,5 +1,4 @@
 import { Schema, model, Document } from "mongoose";
-import { WebhookEvents } from "../modules/webhooks/enums/payment-events.enum";
 
 interface Webhook extends Document {
   id: string;
@@ -10,7 +9,7 @@ interface Webhook extends Document {
   interrupted: boolean;
   authToken: string;
   sendType: string;
-  events: WebhookEvents[];
+  events: string[];
 }
 
 const WebhookSchema = new Schema<Webhook>(
@@ -25,7 +24,6 @@ const WebhookSchema = new Schema<Webhook>(
     sendType: { type: String, required: true, default: "SEQUENTIALLY" },
     events: {
       type: [String],
-      enum: Object.values(WebhookEvents),
       required: true,
     },
   },

@@ -1,4 +1,4 @@
-export type CreateClientInput = {
+export type CreateCustomerInput = {
   name: string;
   cpfCnpj: string;
   password: string;
@@ -19,7 +19,7 @@ export type CreateClientInput = {
   company: string;
 };
 
-export type UpdateClientInput = {
+export type UpdateCustomerInput = {
   id: string;
   name: string;
   cpfCnpj: string;
@@ -41,7 +41,7 @@ export type UpdateClientInput = {
   company: string;
 };
 
-export type ListAsaasClientsInput = {
+export type ListAsaasCustomersInput = {
   name: string;
   email: string;
   cpfCnpj: string;

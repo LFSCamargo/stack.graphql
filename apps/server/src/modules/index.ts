@@ -9,6 +9,6 @@ export * from "./pix/staticQrCode";
 export * from "./pix/transactionPix";
 export * from "./accountTransactions";
 export * from "./webhooks";
-export * from "./client";
+export * from "./customer";
 export * from "./basket";
 export * from "./paymentLink";

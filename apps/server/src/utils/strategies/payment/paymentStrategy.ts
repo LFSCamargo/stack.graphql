@@ -1,19 +1,63 @@
+import { AccountUserModel } from '../../../models';
+import { AccountStatus } from '../../../modules/accountUser/enums/accountStatus.enum';
 import { accountUserService } from '../../../modules/accountUser/services/accountUser.service';
+import { Types } from 'mongoose';
+import { asaasCustomersService } from '../../../modules/customer/services/customer.service';
 
 export interface IPaymentStrategy {
-  handle(event: string): Promise<void>;
+  handle(event: string, data?): Promise<void>;
 }
 
 export class PaymentConfirmedStrategy implements IPaymentStrategy {
-  async handle(receivedEvent: string): Promise<void> {
+  async handle(receivedEvent: string, data): Promise<void> {
     console.log('Payment confirmed:', receivedEvent);
-    await accountUserService.handlePaymentConfirmed(receivedEvent);
   }
 }
+export class PaymentReceivedStrategy implements IPaymentStrategy {
+  async handle(receivedEvent: string, data): Promise<void> {
+    console.log('Payment received:', receivedEvent);
+    if(data.payment.paymentLink === null) {
+      console.log('Payment is not related to account creation, skipping...')
+      return
+    }
 
+    const customerId = data.payment.customer;
+    console.log('aqui o customerId', customerId)
+    try {
+      const user = await AccountUserModel.findOne({ customerId: customerId });
+      if(user && user.accountStatus === AccountStatus.WAITING_PAYMENT) {
+        await accountUserService.handleAccountUserPaymentReceived(user._id as Types.ObjectId);
+        user.accountStatus = AccountStatus.WAITING_DOCUMENTS;
+        await user.save();
+        console.log('User account status updated to WAITING_DOCUMENTS');
+        //await asaasCustomersService.createCustomerDB(user);
+        return
+      } 
+    } catch (error) {
+      console.error('User not found with customerId:', customerId);
+    }
+  }
+}
 export class PaymentCreatedStrategy implements IPaymentStrategy {
-  async handle(receivedEvent: string): Promise<void> {
-    console.log('Payment created:', receivedEvent);
+  async handle(event: string, data): Promise<void> {
+    console.log('Payment created:', event);
+
+    const customerId = data.payment.customer;
+    console.log('aqui o que veio', data)
+    try {
+      const customer = await asaasCustomersService.getCustomerById(customerId);
+      console.log('aqui o customer', customer)
+      const user = await AccountUserModel.findOne({ name: customer.name, cpfCnpj: customer.cpfCnpj });
+
+      console.log('aqui cara', user)
+      if(user) {
+        user.customerId = customerId;
+        await user.save();
+        console.log('User updated:', user);
+      }
+    } catch (error) {
+      console.error('User not found with customerId:', customerId);
+    }
   }
 }
 
@@ -44,12 +88,6 @@ export class PaymentAuthorizedStrategy implements IPaymentStrategy {
 export class PaymentUpdatedStrategy implements IPaymentStrategy {
   async handle(receivedEvent: string): Promise<void> {
     console.log('Payment updated:', receivedEvent);
-  }
-}
-
-export class PaymentReceivedStrategy implements IPaymentStrategy {
-  async handle(receivedEvent: string): Promise<void> {
-    console.log('Payment received:', receivedEvent);
   }
 }
 

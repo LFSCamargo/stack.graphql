@@ -1,10 +1,10 @@
 import { Schema, model, Document } from "mongoose";
 
-export interface IClient extends Document {
+export interface ICustomer extends Document {
   name: string;
   cpfCnpj: string;
   email: string;
-  asaasId: string;
+  customerId: string;
   phone: string;
   mobilePhone: string;
   address: string;
@@ -22,7 +22,7 @@ export interface IClient extends Document {
   createdAt: Date;
 }
 
-const clientSchema = new Schema(
+const customerSchema = new Schema(
   {
     name: {
       type: String,
@@ -32,7 +32,7 @@ const clientSchema = new Schema(
       type: String,
       required: true,
     },
-    asaasId: {
+    customerId: {
       type: String,
     },
     email: {
@@ -88,8 +88,8 @@ const clientSchema = new Schema(
   },
   {
     timestamps: true,
-    collection: "clients",
+    collection: "customers",
   },
 );
 
-export const ClientModel = model<IClient>("Client", clientSchema);
+export const CustomerModel = model<ICustomer>("Customer", customerSchema);

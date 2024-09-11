@@ -13,10 +13,10 @@ export class PaymentEventStrategyContext {
     
   }
 
-  async executeStrategy(event: string): Promise<void> {
+  async executeStrategy(event: string, data?): Promise<void> {
     const strategy = this.strategies[event];
     if (strategy) {
-      await strategy.handle(event);
+      await strategy.handle(event, data);
     } else {
       console.log(`Unhandled event type: ${event}`);
     }
