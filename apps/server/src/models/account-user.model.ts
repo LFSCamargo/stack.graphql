@@ -10,6 +10,7 @@ export interface IAccountUserSchema extends Document {
   customerId?: string;
   asaasId?: string;
   asaasApiKey?: string;
+  walletId?: string;
   basketId?: Types.ObjectId;
   cpfCnpj: string;
   birthDate?: Date;
@@ -50,6 +51,7 @@ const accountUserSchema = new Schema(
     customerId: { type: String },
     asaasId: { type: String },
     asaasApiKey: { type: String },
+    walletId: { type: String },
     basketId: { type: Types.ObjectId, ref: "Basket" },
     cpfCnpj: { type: String, required: true },
     birthDate: { type: Date },

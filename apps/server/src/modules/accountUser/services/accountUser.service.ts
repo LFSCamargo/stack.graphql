@@ -20,7 +20,7 @@ import { CreatePaymentLinkInput } from "../../paymentLink/types/paymentLink.type
 import { MailingHandler } from "../../../mailing/handlers.mailing";
 import { PaymentEvents } from "../../webhooks/enums/payment-events.enum";
 import { AccountDocumentsStatus } from "../../webhooks/enums/account-documents.enum";
-import { asaasClient } from "../../../utils/asaasClient.utils";
+import { asaasClient, asaasClientWithUserApiKey } from "../../../utils/asaasClient.utils";
 import { accountDocumentsService } from '../../accountDocuments/services/accountDocuments.service';
 
 class AccountUserService {
@@ -58,7 +58,7 @@ class AccountUserService {
 
   private async createAsaasSubaccount(userId: Types.ObjectId): Promise<void | Error> {
     try {
-      const user: IAccountUserSchema = await AccountUserModel.findById(userId);
+      const user: IAccountUserSchema | null = await AccountUserModel.findById(userId);
       if (!user) {
         throw new Error(ErrorMessages.USER_NOT_FOUND);
       }
@@ -107,11 +107,13 @@ class AccountUserService {
 
       const asaasId = response.data.id;
       const apiKey = response.data.apiKey;
+      const walletId = response.data.walletId;
       user.asaasId = asaasId;
       user.asaasApiKey = apiKey;
+      user.walletId = walletId;
       await user.save();
       await accountDocumentsService.getPendingDocuments(user._id as Types.ObjectId);
-      return user;
+      //return user;
     } catch (error) {
       console.log('error', error.response.data.errors)
       return new Error(`Error creating ASAAS subaccount: ${error.message}`);
@@ -284,6 +286,26 @@ class AccountUserService {
     const existingUser = await AccountUserModel.findOne({ email });
     if (existingUser) {
       throw new Error(ErrorMessages.EMAIL_ALREADY_EXISTS);
+    }
+  }
+
+  async checkAccountRegistrationStatus(userId: Types.ObjectId): Promise<any> {
+    const user = await AccountUserModel.findById(userId);
+    if (!user) {
+      throw new Error(ErrorMessages.USER_NOT_FOUND);
+    }
+
+    if (!user.asaasApiKey) {
+      throw new Error("User does not have an ASAAS API key");
+    }
+
+    const client = asaasClientWithUserApiKey(user.asaasApiKey);
+
+    try {
+      const response = await client.get('/myAccount/status');
+      return response.data;
+    } catch (error) {
+      throw new Error(`Error checking account registration status: ${error.message}`);
     }
   }
 }

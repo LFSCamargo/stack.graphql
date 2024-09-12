@@ -1,8 +1,8 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
 
 export interface IDocumentEventSchema extends Document {
-  id: string;
-  event: string;
+  eventId: string;
+  eventType: string;
   dateCreated: Date;
   accountStatus: {
     id: string;
@@ -15,8 +15,8 @@ export interface IDocumentEventSchema extends Document {
 
 const documentEventSchema = new Schema(
   {
-    id: { type: String, required: true },
-    event: { type: String, required: true },
+    eventId: { type: String, required: true },
+    eventType: { type: String, required: true },
     dateCreated: { type: Date, required: true },
     accountStatus: {
       id: { type: String, required: true },

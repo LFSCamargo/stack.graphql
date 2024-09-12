@@ -11,6 +11,7 @@ import { MailingHandler } from "../../mailing/handlers.mailing";
 import { AccountUserRecoveryCodeModel } from "../../models/account-user-recovery-code.model";
 import { AccountStatus } from "./enums/accountStatus.enum";
 import { ErrorMessages } from "../../utils/errorMessages.enum";
+import { Types } from 'mongoose';
 
 export const AccountUserResolvers: TResolvers = {
   Query: {
@@ -32,6 +33,10 @@ export const AccountUserResolvers: TResolvers = {
       } catch (error) {
         throw new GraphQLError(error.message);
       }
+    },
+    checkAccountRegistrationStatus: async (_, { userId }: { userId: string }) => {
+      const objectId = new Types.ObjectId(userId);
+      return await accountUserService.checkAccountRegistrationStatus(objectId);
     },
   },
   Mutation: {
@@ -56,7 +61,7 @@ export const AccountUserResolvers: TResolvers = {
         const accountUser = await accountUserService.linkBasketToUser(
           input.userId,
           input.basketId,
-          user._id,
+          user._id as string,
         );
         return accountUser;
       } catch (error) {

@@ -68,7 +68,7 @@ export const MailingHandler = {
   },
 
   async accountDocumentsEmail(input: {
-    documents: SendedDocument[];
+    documents;
     userEmail: string;
   }) {
     const renderedContent = render(

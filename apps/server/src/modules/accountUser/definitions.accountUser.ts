@@ -129,6 +129,7 @@ export const AccountUserDefinitions = gql`
   type Query {
     getPendingAccounts: [AccountUser!]!
     getPendingAccountByEmail(email: String!): AccountUser
+    checkAccountRegistrationStatus(userId: String!): Boolean!
   }
 
   type Mutation {
