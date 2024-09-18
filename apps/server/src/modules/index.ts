@@ -12,4 +12,5 @@ export * from "./webhooks";
 export * from "./customer";
 export * from "./basket";
 export * from "./paymentLink";
-export * from './accountDocuments'
+export * from "./accountDocuments";
+export * from "./transfers";

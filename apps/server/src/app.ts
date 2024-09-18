@@ -19,7 +19,8 @@ import {
   BasketModule,
   BasketItemsModule,
   PaymentLinkModule,
-  AccountDocumentsModule
+  AccountDocumentsModule,
+  TransferModule,
 } from "./modules";
 import { Env } from "./env";
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
@@ -46,6 +47,7 @@ const apolloServer = new ApolloServer({
     BasketItemsModule.resolvers,
     PaymentLinkModule.resolvers,
     AccountDocumentsModule.resolvers,
+    TransferModule.resolvers,
   ],
   typeDefs: [
     HealthModule.typeDefs,
@@ -64,6 +66,7 @@ const apolloServer = new ApolloServer({
     BasketItemsModule.typeDefs,
     PaymentLinkModule.typeDefs,
     AccountDocumentsModule.typeDefs,
+    TransferModule.typeDefs,
     GlobalTypes,
   ],
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
